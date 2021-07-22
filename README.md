@@ -4,9 +4,13 @@
 
 ### :book: Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
 
-> [[Paper](https://arxiv.org/abs/2101.04061)] &emsp; [[Project Page](https://xinntao.github.io/projects/gfpgan)] &emsp; [Demo] <br>
+> [[Paper](https://arxiv.org/abs/2101.04061)] &emsp; [Project Page] &emsp; [Demo] <br>
 > [Xintao Wang](https://xinntao.github.io/), Liangbin Xie, [Chao Dong](https://scholar.google.com.hk/citations?user=OSDCB0UAAAAJ), [Ying Shan](https://scholar.google.com/citations?user=4oXBp9UAAAAJ&hl=en) <br>
 > Applied Research Center (ARC), Tencent PCG; Shenzhen Institutes of Advanced Technology, Chinese Academy of Sciences
+
+<p align="center">
+  <img src="assets/teaser.jpg">
+</p>
 
 #### Abstract
 
@@ -27,20 +31,16 @@ We are cleaning the training codes. It will be finished on 23 or 24, July.
 
 ---
 
-You can download **Windows executable files** from https://https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN-ncnn-vulkan.zip
+You can download **Windows executable files** from https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN-ncnn-vulkan.zip
 
 You can simply run the following command:
 ```bash
-realesrgan-ncnn-vulkan.exe -i input.jpg -o output.png
+./realesrgan-ncnn-vulkan.exe -i input.jpg -o output.png
 ```
 
-This executable file is based on the wonderful [ncnn project](https://github.com/Tencent/ncnn) and [realsr-ncnn-vulkan](https://github.com/nihui/realsr-ncnn-vulkan)
+Note that it may introduce block artifacts (and also generate slightly different results from the PyTorch implementation), because this executable file first crops the input image into several tiles, and then processes them separately, finally stitches together.
 
----
-
-<p align="center">
-  <img src="assets/teaser.jpg">
-</p>
+This executable file is based on the wonderful [ncnn project](https://github.com/Tencent/ncnn) and [realsr-ncnn-vulkan](https://github.com/nihui/realsr-ncnn-vulkan).
 
 ---
 
@@ -69,12 +69,12 @@ This executable file is based on the wonderful [ncnn project](https://github.com
 
 ## :zap: Quick Inference
 
-Download pre-trained models: [RealESRGAN_x4plus.pth](https://https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth)
+Download pre-trained models: [RealESRGAN_x4plus.pth](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth)
 
 Download pretrained models:
 
 ```bash
-wget https://https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth -P experiments/pretrained_models
+wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth -P experiments/pretrained_models
 ```
 
 Inference!
