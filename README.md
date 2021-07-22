@@ -1,72 +1,90 @@
-# ProjectTemplate-Python
+# Real-ESRGAN
 
-[English](README.md) **|** [简体中文](README_CN.md) &emsp; [GitHub](https://github.com/xinntao/ProjectTemplate-Python) **|** [Gitee码云](https://gitee.com/xinntao/ProjectTemplate-Python)
+[**Paper**](https://arxiv.org/abs/2101.04061)
 
-## File Modification
+### :book: Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
 
-1. Setup *pre-commit* hook
-    1. If necessary, modify `.pre-commit-config.yaml`
-    1. In the repository root path, run
-    > pre-commit install
-1. Modify the `.gitignore` file
-1. Modify the `LICENSE` file
-    This repository uses the *MIT* license, you may change it to other licenses
-1. Modify the *setup* files
-    1. `setup.cfg`
-    1. `setup.py`, especially the `basicsr` keyword
-1. Modify the `requirements.txt` files
-1. Modify the `VERSION` file
+> [[Paper](https://arxiv.org/abs/2101.04061)] &emsp; [[Project Page](https://xinntao.github.io/projects/gfpgan)] &emsp; [Demo] <br>
+> [Xintao Wang](https://xinntao.github.io/), Liangbin Xie, [Chao Dong](https://scholar.google.com.hk/citations?user=OSDCB0UAAAAJ), [Ying Shan](https://scholar.google.com/citations?user=4oXBp9UAAAAJ&hl=en) <br>
+> Applied Research Center (ARC), Tencent PCG; Shenzhen Institutes of Advanced Technology, Chinese Academy of Sciences
 
-## GitHub Workflows
+#### Abstract
 
-1. [pylint](./github/workflows/pylint.yml)
-1. [gitee-repo-mirror](./github/workflow/gitee-repo-mirror.yml) - Support Gitee码云
-    1. Clone GitHub repo in the [Gitee](https://gitee.com/) website
-    1. Modify [gitee-repo-mirror](./github/workflow/gitee-repo-mirror.yml)
-    1. In Github *Settings* -> *Secrets*, add `SSH_PRIVATE_KEY`
+Though many attempts have been made in blind super-resolution to restore low-resolution images with unknown and complex degradations, they are still far from addressing general real-world degraded images. In this work, we extend the powerful ESRGAN to a practical restoration application (namely, Real-ESRGAN), which is trained with pure synthetic data. Specifically, a high-order degradation modeling process is introduced to better simulate complex real-world degradations. We also consider the common ringing and overshoot artifacts in the synthesis process. In addition, we employ a U-Net discriminator with spectral normalization to increase discriminator capability and stabilize the training dynamics. Extensive comparisons have shown its superior visual performance than prior works on various real datasets. We also provide efficient implementations to synthesize training pairs on the fly.
 
-## Other Procedures
+#### BibTeX
 
-1. The `description`, `website`, `topics` in the main page
-1. Support Chinese documents, for example, `README_CN.md`
+    @Article{wang2021realesrgan,
+        title={Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data},
+        author={Xintao Wang and Liangbin Xie and Chao Dong and Ying Shan},
+        journal={arXiv:2107.xxxxx},
+        year={2021}
+    }
 
-## Emoji
+---
 
-[Emoji cheat-sheet](https://github.com/ikatyang/emoji-cheat-sheet)
+We are cleaning the training codes. It will be finished on 23 or 24, July.
 
-| Emoji | Meaning |
-| :---         |     :---:      |
-| :rocket:   | Used for [BasicSR](https://github.com/xinntao/BasicSR) Logo |
-| :sparkles: | Features |
-| :zap: | HOWTOs |
-| :wrench: | Installation / Usage |
-| :hourglass_flowing_sand: | TODO list |
-| :turtle: | Dataset preparation |
-| :computer: | Commands |
-| :european_castle: | Model zoo |
-| :memo: | Designs |
-| :scroll: | License and acknowledgement |
-| :earth_asia: | Citations |
-| :e-mail: | Contact |
-| :m: | Models |
-| :arrow_double_down: | Download |
-| :file_folder: | Datasets |
-| :chart_with_upwards_trend: | Curves|
-| :eyes: | Screenshot |
-| :books: |References |
+---
 
-## Useful Image Links
+You can download **Windows executable files** from https://https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN-ncnn-vulkan.zip
 
-<img src="https://colab.research.google.com/assets/colab-badge.svg" height="28" alt="google colab logo">  Google Colab Logo <br>
-<img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/Windows_darkblue_2012.svg" height="28" alt="google colab logo">  Windows Logo <br>
-<img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Logo-ubuntu_no%28r%29-black_orange-hex.svg" alt="Ubuntu" height="24">  Ubuntu Logo <br>
+You can simply run the following command:
+```bash
+realesrgan-ncnn-vulkan.exe -i input.jpg -o output.png
+```
 
-## Other Useful Tips
+This executable file is based on the wonderful [ncnn project](https://github.com/Tencent/ncnn) and [realsr-ncnn-vulkan](https://github.com/nihui/realsr-ncnn-vulkan)
 
-1. `More` drop-down menu
-    <details>
-    <summary>More</summary>
-    <ul>
-    <li>Nov 19, 2020. Set up ProjectTemplate-Python.</li>
-    </ul>
-    </details>
+---
+
+<p align="center">
+  <img src="assets/teaser.jpg">
+</p>
+
+---
+
+## :wrench: Dependencies and Installation
+
+- Python >= 3.7 (Recommend to use [Anaconda](https://www.anaconda.com/download/#linux) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html))
+- [PyTorch >= 1.7](https://pytorch.org/)
+
+### Installation
+
+1. Clone repo
+
+    ```bash
+    git clone https://github.com/xinntao/Real-ESRGAN.git
+    cd Real-ESRGAN
+    ```
+
+1. Install dependent packages
+
+    ```bash
+    # Install basicsr - https://github.com/xinntao/BasicSR
+    # We use BasicSR for both training and inference
+    pip install basicsr
+    pip install -r requirements.txt
+    ```
+
+## :zap: Quick Inference
+
+Download pre-trained models: [RealESRGAN_x4plus.pth](https://https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth)
+
+Download pretrained models:
+
+```bash
+wget https://https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth -P experiments/pretrained_models
+```
+
+Inference!
+
+```bash
+python inference_realesrgan.py --model_path experiments/pretrained_models/RealESRGAN_x4plus.pth --input inputs
+```
+
+Results are in the `results` folder
+
+## :e-mail: Contact
+
+If you have any question, please email `xintao.wang@outlook.com` or `xintaowang@tencent.com`.
