@@ -1,10 +1,10 @@
 # Real-ESRGAN
 
-[**Paper**](https://arxiv.org/abs/2101.04061)
+[**Paper**](https://arxiv.org/abs/2107.10833)
 
 ### :book: Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
 
-> [[Paper](https://arxiv.org/abs/2101.04061)] &emsp; [Project Page] &emsp; [Demo] <br>
+> [[Paper](https://arxiv.org/abs/2107.10833)] &emsp; [Project Page] &emsp; [Demo] <br>
 > [Xintao Wang](https://xinntao.github.io/), Liangbin Xie, [Chao Dong](https://scholar.google.com.hk/citations?user=OSDCB0UAAAAJ), [Ying Shan](https://scholar.google.com/citations?user=4oXBp9UAAAAJ&hl=en) <br>
 > Applied Research Center (ARC), Tencent PCG; Shenzhen Institutes of Advanced Technology, Chinese Academy of Sciences
 
@@ -21,7 +21,7 @@ Though many attempts have been made in blind super-resolution to restore low-res
     @Article{wang2021realesrgan,
         title={Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data},
         author={Xintao Wang and Liangbin Xie and Chao Dong and Ying Shan},
-        journal={arXiv:2107.xxxxx},
+        journal={arXiv:2107.10833},
         year={2021}
     }
 
