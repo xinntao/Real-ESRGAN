@@ -17,7 +17,9 @@ def main():
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     # set up model
-    model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=args.scale)
+    # FIXME: currenly RRDBNet in BasicSR does not support scale argument. Will update later
+    # model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=args.scale)
+    model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32)
     loadnet = torch.load(args.model_path)
     model.load_state_dict(loadnet['params_ema'], strict=True)
     model.eval()

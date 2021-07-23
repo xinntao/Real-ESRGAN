@@ -1,4 +1,4 @@
-name: Python Lint
+name: PyLint
 
 on: [push, pull_request]
 
@@ -26,5 +26,5 @@ jobs:
     - name: Lint
       run: |
         flake8 .
-        isort --check-only --diff basicsr/ options/ scripts/ tests/ inference/ setup.py
-        yapf -r -d basicsr/ options/ scripts/ tests/ inference/ setup.py
+        isort --check-only --diff data/ models/ inference_realesrgan.py
+        yapf -r -d data/ models/ inference_realesrgan.py

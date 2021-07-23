@@ -1,5 +1,10 @@
 # Real-ESRGAN
 
+[![download](https://img.shields.io/github/downloads/xinntao/Real-ESRGAN/total.svg)](https://github.com/xinntao/Real-ESRGAN/releases)
+[![Open issue](https://isitmaintained.com/badge/open/xinntao/Real-ESRGAN.svg)](https://github.com/xinntao/Real-ESRGAN/issues)
+[![LICENSE](https://img.shields.io/github/license/xinntao/Real-ESRGAN.svg)](https://github.com/xinntao/Real-ESRGAN/blob/master/LICENSE)
+[![python lint](https://github.com/xinntao/Real-ESRGAN/actions/workflows/pylint.yml/badge.svg)](https://github.com/xinntao/Real-ESRGAN/blob/master/.github/workflows/pylint.yml)
+
 [**Paper**](https://arxiv.org/abs/2107.10833)
 
 ### :book: Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
