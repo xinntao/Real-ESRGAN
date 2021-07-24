@@ -8,8 +8,10 @@
 1. [Colab Demo](https://colab.research.google.com/drive/1sVsoBd9AjckIXThgtZhGrHRfFI6UUYOo) for Real-ESRGAN <a href="https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="google colab logo"></a>.
 2. [Portable Windows executable file](https://github.com/xinntao/Real-ESRGAN/releases). You can find more information [here](#Portable-executable-files).
 
-Real-ESRGAN aims for **Practical Image Restoration**.<br>
+Real-ESRGAN aims at developing **Practical Algorithms for General Image Restoration**.<br>
 We extend the powerful ESRGAN to a practical restoration application (namely, Real-ESRGAN), which is trained with pure synthetic data.
+
+:triangular_flag_on_post: The training codes have been released. A detailed guide will be provided later (on July 25th). Note that the codes have a lot of refactoring from our developed codes. So there may be some bugs/performance drops. Welcome to report issues and I wil also retrain the models.
 
 ### :book: Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
 
@@ -22,14 +24,26 @@ We extend the powerful ESRGAN to a practical restoration application (namely, Re
   <img src="assets/teaser.jpg">
 </p>
 
-We provide a pretrained model (*RealESRGAN_x4plus.pth*) with upsampling X4.<br>
+---
+
+We have provided a pretrained model (*RealESRGAN_x4plus.pth*) with upsampling X4.<br>
 **Note that RealESRGAN may still fail in some cases as the real-world degradations are really too complex.**<br>
 Moreover, it **may not** perform well on **human faces, text**, *etc*, which will be optimized later.
 <br>
 
----
+Real-ESRGAN will be a long-term supported project (in my current plan :smiley:). It will be continuously updated
+in my spare time.
 
-We are cleaning the training codes. It will be finished on 23 or 24, July.
+Here is a TODO list in the near future:
+
+[ ] optimize for human faces
+[ ] optimize for texts
+[ ] optimize for animation images
+[ ] support more scales
+[ ] support controllable restoration strength
+
+If you have any good ideas or demands, please open an issue/discussion to let me know. <br>
+If you have some images that Real-ESRGAN could not well restored, please also open an issue/discussion. I will record it (but I cannot guarantee to resolve it:stuck_out_tongue:). If necessary, I will open a page to specially record these real-world cases that need to be solved, but the current technology is difficult to handle well.
 
 ---
 
