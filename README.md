@@ -11,7 +11,7 @@
 Real-ESRGAN aims at developing **Practical Algorithms for General Image Restoration**.<br>
 We extend the powerful ESRGAN to a practical restoration application (namely, Real-ESRGAN), which is trained with pure synthetic data.
 
-:triangular_flag_on_post: The training codes have been released. A detailed guide will be provided later (on July 25th). Note that the codes have a lot of refactoring from our developed codes. So there may be some bugs/performance drops. Welcome to report issues and I wil also retrain the models.
+:triangular_flag_on_post: The training codes have been released. A detailed guide will be provided later (on July 25th). Note that the codes have a lot of refactoring. So there may be some bugs/performance drops. Welcome to report issues and I wil also retrain the models.
 
 ### :book: Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
 
@@ -36,11 +36,11 @@ in my spare time.
 
 Here is a TODO list in the near future:
 
-[ ] optimize for human faces
-[ ] optimize for texts
-[ ] optimize for animation images
-[ ] support more scales
-[ ] support controllable restoration strength
+- [ ] optimize for human faces
+- [ ] optimize for texts
+- [ ] optimize for animation images
+- [ ] support more scales
+- [ ] support controllable restoration strength
 
 If you have any good ideas or demands, please open an issue/discussion to let me know. <br>
 If you have some images that Real-ESRGAN could not well restored, please also open an issue/discussion. I will record it (but I cannot guarantee to resolve it:stuck_out_tongue:). If necessary, I will open a page to specially record these real-world cases that need to be solved, but the current technology is difficult to handle well.
