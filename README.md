@@ -49,7 +49,7 @@ If you have some images that Real-ESRGAN could not well restored, please also op
 
 ### Portable executable files
 
-You can download **Windows executable files** from https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN-ncnn-vulkan.zip
+You can download **Windows executable files** from https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.1/RealESRGAN-ncnn-vulkan-20210725-windows.zip
 
 This executable file is **portable** and includes all the binaries and models required. No CUDA or PyTorch environment is needed.<br>
 
@@ -58,6 +58,14 @@ You can simply run the following command:
 ```bash
 ./realesrgan-ncnn-vulkan.exe -i input.jpg -o output.png
 ```
+
+We have provided three models:
+
+1. realesrgan-x4plus  (default)
+2. realesrnet-x4plus
+3. esrgan-x4
+
+You can use the `-n` argument for other models, for example, `./realesrgan-ncnn-vulkan.exe -i input.jpg -o output.png -n realesrnet-x4plus`
 
 Note that it may introduce block inconsistency (and also generate slightly different results from the PyTorch implementation), because this executable file first crops the input image into several tiles, and then processes them separately, finally stitches together.
 
@@ -105,6 +113,12 @@ python inference_realesrgan.py --model_path experiments/pretrained_models/RealES
 ```
 
 Results are in the `results` folder
+
+## :european_castle: Model Zoo
+
+- [RealESRGAN-x4plus](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth)
+- [RealESRNet-x4plus](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.1/RealESRNet_x4plus.pth)
+- [official ESRGAN-x4](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.1/ESRGAN_SRx4_DF2KOST_official-ff704c30.pth)
 
 ## :computer: Training
 

@@ -12,6 +12,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_path', type=str, default='experiments/pretrained_models/RealESRGAN_x4plus.pth')
     parser.add_argument('--scale', type=int, default=4)
+    parser.add_argument('--suffix', type=str, default='_out')
     parser.add_argument('--input', type=str, default='inputs', help='input image or folder')
     args = parser.parse_args()
 
@@ -19,7 +20,11 @@ def main():
     # set up model
     model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=args.scale)
     loadnet = torch.load(args.model_path)
-    model.load_state_dict(loadnet['params_ema'], strict=True)
+    if 'params_ema' in loadnet:
+        keyname = 'params_ema'
+    else:
+        keyname = 'params'
+    model.load_state_dict(loadnet[keyname], strict=True)
     model.eval()
     model = model.to(device)
 
@@ -59,7 +64,7 @@ def main():
             output = output.data.squeeze().float().cpu().clamp_(0, 1).numpy()
             output = np.transpose(output[[2, 1, 0], :, :], (1, 2, 0))
             output = (output * 255.0).round().astype(np.uint8)
-            cv2.imwrite(f'results/{imgname}_RealESRGAN.png', output)
+            cv2.imwrite(f'results/{imgname}_{args.suffix}.png', output)
         except Exception as error:
             print('Error', error)
 

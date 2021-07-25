@@ -34,7 +34,10 @@ DF2K_HR_sub/000001_s003.png
 
 ## Train Real-ESRNet
 
-1. Download pre-trained model [ESRGAN](https://drive.google.com/file/d/1b3_bWZTjNO3iL2js1yWkJfjZykcQgvzT/view?usp=sharing) into `experiments/pretrained_models`.
+1. Download pre-trained model [ESRGAN](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.1/ESRGAN_SRx4_DF2KOST_official-ff704c30.pth) into `experiments/pretrained_models`.
+    ```bash
+    wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.1/ESRGAN_SRx4_DF2KOST_official-ff704c30.pth -P experiments/pretrained_models
+    ```
 1. Modify the content in the option file `options/train_realesrnet_x4plus.yml` accordingly:
     ```yml
     train:
