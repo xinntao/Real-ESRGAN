@@ -11,7 +11,7 @@
 Real-ESRGAN aims at developing **Practical Algorithms for General Image Restoration**.<br>
 We extend the powerful ESRGAN to a practical restoration application (namely, Real-ESRGAN), which is trained with pure synthetic data.
 
-:triangular_flag_on_post: The training codes have been released. A detailed guide will be provided later (on July 25th). Note that the codes have a lot of refactoring. So there may be some bugs/performance drops. Welcome to report issues and I wil also retrain the models.
+:triangular_flag_on_post: The training codes have been released. A detailed guide can be found in [Training.md](Training.md).
 
 ### :book: Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
 
@@ -54,6 +54,7 @@ You can download **Windows executable files** from https://github.com/xinntao/Re
 This executable file is **portable** and includes all the binaries and models required. No CUDA or PyTorch environment is needed.<br>
 
 You can simply run the following command:
+
 ```bash
 ./realesrgan-ncnn-vulkan.exe -i input.jpg -o output.png
 ```
