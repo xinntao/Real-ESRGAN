@@ -106,6 +106,10 @@ python inference_realesrgan.py --model_path experiments/pretrained_models/RealES
 
 Results are in the `results` folder
 
+## :computer: Training
+
+A detailed guide can be found in [Training.md](Training.md).
+
 ## BibTeX
 
     @Article{wang2021realesrgan,
