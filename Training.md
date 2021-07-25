@@ -8,7 +8,7 @@ Note that the codes have a lot of refactoring. So there may be some bugs/perform
 The training has been divided into two stages. These two stages have the same data synthesis process and training pipeline, except for the loss functions. Specifically,
 
 1. We first train Real-ESRNet with L1 loss from the pre-trained model ESRGAN.
-1. We then use the trained Real-ESRNet model as an initialization of the generator, and train the Real-ESRGAN with a combination ofL1 loss, perceptual loss and GAN loss.
+1. We then use the trained Real-ESRNet model as an initialization of the generator, and train the Real-ESRGAN with a combination of L1 loss, perceptual loss and GAN loss.
 
 ## Dataset Preparation
 
@@ -23,7 +23,7 @@ For the DF2K dataset, we use a multi-scale strategy, *i.e.*, we downsample HR im
 
 We then crop DF2K images into sub-images for faster IO and processing.
 
-You need to prepare a txt file containing the image paths. Examples in `meta_info_DF2Kmultiscale+OST_sub.txt` (As different users may have different sub-images partition, this file is not suitable for your purpose and you need to prepare your own txt file):
+You need to prepare a txt file containing the image paths. The following are some examples in `meta_info_DF2Kmultiscale+OST_sub.txt` (As different users may have different sub-images partitions, this file is not suitable for your purpose and you need to prepare your own txt file):
 
 ```txt
 DF2K_HR_sub/000001_s001.png
@@ -41,7 +41,7 @@ DF2K_HR_sub/000001_s003.png
         name: DF2K+OST
         type: RealESRGANDataset
         dataroot_gt: datasets/DF2K  # modify to the root path of your folder
-        meta_info: data/meta_info/meta_info_DF2Kmultiscale+OST_sub.txt # modify to your own generate meta info
+        meta_info: data/meta_info/meta_info_DF2Kmultiscale+OST_sub.txt  # modify to your own generate meta info txt
         io_backend:
             type: disk
     ```
@@ -75,7 +75,7 @@ DF2K_HR_sub/000001_s003.png
     CUDA_VISIBLE_DEVICES=0,1,2,3 \
     python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 train.py -opt options/train_realesrnet_x4plus.yml --launcher pytorch --debug
     ```
-1. The formal training. We use four GPUs for training. We pass `--auto_resume` to resume the training if necessary automatically.
+1. The formal training. We use four GPUs for training. We use the `--auto_resume` argument to automatically resume the training if necessary.
     ```bash
     CUDA_VISIBLE_DEVICES=0,1,2,3 \
     python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 train.py -opt options/train_realesrnet_x4plus.yml --launcher pytorch --auto_resume
@@ -83,14 +83,14 @@ DF2K_HR_sub/000001_s003.png
 
 ## Train Real-ESRGAN
 
-1. After you train Real-ESRNet, you now have the file `experiments/train_RealESRNetx4plus_1000k_B12G4_fromESRGAN/model/net_g_1000000.pth`. If you need to specify the pre-trained path of other files. Modify the `pretrain_network_g` value in the option file `train_realesrgan_x4plus.yml`.
+1. After the training of Real-ESRNet, you now have the file `experiments/train_RealESRNetx4plus_1000k_B12G4_fromESRGAN/model/net_g_1000000.pth`. If you need to specify the pre-trained path to other files, modify the `pretrain_network_g` value in the option file `train_realesrgan_x4plus.yml`.
 1. Modify the option file `train_realesrgan_x4plus.yml` accordingly. Most modifications are similar to those listed above.
 1. Before the formal training, you may run in the `--debug` mode to see whether everything is OK. We use four GPUs for training:
     ```bash
     CUDA_VISIBLE_DEVICES=0,1,2,3 \
     python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 train.py -opt options/train_realesrgan_x4plus.yml --launcher pytorch --debug
     ```
-1. The formal training. We use four GPUs for training. We pass `--auto_resume` to resume the training if necessary automatically.
+1. The formal training. We use four GPUs for training. We use the `--auto_resume` argument to automatically resume the training if necessary.
     ```bash
     CUDA_VISIBLE_DEVICES=0,1,2,3 \
     python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 train.py -opt options/train_realesrgan_x4plus.yml --launcher pytorch --auto_resume

@@ -11,7 +11,7 @@
 Real-ESRGAN aims at developing **Practical Algorithms for General Image Restoration**.<br>
 We extend the powerful ESRGAN to a practical restoration application (namely, Real-ESRGAN), which is trained with pure synthetic data.
 
-:triangular_flag_on_post: The training codes have been released. A detailed guide will be provided later (on July 25th).
+:triangular_flag_on_post: The training codes have been released. A detailed guide can be found [here](Training.md)
 
 ### :book: Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
 
