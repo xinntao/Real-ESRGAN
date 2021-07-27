@@ -18,7 +18,7 @@ class RealESRGANModel(SRGANModel):
     def __init__(self, opt):
         super(RealESRGANModel, self).__init__(opt)
         self.jpeger = DiffJPEG(differentiable=False).cuda()
-        self.usm_shaper = USMSharp().cuda()
+        self.usm_sharpener = USMSharp().cuda()
         self.queue_size = opt['queue_size']
 
     @torch.no_grad()
@@ -58,7 +58,7 @@ class RealESRGANModel(SRGANModel):
         if self.is_train:
             # training data synthesis
             self.gt = data['gt'].to(self.device)
-            self.gt_usm = self.usm_shaper(self.gt)
+            self.gt_usm = self.usm_sharpener(self.gt)
 
             self.kernel1 = data['kernel1'].to(self.device)
             self.kernel2 = data['kernel2'].to(self.device)
@@ -160,6 +160,8 @@ class RealESRGANModel(SRGANModel):
 
             # training pair pool
             self._dequeue_and_enqueue()
+            # sharpen self.gt again, as we have changed the self.gt with self._dequeue_and_enqueue
+            self.gt_usm = self.usm_sharpener(self.gt)
         else:
             self.lq = data['lq'].to(self.device)
             if 'gt' in data:

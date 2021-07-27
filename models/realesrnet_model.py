@@ -17,7 +17,7 @@ class RealESRNetModel(SRModel):
     def __init__(self, opt):
         super(RealESRNetModel, self).__init__(opt)
         self.jpeger = DiffJPEG(differentiable=False).cuda()
-        self.usm_shaper = USMSharp().cuda()
+        self.usm_sharpener = USMSharp().cuda()
         self.queue_size = opt['queue_size']
 
     @torch.no_grad()
@@ -59,7 +59,7 @@ class RealESRNetModel(SRModel):
             self.gt = data['gt'].to(self.device)
             # USM the GT images
             if self.opt['gt_usm'] is True:
-                self.gt = self.usm_shaper(self.gt)
+                self.gt = self.usm_sharpener(self.gt)
 
             self.kernel1 = data['kernel1'].to(self.device)
             self.kernel2 = data['kernel2'].to(self.device)
