@@ -13,8 +13,8 @@ We extend the powerful ESRGAN to a practical restoration application (namely, Re
 
 :triangular_flag_on_post: **Updates**
 
-- [x] [Inference code](inference_realesrgan.py) supports: 1) tile inference; 2) images with alpha channel; 3) gray images; 4) 16-bit images.
-- [x] The training codes have been released. A detailed guide can be found in [Training.md](Training.md).
+- :white_check_mark: [The inference code](inference_realesrgan.py) supports: 1) **tile** options; 2) images with **alpha channel**; 3) **gray** images; 4) **16-bit** images.
+- :white_check_mark: The training codes have been released. A detailed guide can be found in [Training.md](Training.md).
 
 ### :book: Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
 
