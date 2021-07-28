@@ -28,7 +28,7 @@ def main():
         default='realesrgan',
         help='The upsampler for the alpha channels. Options: realesrgan | bicubic')
     parser.add_argument(
-        '--extension',
+        '--ext',
         type=str,
         default='auto',
         help='Image extension. Options: auto | jpg | png, auto means using the same extension as inputs')
@@ -101,10 +101,10 @@ def main():
             output_img[:, :, 3] = output_alpha
 
         # ------------------------------ save image ------------------------------ #
-        if args.extension == 'auto':
+        if args.ext == 'auto':
             extension = extension[1:]
         else:
-            extension == args.extension
+            extension = args.ext
         if img_mode == 'RGBA':  # RGBA images should be saved in png format
             extension = 'png'
         save_path = f'results/{imgname}_{args.suffix}.{extension}'
