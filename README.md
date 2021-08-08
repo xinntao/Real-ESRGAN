@@ -24,6 +24,8 @@ We extend the powerful ESRGAN to a practical restoration application (namely, Re
 If Real-ESRGAN is helpful in your photos/projects, please help to :star: this repo. Thanks:blush: <br>
 Other recommended projects: &emsp; :arrow_forward: [GFPGAN](https://github.com/TencentARC/GFPGAN) &emsp; :arrow_forward: [BasicSR](https://github.com/xinntao/BasicSR) &emsp; :arrow_forward: [facexlib](https://github.com/xinntao/facexlib)
 
+---
+
 ### :book: Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
 
 > [[Paper](https://arxiv.org/abs/2107.10833)] &emsp; [Project Page] &emsp; [Demo] <br>
