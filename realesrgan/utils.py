@@ -63,12 +63,7 @@ class RealESRGANer():
             self.img = F.pad(self.img, (0, self.mod_pad_w, 0, self.mod_pad_h), 'reflect')
 
     def process(self):
-        try:
-            # inference
-            with torch.no_grad():
-                self.output = self.model(self.img)
-        except Exception as error:
-            print('Error', error)
+        self.output = self.model(self.img)
 
     def tile_process(self):
         """Modified from: https://github.com/ata4/esrgan-launcher
@@ -143,7 +138,9 @@ class RealESRGANer():
             self.output = self.output[:, :, 0:h - self.pre_pad * self.scale, 0:w - self.pre_pad * self.scale]
         return self.output
 
-    def enhance(self, img, tile=False, alpha_upsampler='realesrgan'):
+    @torch.no_grad()
+    def enhance(self, img, outscale=None, alpha_upsampler='realesrgan'):
+        h_input, w_input = img.shape[0:2]
         # img: numpy
         img = img.astype(np.float32)
         if np.max(img) > 255:  # 16-bit image
@@ -203,6 +200,14 @@ class RealESRGANer():
             output = (output_img * 65535.0).round().astype(np.uint16)
         else:
             output = (output_img * 255.0).round().astype(np.uint8)
+
+        if outscale is not None and outscale != float(self.scale):
+            output = cv2.resize(
+                output, (
+                    int(w_input * outscale),
+                    int(h_input * outscale),
+                ), interpolation=cv2.INTER_LANCZOS4)
+
         return output, img_mode
 
 
