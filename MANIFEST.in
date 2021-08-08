@@ -3,5 +3,6 @@ include inputs/*
 include scripts/*.py
 include inference_realesrgan.py
 include VERSION
+include LICENSE
 include requirements.txt
 include realesrgan/weights/README.md
