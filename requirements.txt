@@ -1,4 +1,4 @@
 basicsr
-cv2
 numpy
+opencv-python
 torch>=1.7
