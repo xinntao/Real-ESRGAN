@@ -1,3 +1,11 @@
+# ignored folders
+datasets/*
+experiments/*
+results/*
+tb_logger/*
+wandb/*
+tmp/*
+
 .vscode
 
 # Byte-compiled / optimized / DLL files
