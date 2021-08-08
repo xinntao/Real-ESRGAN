@@ -21,6 +21,9 @@ We extend the powerful ESRGAN to a practical restoration application (namely, Re
 - :white_check_mark: [The inference code](inference_realesrgan.py) supports: 1) **tile** options; 2) images with **alpha channel**; 3) **gray** images; 4) **16-bit** images.
 - :white_check_mark: The training codes have been released. A detailed guide can be found in [Training.md](Training.md).
 
+If Real-ESRGAN is helpful in your photos/projects, please help to :star: this repo. Thanks:blush: <br>
+Other recommended projects: &emsp; :arrow_forward: [GFPGAN](https://github.com/TencentARC/GFPGAN) &emsp; :arrow_forward: [BasicSR](https://github.com/xinntao/BasicSR) &emsp; :arrow_forward: [facexlib](https://github.com/xinntao/facexlib)
+
 ### :book: Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
 
 > [[Paper](https://arxiv.org/abs/2107.10833)] &emsp; [Project Page] &emsp; [Demo] <br>
