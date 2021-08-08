@@ -54,9 +54,11 @@ def main():
         img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
         h, w = img.shape[0:2]
         if max(h, w) > 1000 and args.netscale == 4:
-            print('WARNING: The input image is large, try X2 model for better performace.')
+            import warnings
+            warnings.warn('The input image is large, try X2 model for better performace.')
         if max(h, w) < 500 and args.netscale == 2:
-            print('WARNING: The input image is small, try X4 model for better performace.')
+            import warnings
+            warnings.warn('The input image is small, try X4 model for better performace.')
 
         try:
             output, img_mode = upsampler.enhance(img, outscale=args.outscale)
