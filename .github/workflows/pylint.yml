@@ -26,5 +26,5 @@ jobs:
     - name: Lint
       run: |
         flake8 .
-        isort --check-only --diff data/ models/ inference_realesrgan.py
-        yapf -r -d data/ models/ inference_realesrgan.py
+        isort --check-only --diff realesrgan/ scripts/ inference_realesrgan.py setup.py
+        yapf -r -d realesrgan/ scripts/ inference_realesrgan.py setup.py

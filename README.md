@@ -97,6 +97,7 @@ This executable file is based on the wonderful [Tencent/ncnn](https://github.com
     # We use BasicSR for both training and inference
     pip install basicsr
     pip install -r requirements.txt
+    python setup.py develop
     ```
 
 ## :zap: Quick Inference

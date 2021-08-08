@@ -44,7 +44,7 @@ DF2K_HR_sub/000001_s003.png
         name: DF2K+OST
         type: RealESRGANDataset
         dataroot_gt: datasets/DF2K  # modify to the root path of your folder
-        meta_info: data/meta_info/meta_info_DF2Kmultiscale+OST_sub.txt  # modify to your own generate meta info txt
+        meta_info: realesrgan/meta_info/meta_info_DF2Kmultiscale+OST_sub.txt  # modify to your own generate meta info txt
         io_backend:
             type: disk
     ```
@@ -76,12 +76,12 @@ DF2K_HR_sub/000001_s003.png
 1. Before the formal training, you may run in the `--debug` mode to see whether everything is OK. We use four GPUs for training:
     ```bash
     CUDA_VISIBLE_DEVICES=0,1,2,3 \
-    python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 train.py -opt options/train_realesrnet_x4plus.yml --launcher pytorch --debug
+    python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 realesrgan/train.py -opt options/train_realesrnet_x4plus.yml --launcher pytorch --debug
     ```
 1. The formal training. We use four GPUs for training. We use the `--auto_resume` argument to automatically resume the training if necessary.
     ```bash
     CUDA_VISIBLE_DEVICES=0,1,2,3 \
-    python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 train.py -opt options/train_realesrnet_x4plus.yml --launcher pytorch --auto_resume
+    python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 realesrgan/train.py -opt options/train_realesrnet_x4plus.yml --launcher pytorch --auto_resume
     ```
 
 ## Train Real-ESRGAN
@@ -91,10 +91,10 @@ DF2K_HR_sub/000001_s003.png
 1. Before the formal training, you may run in the `--debug` mode to see whether everything is OK. We use four GPUs for training:
     ```bash
     CUDA_VISIBLE_DEVICES=0,1,2,3 \
-    python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 train.py -opt options/train_realesrgan_x4plus.yml --launcher pytorch --debug
+    python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 realesrgan/train.py -opt options/train_realesrgan_x4plus.yml --launcher pytorch --debug
     ```
 1. The formal training. We use four GPUs for training. We use the `--auto_resume` argument to automatically resume the training if necessary.
     ```bash
     CUDA_VISIBLE_DEVICES=0,1,2,3 \
-    python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 train.py -opt options/train_realesrgan_x4plus.yml --launcher pytorch --auto_resume
+    python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 realesrgan/train.py -opt options/train_realesrgan_x4plus.yml --launcher pytorch --auto_resume
     ```
