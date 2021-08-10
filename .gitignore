@@ -5,6 +5,7 @@ results/*
 tb_logger/*
 wandb/*
 tmp/*
+realesrgan/weights/*
 
 version.py
 .vscode

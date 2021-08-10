@@ -51,7 +51,7 @@ Here is a TODO list in the near future:
 
 - [ ] optimize for human faces
 - [ ] optimize for texts
-- [ ] optimize for animation images
+- [ ] optimize for anime images [in progress]
 - [ ] support more scales
 - [ ] support controllable restoration strength
 
