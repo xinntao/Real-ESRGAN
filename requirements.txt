@@ -1,3 +1,4 @@
+basicsr
 torch>=1.7
 basicsr
 numpy
