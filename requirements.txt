@@ -1,7 +1,7 @@
+torch>=1.7
 basicsr
 numpy
 opencv-python
-torch>=1.7
 setuptools
 gradio
 
