@@ -1,7 +1,7 @@
 # :computer: How to Train Real-ESRGAN
 
 The training codes have been released. <br>
-Note that the codes have a lot of refactoring. So there may be some bugs/performance drops. Welcome to report issues and I will also retrain the models.
+Note that the codes have a lot of refactoring. So there may be some bugs/performance drops. Welcome to report bugs/issues.
 
 ## Overview
 

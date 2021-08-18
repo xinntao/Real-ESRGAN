@@ -8,7 +8,6 @@ tmp/*
 realesrgan/weights/*
 
 version.py
-.vscode
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
