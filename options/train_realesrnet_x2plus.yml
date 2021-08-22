@@ -1,15 +1,12 @@
 # general settings
-name: train_RealESRGANx4plus_400k_B12G4
-model_type: RealESRGANModel
-scale: 4
+name: train_RealESRNetx2plus_1000k_B12G4
+model_type: RealESRNetModel
+scale: 2
 num_gpu: 4
 manual_seed: 0
 
-# ----------------- options for synthesizing training data in RealESRGANModel ----------------- #
-# USM the ground-truth
-l1_gt_usm: True
-percep_gt_usm: True
-gan_gt_usm: False
+# ----------------- options for synthesizing training data in RealESRNetModel ----------------- #
+gt_usm: True  # USM the ground-truth
 
 # the first degradation process
 resize_prob: [0.2, 0.7, 0.1]  # up, down, keep
@@ -89,20 +86,13 @@ network_g:
   num_feat: 64
   num_block: 23
   num_grow_ch: 32
-
-
-network_d:
-  type: UNetDiscriminatorSN
-  num_in_ch: 3
-  num_feat: 64
-  skip_connection: True
+  scale: 2
 
 # path
 path:
-  # use the pre-trained Real-ESRNet model
-  pretrain_network_g: experiments/pretrained_models/RealESRNet_x4plus.pth
+  pretrain_network_g: experiments/pretrained_models/RealESRGAN_x4plus.pth
   param_key_g: params_ema
-  strict_load_g: true
+  strict_load_g: False
   resume_state: ~
 
 # training settings
@@ -110,21 +100,16 @@ train:
   ema_decay: 0.999
   optim_g:
     type: Adam
-    lr: !!float 1e-4
-    weight_decay: 0
-    betas: [0.9, 0.99]
-  optim_d:
-    type: Adam
-    lr: !!float 1e-4
+    lr: !!float 2e-4
     weight_decay: 0
     betas: [0.9, 0.99]
 
   scheduler:
     type: MultiStepLR
-    milestones: [400000]
+    milestones: [1000000]
     gamma: 0.5
 
-  total_iter: 400000
+  total_iter: 1000000
   warmup_iter: -1  # no warm up
 
   # losses
@@ -132,32 +117,6 @@ train:
     type: L1Loss
     loss_weight: 1.0
     reduction: mean
-  # perceptual loss (content and style losses)
-  perceptual_opt:
-    type: PerceptualLoss
-    layer_weights:
-      # before relu
-      'conv1_2': 0.1
-      'conv2_2': 0.1
-      'conv3_4': 1
-      'conv4_4': 1
-      'conv5_4': 1
-    vgg_type: vgg19
-    use_input_norm: true
-    perceptual_weight: !!float 1.0
-    style_weight: 0
-    range_norm: false
-    criterion: l1
-  # gan loss
-  gan_opt:
-    type: GANLoss
-    gan_type: vanilla
-    real_label_val: 1.0
-    fake_label_val: 0.0
-    loss_weight: !!float 1e-1
-
-  net_d_iters: 1
-  net_d_init_iters: 0
 
 # Uncomment these for validation
 # validation settings

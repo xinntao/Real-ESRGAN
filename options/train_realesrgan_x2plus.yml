@@ -1,7 +1,7 @@
 # general settings
-name: train_RealESRGANx4plus_400k_B12G4
+name: train_RealESRGANx2plus_400k_B12G4
 model_type: RealESRGANModel
-scale: 4
+scale: 2
 num_gpu: 4
 manual_seed: 0
 
@@ -89,6 +89,7 @@ network_g:
   num_feat: 64
   num_block: 23
   num_grow_ch: 32
+  scale: 2
 
 
 network_d:
@@ -100,7 +101,7 @@ network_d:
 # path
 path:
   # use the pre-trained Real-ESRNet model
-  pretrain_network_g: experiments/pretrained_models/RealESRNet_x4plus.pth
+  pretrain_network_g: experiments/pretrained_models/RealESRNet_x2plus.pth
   param_key_g: params_ema
   strict_load_g: true
   resume_state: ~

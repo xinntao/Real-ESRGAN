@@ -1,5 +1,5 @@
 # general settings
-name: train_RealESRNetx4plus_1000k_B12G4_fromESRGAN
+name: train_RealESRNetx4plus_1000k_B12G4
 model_type: RealESRNetModel
 scale: 4
 num_gpu: 4
