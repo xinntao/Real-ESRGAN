@@ -16,7 +16,7 @@ We extend the powerful ESRGAN to a practical restoration application (namely, Re
 :question: Frequently Asked Questions can be found in [FAQ.md](FAQ.md).
 
 :triangular_flag_on_post: **Updates**
-- :white_check_mark: Integrate [GFPGAN](https://github.com/TencentARC/GFPGAN) to support face enhancement.
+- :white_check_mark: Integrate [GFPGAN](https://github.com/TencentARC/GFPGAN) to support **face enhancement**.
 - :white_check_mark: Integrated to [Huggingface Spaces](https://huggingface.co/spaces) with [Gradio](https://github.com/gradio-app/gradio). See [Gradio Web Demo](https://huggingface.co/spaces/akhaliq/Real-ESRGAN).
 - :white_check_mark: Support arbitrary scale with `--outscale` (It actually further resizes outputs with `LANCZOS4`). Add *RealESRGAN_x2plus.pth* model.
 - :white_check_mark: [The inference code](inference_realesrgan.py) supports: 1) **tile** options; 2) images with **alpha channel**; 3) **gray** images; 4) **16-bit** images.
@@ -107,6 +107,9 @@ This executable file is based on the wonderful [Tencent/ncnn](https://github.com
     # Install basicsr - https://github.com/xinntao/BasicSR
     # We use BasicSR for both training and inference
     pip install basicsr
+    # facexlib and gfpgan are for face enhancement
+    pip install facexlib
+    pip install gfpgan
     pip install -r requirements.txt
     python setup.py develop
     ```
