@@ -1,8 +1,4 @@
-basicsr
-torch>=1.7
-basicsr
+basicsr>=1.3.3.10
 numpy
 opencv-python
-setuptools
-gradio
-
+torch>=1.7
