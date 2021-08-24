@@ -3,4 +3,5 @@ facexlib>=0.2.0.3
 gfpgan>=0.2.1
 numpy
 opencv-python
+Pillow
 torch>=1.7
