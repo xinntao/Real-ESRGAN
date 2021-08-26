@@ -18,7 +18,9 @@ jobs:
       - name: Install PyTorch (cpu)
         run: pip install torch==1.7.0+cpu torchvision==0.8.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install basicsr
+          pip install -r requirements.txt
       - name: Build and install
         run: rm -rf .eggs && pip install -e .
       - name: Build for distribution
