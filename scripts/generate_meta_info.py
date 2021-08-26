@@ -14,6 +14,10 @@ def main(args):
 
 
 if __name__ == '__main__':
+    """Generate meta info (txt file) for only Ground-Truth images.
+
+    It can also generate meta info from several folders into one txt file.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--input',
