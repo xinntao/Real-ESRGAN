@@ -5,6 +5,9 @@
   - [Dataset Preparation](#dataset-preparation)
   - [Train Real-ESRNet](#Train-Real-ESRNet)
   - [Train Real-ESRGAN](#Train-Real-ESRGAN)
+- [Finetune Real-ESRGAN on your own dataset](#Finetune-Real-ESRGAN-on-your-own-dataset)
+  - [Generate degraded images on the fly](#Generate-degraded-images-on-the-fly)
+  - [Use paired training data](#Use-paired-training-data)
 
 ## Train Real-ESRGAN
 
@@ -130,4 +133,107 @@ You can merge several folders into one meta_info txt. Here is the example:
     ```bash
     CUDA_VISIBLE_DEVICES=0,1,2,3 \
     python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 realesrgan/train.py -opt options/train_realesrgan_x4plus.yml --launcher pytorch --auto_resume
+    ```
+
+## Finetune Real-ESRGAN on your own dataset
+
+You can finetune Real-ESRGAN on your own dataset. Typically, the fine-tuning process can be divided into two cases:
+
+1. [generate degraded images on the fly](#Generate-degraded-images-on-the-fly)
+1. [use your own **paired** data(#Use-paired-training-data)
+
+### Generate degraded images on the fly
+
+Only high-resolution images are required. The low-quality images are generated with the degradation process in Real-ESRGAN during trainig.
+
+**Prepare dataset**
+
+See [this section](#dataset-preparation) for more details.
+
+**Download pre-trained models**
+
+Download pre-trained models into `experiments/pretrained_models`.
+
+*RealESRGAN_x4plus.pth*
+
+    ```bash
+    wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth -P experiments/pretrained_models
+    ```
+
+*RealESRGAN_x4plus_netD.pth*
+
+    ```bash
+    wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.3/RealESRGAN_x4plus_netD.pth -P experiments/pretrained_models
+    ```
+
+**Finetune**
+
+Modify [options/finetune_realesrgan_x4plus.yml](options/finetune_realesrgan_x4plus.yml) accordingly, especially the `datasets` part:
+    ```yml
+    train:
+        name: DF2K+OST
+        type: RealESRGANDataset
+        dataroot_gt: datasets/DF2K  # modify to the root path of your folder
+        meta_info: realesrgan/meta_info/meta_info_DF2Kmultiscale+OST_sub.txt  # modify to your own generate meta info txt
+        io_backend:
+            type: disk
+    ```
+
+We use four GPUs for training. We use the `--auto_resume` argument to automatically resume the training if necessary.
+    ```bash
+    CUDA_VISIBLE_DEVICES=0,1,2,3 \
+    python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 realesrgan/train.py -opt options/finetune_realesrgan_x4plus.yml --launcher pytorch --auto_resume
+    ```
+
+### Use paired training data
+
+You can also finetune RealESRGAN with your own paired data. It is more similar to fine-tuning ESRGAN.
+
+**Prepare dataset**
+
+Assume that you already have two folders:
+
+- gt folder (Ground-truth, high-resolution images): datasets/DF2K/DIV2K_train_HR_sub
+- lq folder (Low quality, low-resolution images): datasets/DF2K/DIV2K_train_LR_bicubic_X4_sub
+
+Then, you can prepare the meta_info txt file using the script [scripts/generate_meta_info_pairdata.py](scripts/generate_meta_info_pairdata.py):
+
+```bash
+python scripts/generate_meta_info_pairdata.py --input datasets/DF2K/DIV2K_train_HR_sub datasets/DF2K/DIV2K_train_LR_bicubic_X4_sub --meta_info datasets/DF2K/meta_info/meta_info_DIV2K_sub_pair.txt
+```
+
+**Download pre-trained models**
+
+Download pre-trained models into `experiments/pretrained_models`.
+
+*RealESRGAN_x4plus.pth*
+
+    ```bash
+    wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth -P experiments/pretrained_models
+    ```
+
+*RealESRGAN_x4plus_netD.pth*
+
+    ```bash
+    wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.3/RealESRGAN_x4plus_netD.pth -P experiments/pretrained_models
+    ```
+
+**Finetune**
+
+Modify [options/finetune_realesrgan_x4plus_pairdata.yml](options/finetune_realesrgan_x4plus_pairdata.yml) accordingly, especially the `datasets` part:
+    ```yml
+    train:
+        name: DIV2K
+        type: RealESRGANPairedDataset
+        dataroot_gt: datasets/DF2K  # modify to the root path of your folder
+        dataroot_lq: datasets/DF2K  # modify to the root path of your folder
+        meta_info: datasets/DF2K/meta_info/meta_info_DIV2K_sub_pair.txt  # modify to the root path of your folder
+        io_backend:
+        type: disk
+    ```
+
+We use four GPUs for training. We use the `--auto_resume` argument to automatically resume the training if necessary.
+    ```bash
+    CUDA_VISIBLE_DEVICES=0,1,2,3 \
+    python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 realesrgan/train.py -opt options/finetune_realesrgan_x4plus_pairdata.yml --launcher pytorch --auto_resume
     ```

@@ -35,6 +35,9 @@ if __name__ == '__main__':
         default='datasets/DF2K/meta_info/meta_info_DF2Kmultiscale.txt',
         help='txt path for meta info')
     args = parser.parse_args()
+
     assert len(args.input) == len(args.root), ('Input folder and folder root should have the same length, but got '
                                                f'{len(args.input)} and {len(args.root)}.')
+    os.makedirs(os.path.dirname(args.meta_info), exist_ok=True)
+
     main(args)
