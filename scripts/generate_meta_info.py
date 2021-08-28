@@ -1,4 +1,5 @@
 import argparse
+import cv2
 import glob
 import os
 
@@ -8,9 +9,20 @@ def main(args):
     for folder, root in zip(args.input, args.root):
         img_paths = sorted(glob.glob(os.path.join(folder, '*')))
         for img_path in img_paths:
-            img_name = os.path.relpath(img_path, root)
-            print(img_name)
-            txt_file.write(f'{img_name}\n')
+            status = True
+            if args.check:
+                try:
+                    img = cv2.imread(img_path)
+                except Exception as error:
+                    print(f'Read {img_path} error: {error}')
+                    status = False
+                if img is None:
+                    status = False
+                    print(f'Img is None: {img_path}')
+            if status:
+                img_name = os.path.relpath(img_path, root)
+                print(img_name)
+                txt_file.write(f'{img_name}\n')
 
 
 if __name__ == '__main__':
@@ -34,6 +46,7 @@ if __name__ == '__main__':
         type=str,
         default='datasets/DF2K/meta_info/meta_info_DF2Kmultiscale.txt',
         help='txt path for meta info')
+    parser.add_argument('--check', action='store_true', help='Read image to check whether it is ok')
     args = parser.parse_args()
 
     assert len(args.input) == len(args.root), ('Input folder and folder root should have the same length, but got '

@@ -216,7 +216,7 @@ Download pre-trained models into `experiments/pretrained_models`.
     wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.3/RealESRGAN_x4plus_netD.pth -P experiments/pretrained_models
     ```
 
-**Finetune**
+**3. Finetune**
 
 Modify [options/finetune_realesrgan_x4plus_pairdata.yml](options/finetune_realesrgan_x4plus_pairdata.yml) accordingly, especially the `datasets` part:
 
