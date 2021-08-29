@@ -14,6 +14,8 @@
 Real-ESRGAN aims at developing **Practical Algorithms for General Image Restoration**.<br>
 We extend the powerful ESRGAN to a practical restoration application (namely, Real-ESRGAN), which is trained with pure synthetic data.
 
+:art: Real-ESRGAN needs your contribution. Any contributions are welcome, such as new features/models/typo fixes/suggestions/maintenance, *etc*. See [CONTRIBUTING.md](CONTRIBUTING.md). All contributors are list [here](CONTRIBUTING.md#Contributors).
+
 :question: Frequently Asked Questions can be found in [FAQ.md](FAQ.md).
 
 :triangular_flag_on_post: **Updates**
