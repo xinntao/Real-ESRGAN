@@ -8,6 +8,12 @@
 - [Comparisons with waifu2x](#Comparisons-with-waifu2x)
 - [Comparions with Sliding Bars](#Comparions-with-Sliding-Bars)
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/xinntao/public-figures/master/Real-ESRGAN/cmp_realesrgan_anime_1.png">
+</p>
+
+The following is a video comparison with sliding bar. You may need to use the full-screen mode for better visual quality, as the original image is large; otherwise, you may encounter aliasing issue.
+
 https://user-images.githubusercontent.com/17445847/131535127-613250d4-f754-4e20-9720-2f9608ad0675.mp4
 
 ## How to Use
@@ -53,7 +59,9 @@ We compare Real-ESRGAN-anime with [waifu2x](https://github.com/nihui/waifu2x-ncn
   <img src="https://raw.githubusercontent.com/xinntao/public-figures/master/Real-ESRGAN/cmp_realesrgan_anime_5.png">
 </p>
 
-## Comparions with Sliding Bars
+## Comparisons with Sliding Bars
+
+The following are video comparisons with sliding bar. You may need to use the full-screen mode for better visual quality, as the original image is large; otherwise, you may encounter aliasing issue.
 
 https://user-images.githubusercontent.com/17445847/131536647-a2fbf896-b495-4a9f-b1dd-ca7bbc90101a.mp4
 
