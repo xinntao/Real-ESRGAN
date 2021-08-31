@@ -14,11 +14,12 @@
 Real-ESRGAN aims at developing **Practical Algorithms for General Image Restoration**.<br>
 We extend the powerful ESRGAN to a practical restoration application (namely, Real-ESRGAN), which is trained with pure synthetic data.
 
-:art: Real-ESRGAN needs your contribution. Any contributions are welcome, such as new features/models/typo fixes/suggestions/maintenance, *etc*. See [CONTRIBUTING.md](CONTRIBUTING.md). All contributors are list [here](CONTRIBUTING.md#Contributors).
+:art: Real-ESRGAN needs your contributions. Any contributions are welcome, such as new features/models/typo fixes/suggestions/maintenance, *etc*. See [CONTRIBUTING.md](CONTRIBUTING.md). All contributors are list [here](CONTRIBUTING.md#Contributors).
 
 :question: Frequently Asked Questions can be found in [FAQ.md](FAQ.md).
 
 :triangular_flag_on_post: **Updates**
+- :white_check_mark: Add *RealESRGAN_x4plus_anime_6B.pth*, which is optimized for **anime** images with much smaller size. More details and comparisons with [waifu2x](https://github.com/nihui/waifu2x-ncnn-vulkan) are in [anime_model.md](docs/anime_model.md)
 - :white_check_mark: Support finetuning on your own data or paired data (*i.e.*, finetuning ESRGAN). See [here](Training.md#Finetune-Real-ESRGAN-on-your-own-dataset)
 - :white_check_mark: Integrate [GFPGAN](https://github.com/TencentARC/GFPGAN) to support **face enhancement**.
 - :white_check_mark: Integrated to [Huggingface Spaces](https://huggingface.co/spaces) with [Gradio](https://github.com/gradio-app/gradio). See [Gradio Web Demo](https://huggingface.co/spaces/akhaliq/Real-ESRGAN). Thanks [@AK391](https://github.com/AK391)
@@ -62,7 +63,7 @@ Here is a TODO list in the near future:
 
 - [ ] optimize for human faces
 - [ ] optimize for texts
-- [ ] optimize for anime images [in progress]
+- [x] optimize for anime images
 - [ ] support more scales
 - [ ] support controllable restoration strength
 
@@ -87,7 +88,7 @@ We have provided three models:
 
 1. realesrgan-x4plus  (default)
 2. realesrnet-x4plus
-3. esrgan-x4
+3. realesrgan-x4plus-anime (optimized for anime images, small size)
 
 You can use the `-n` argument for other models, for example, `./realesrgan-ncnn-vulkan.exe -i input.jpg -o output.png -n realesrnet-x4plus`
 
