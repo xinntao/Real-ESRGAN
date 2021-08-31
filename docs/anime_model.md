@@ -1,10 +1,10 @@
 # Anime model
 
-https://raw.githubusercontent.com/xinntao/public-figures/master/Real-ESRGAN/a0002_RealESRGAN-anime_vs_input.mp4
+https://user-images.githubusercontent.com/17445847/131522527-390ac0b2-e9c0-4618-911f-7911e83f5552.mp4
 
 
-<video auto-play="true" loop="loop" muted="muted" plays-inline="true">
-  <source src="https://raw.githubusercontent.com/xinntao/public-figures/master/Real-ESRGAN/a0002_RealESRGAN-anime_vs_input.mp4" type="video/mp4">
+<video autoplay loop muted playsinline>
+  <source src="https://user-images.githubusercontent.com/17445847/131522527-390ac0b2-e9c0-4618-911f-7911e83f5552.mp4" type="video/mp4">
 </video>
 
 
