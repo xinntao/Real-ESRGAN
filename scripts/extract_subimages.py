@@ -106,13 +106,7 @@ def worker(path, opt):
 
     img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
 
-    if img.ndim == 2:
-        h, w = img.shape
-    elif img.ndim == 3:
-        h, w, c = img.shape
-    else:
-        raise ValueError(f'Image ndim should be 2 or 3, but got {img.ndim}')
-
+    h, w = img.shape[0:2]
     h_space = np.arange(0, h - crop_size + 1, step)
     if h - (h_space[-1] + crop_size) > thresh_size:
         h_space = np.append(h_space, h - crop_size)
