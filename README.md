@@ -32,7 +32,7 @@ We extend the powerful ESRGAN to a practical restoration application (namely, Re
 If Real-ESRGAN is helpful in your photos/projects, please help to :star: this repo or recommend it to your friends. Thanks:blush: <br>
 Other recommended projects:<br>
 :arrow_forward: [GFPGAN](https://github.com/TencentARC/GFPGAN): A practical algorithm for real-world face restoration <br>
-:arrow_forward: [BasicSR](https://github.com/xinntao/BasicSR): An ppen-source image and video restoration toolbox<br>
+:arrow_forward: [BasicSR](https://github.com/xinntao/BasicSR): An open-source image and video restoration toolbox<br>
 :arrow_forward: [facexlib](https://github.com/xinntao/facexlib): A collection that provides useful face-relation functions.<br>
 :arrow_forward: [HandyView](https://github.com/xinntao/HandyView): A PyQt5-based image viewer that is handy for view and comparison. <br>
 
