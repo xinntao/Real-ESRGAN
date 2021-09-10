@@ -4,6 +4,8 @@ on: push
 
 jobs:
   build-n-publish:
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     if: startsWith(github.event.ref, 'refs/tags')
 
