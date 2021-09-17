@@ -114,10 +114,20 @@ You can merge several folders into one meta_info txt. Here is the example:
     CUDA_VISIBLE_DEVICES=0,1,2,3 \
     python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 realesrgan/train.py -opt options/train_realesrnet_x4plus.yml --launcher pytorch --debug
     ```
+
+    Train with **a single GPU**:
+    ```bash
+    python realesrgan/train.py -opt options/train_realesrnet_x4plus.yml --debug
+    ```
 1. The formal training. We use four GPUs for training. We use the `--auto_resume` argument to automatically resume the training if necessary.
     ```bash
     CUDA_VISIBLE_DEVICES=0,1,2,3 \
     python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 realesrgan/train.py -opt options/train_realesrnet_x4plus.yml --launcher pytorch --auto_resume
+    ```
+
+    Train with **a single GPU**:
+    ```bash
+    python realesrgan/train.py -opt options/train_realesrnet_x4plus.yml --auto_resume
     ```
 
 ### Train Real-ESRGAN
@@ -129,10 +139,20 @@ You can merge several folders into one meta_info txt. Here is the example:
     CUDA_VISIBLE_DEVICES=0,1,2,3 \
     python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 realesrgan/train.py -opt options/train_realesrgan_x4plus.yml --launcher pytorch --debug
     ```
+
+    Train with **a single GPU**:
+    ```bash
+    python realesrgan/train.py -opt options/train_realesrgan_x4plus.yml --debug
+    ```
 1. The formal training. We use four GPUs for training. We use the `--auto_resume` argument to automatically resume the training if necessary.
     ```bash
     CUDA_VISIBLE_DEVICES=0,1,2,3 \
     python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 realesrgan/train.py -opt options/train_realesrgan_x4plus.yml --launcher pytorch --auto_resume
+    ```
+
+    Train with **a single GPU**:
+    ```bash
+    python realesrgan/train.py -opt options/train_realesrgan_x4plus.yml --auto_resume
     ```
 
 ## Finetune Real-ESRGAN on your own dataset
@@ -183,6 +203,11 @@ We use four GPUs for training. We use the `--auto_resume` argument to automatica
 ```bash
 CUDA_VISIBLE_DEVICES=0,1,2,3 \
 python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 realesrgan/train.py -opt options/finetune_realesrgan_x4plus.yml --launcher pytorch --auto_resume
+```
+
+Train with **a single GPU**:
+```bash
+python realesrgan/train.py -opt options/finetune_realesrgan_x4plus.yml --auto_resume
 ```
 
 ### Use your own paired data
@@ -236,4 +261,9 @@ We use four GPUs for training. We use the `--auto_resume` argument to automatica
 ```bash
 CUDA_VISIBLE_DEVICES=0,1,2,3 \
 python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 realesrgan/train.py -opt options/finetune_realesrgan_x4plus_pairdata.yml --launcher pytorch --auto_resume
+```
+
+Train with **a single GPU**:
+```bash
+python realesrgan/train.py -opt options/finetune_realesrgan_x4plus_pairdata.yml --auto_resume
 ```
