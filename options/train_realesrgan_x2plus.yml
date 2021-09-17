@@ -2,7 +2,7 @@
 name: train_RealESRGANx2plus_400k_B12G4
 model_type: RealESRGANModel
 scale: 2
-num_gpu: 4
+num_gpu: auto  # auto: can infer from your visible devices automatically. official: 4 GPUs
 manual_seed: 0
 
 # ----------------- options for synthesizing training data in RealESRGANModel ----------------- #
