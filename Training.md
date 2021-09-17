@@ -115,7 +115,7 @@ You can merge several folders into one meta_info txt. Here is the example:
     python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 realesrgan/train.py -opt options/train_realesrnet_x4plus.yml --launcher pytorch --debug
     ```
 
-    Train with **a single GPU**:
+    Train with **a single GPU** in the *debug* mode:
     ```bash
     python realesrgan/train.py -opt options/train_realesrnet_x4plus.yml --debug
     ```
@@ -140,7 +140,7 @@ You can merge several folders into one meta_info txt. Here is the example:
     python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 realesrgan/train.py -opt options/train_realesrgan_x4plus.yml --launcher pytorch --debug
     ```
 
-    Train with **a single GPU**:
+    Train with **a single GPU** in the *debug* mode:
     ```bash
     python realesrgan/train.py -opt options/train_realesrgan_x4plus.yml --debug
     ```
@@ -205,7 +205,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 \
 python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 realesrgan/train.py -opt options/finetune_realesrgan_x4plus.yml --launcher pytorch --auto_resume
 ```
 
-Train with **a single GPU**:
+Finetune with **a single GPU**:
 ```bash
 python realesrgan/train.py -opt options/finetune_realesrgan_x4plus.yml --auto_resume
 ```
@@ -263,7 +263,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 \
 python -m torch.distributed.launch --nproc_per_node=4 --master_port=4321 realesrgan/train.py -opt options/finetune_realesrgan_x4plus_pairdata.yml --launcher pytorch --auto_resume
 ```
 
-Train with **a single GPU**:
+Finetune with **a single GPU**:
 ```bash
 python realesrgan/train.py -opt options/finetune_realesrgan_x4plus_pairdata.yml --auto_resume
 ```
