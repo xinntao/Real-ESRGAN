@@ -20,11 +20,12 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 yapf isort
+        pip install codespell flake8 isort yapf
 
     # modify the folders accordingly
     - name: Lint
       run: |
+        codespell
         flake8 .
         isort --check-only --diff realesrgan/ scripts/ inference_realesrgan.py setup.py
         yapf -r -d realesrgan/ scripts/ inference_realesrgan.py setup.py
