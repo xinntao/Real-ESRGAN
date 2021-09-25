@@ -6,7 +6,7 @@
   - [PyTorch Inference](#PyTorch-Inference)
   - [ncnn Executable File](#ncnn-Executable-File)
 - [Comparisons with waifu2x](#Comparisons-with-waifu2x)
-- [Comparions with Sliding Bars](#Comparions-with-Sliding-Bars)
+- [Comparisons with Sliding Bars](#Comparions-with-Sliding-Bars)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/xinntao/public-figures/master/Real-ESRGAN/cmp_realesrgan_anime_1.png">
