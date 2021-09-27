@@ -81,10 +81,10 @@ def main():
         h, w = img.shape[0:2]
         if max(h, w) > 1000 and args.netscale == 4:
             import warnings
-            warnings.warn('The input image is large, try X2 model for better performace.')
+            warnings.warn('The input image is large, try X2 model for better performance.')
         if max(h, w) < 500 and args.netscale == 2:
             import warnings
-            warnings.warn('The input image is small, try X4 model for better performace.')
+            warnings.warn('The input image is small, try X4 model for better performance.')
 
         try:
             if args.face_enhance:

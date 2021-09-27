@@ -32,7 +32,7 @@ Here are steps for data preparation.
 #### Step 1: [Optional] Generate multi-scale images
 
 For the DF2K dataset, we use a multi-scale strategy, *i.e.*, we downsample HR images to obtain several Ground-Truth images with different scales. <br>
-You can use the [scripts/generate_multiscale_DF2K.py](scripts/generate_multiscale_DF2K.py) script to geneate multi-scale images. <br>
+You can use the [scripts/generate_multiscale_DF2K.py](scripts/generate_multiscale_DF2K.py) script to generate multi-scale images. <br>
 Note that this step can be omitted if you just want to have a fast try.
 
 ```bash
