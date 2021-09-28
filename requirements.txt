@@ -1,5 +1,4 @@
 basicsr>=1.3.3.11
-gfpgan>=0.2.1
 numpy
 Pillow
 torch>=1.7
