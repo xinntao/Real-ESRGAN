@@ -117,10 +117,13 @@ This executable file is based on the wonderful [Tencent/ncnn](https://github.com
     ```bash
     # Install basicsr - https://github.com/xinntao/BasicSR
     # We use BasicSR for both training and inference
-    pip install basicsr
-    # facexlib and gfpgan are for face enhancement
-    pip install facexlib
-    pip install gfpgan
+    # BasicSR needs a few packages before installing
+    pip install opencv-python scipy facexlib gfpgan
+    
+    # You may also need to install libgl (Ubuntu):
+    apt install libgl1-mesa-glx
+   
+    # Then just install the remaining requirements
     pip install -r requirements.txt
     python setup.py develop
     ```
