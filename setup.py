@@ -50,7 +50,7 @@ def get_hash():
         except ImportError:
             raise ImportError('Unable to get git version')
     else:
-        sha = 'unknown'
+        sha = 'unknown!'
 
     return sha
 
