@@ -57,5 +57,5 @@ if __name__ == '__main__':
     dataset = Resizer(args.input, args.output)
     loader = DataLoader(dataset, num_workers=16)
 
-    for _ in tqdm(loader, desc="Resampling images to: {}".format(args.output):
+    for _ in tqdm(loader, desc="Resampling images to: {}".format(args.output)):
         pass
