@@ -41,7 +41,7 @@ Other recommended projects:<br>
 
 ### :book: Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
 
-> [[Paper](https://arxiv.org/abs/2107.10833)] &emsp; [Project Page] &emsp; [[YouTube Video](https://www.youtube.com/watch?v=fxHWoDSSvSc)] &emsp; [[Poster](https://xinntao.github.io/projects/RealESRGAN_src/RealESRGAN_poster.pdf)] &emsp; [[PPT slides](https://docs.google.com/presentation/d/1QtW6Iy8rm8rGLsJ0Ldti6kP-7Qyzy6XL/edit?usp=sharing&ouid=109799856763657548160&rtpof=true&sd=true)]<br>
+> [[Paper](https://arxiv.org/abs/2107.10833)] &emsp; [Project Page] &emsp; [[YouTube Video](https://www.youtube.com/watch?v=fxHWoDSSvSc)] &emsp; [[B站讲解](https://www.bilibili.com/video/BV1H34y1m7sS/)] &emsp; [[Poster](https://xinntao.github.io/projects/RealESRGAN_src/RealESRGAN_poster.pdf)] &emsp; [[PPT slides](https://docs.google.com/presentation/d/1QtW6Iy8rm8rGLsJ0Ldti6kP-7Qyzy6XL/edit?usp=sharing&ouid=109799856763657548160&rtpof=true&sd=true)]<br>
 > [Xintao Wang](https://xinntao.github.io/), Liangbin Xie, [Chao Dong](https://scholar.google.com.hk/citations?user=OSDCB0UAAAAJ), [Ying Shan](https://scholar.google.com/citations?user=4oXBp9UAAAAJ&hl=en) <br>
 > Tencent ARC Lab; Shenzhen Institutes of Advanced Technology, Chinese Academy of Sciences
 
@@ -161,14 +161,58 @@ python inference_realesrgan.py --model_path experiments/pretrained_models/RealES
 
 Results are in the `results` folder
 
+### Usage of python script
+
+1. You can use X4 model for **arbitrary output size** with the argument `outscale`. The program will further perform cheap resize operation after the Real-ESRGAN output.
+
+```console
+Usage: python inference_realesrgan.py --model_path experiments/pretrained_models/RealESRGAN_x4plus.pth --input infile --output outfile [options]...
+
+A common command: python inference_realesrgan.py --model_path experiments/pretrained_models/RealESRGAN_x4plus.pth --input infile --netscale 4 --outscale 3.5 --half --face_enhance
+
+  -h                   show this help
+  --input              Input image or folder. Default: inputs
+  --output             Output folder. Default: results
+  --model_path         Path to the pre-trained model. Default: experiments/pretrained_models/RealESRGAN_x4plus.pth
+  --netscale           Upsample scale factor of the network. Default: 4
+  --outscale           The final upsampling scale of the image. Default: 4
+  --suffix             Suffix of the restored image. Default: out
+  --tile               Tile size, 0 for no tile during testing. Default: 0
+  --face_enhance       Whether to use GFPGAN to enhance face. Default: False
+  --half               Whether to use half precision during inference. Default: False
+  --ext                Image extension. Options: auto | jpg | png, auto means using the same extension as inputs. Default: auto
+```
+
+### Usage of executable files
+
+1. Please refer to [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan#computer-usages) for more details.
+1. Note that it does not support all the functions (such as `outscale`) as the python script `inference_realesrgan.py`.
+
+```console
+Usage: realesrgan-ncnn-vulkan.exe -i infile -o outfile [options]...
+
+  -h                   show this help
+  -v                   verbose output
+  -i input-path        input image path (jpg/png/webp) or directory
+  -o output-path       output image path (jpg/png/webp) or directory
+  -s scale             upscale ratio (4, default=4)
+  -t tile-size         tile size (>=32/0=auto, default=0) can be 0,0,0 for multi-gpu
+  -m model-path        folder path to pre-trained models(default=models)
+  -n model-name        model name (default=realesrgan-x4plus, can be realesrgan-x4plus | realesrgan-x4plus-anime | realesrnet-x4plus)
+  -g gpu-id            gpu device to use (default=0) can be 0,1,2 for multi-gpu
+  -j load:proc:save    thread count for load/proc/save (default=1:2:2) can be 1:2,2,2:2 for multi-gpu
+  -x                   enable tta mode
+  -f format            output image format (jpg/png/webp, default=ext/png)
+```
+
 ## :european_castle: Model Zoo
 
-- [RealESRGAN_x4plus](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth)
-- [RealESRGAN_x4plus_anime_6B](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth)
-- [RealESRGAN_x2plus](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth)
-- [RealESRNet_x4plus](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.1/RealESRNet_x4plus.pth)
+- [RealESRGAN_x4plus](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth): X4 model for general images
+- [RealESRGAN_x4plus_anime_6B](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth): Optimized for anime images; 6 RRDB blocks (slightly smaller network)
+- [RealESRGAN_x2plus](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth): X2 model for general images
+- [RealESRNet_x4plus](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.1/RealESRNet_x4plus.pth): X4 model with MSE loss (over-smooth effects)
 
-- [official ESRGAN_x4](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.1/ESRGAN_SRx4_DF2KOST_official-ff704c30.pth)
+- [official ESRGAN_x4](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.1/ESRGAN_SRx4_DF2KOST_official-ff704c30.pth): official ESRGAN model (X4)
 
 The following models are **discriminators**, which are usually used for fine-tuning.
 
