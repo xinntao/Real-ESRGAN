@@ -7,7 +7,7 @@
   - [Train Real-ESRGAN](#Train-Real-ESRGAN)
 - [Finetune Real-ESRGAN on your own dataset](#Finetune-Real-ESRGAN-on-your-own-dataset)
   - [Generate degraded images on the fly](#Generate-degraded-images-on-the-fly)
-  - [Use paired training data](#Use-paired-training-data)
+  - [Use paired training data](#use-your-own-paired-data)
 
 ## Train Real-ESRGAN
 
