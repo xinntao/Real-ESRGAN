@@ -11,6 +11,8 @@
 1. [Colab Demo](https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing) for Real-ESRGAN <a href="https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="google colab logo"></a>.
 2. Portable [Windows](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/realesrgan-ncnn-vulkan-20210901-windows.zip) / [Linux](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/realesrgan-ncnn-vulkan-20210901-ubuntu.zip) / [MacOS](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/realesrgan-ncnn-vulkan-20210901-macos.zip) **executable files for Intel/AMD/Nvidia GPU**. You can find more information [here](#Portable-executable-files). The ncnn implementation is in [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
 
+感谢大家的关注和使用:-) 关于动漫插画的模型，目前还有很多问题，最主要的是 1. 视频处理不了; 2. 景深虚化有问题; 3. 不可以调节, 效果过了; 4. 把原来的风格改变了。大家都提供了非常好的反馈，谢谢。我会逐步整理这些反馈，更新在 [这里](feedback.md)。希望不久之后，有新的模型可以发布 :grin:
+
 Real-ESRGAN aims at developing **Practical Algorithms for General Image Restoration**.<br>
 We extend the powerful ESRGAN to a practical restoration application (namely, Real-ESRGAN), which is trained with pure synthetic data.
 
@@ -91,6 +93,28 @@ We have provided three models:
 3. realesrgan-x4plus-anime (optimized for anime images, small model size)
 
 You can use the `-n` argument for other models, for example, `./realesrgan-ncnn-vulkan.exe -i input.jpg -o output.png -n realesrnet-x4plus`
+
+### Usage of executable files
+
+1. Please refer to [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan#computer-usages) for more details.
+1. Note that it does not support all the functions (such as `outscale`) as the python script `inference_realesrgan.py`.
+
+```console
+Usage: realesrgan-ncnn-vulkan.exe -i infile -o outfile [options]...
+
+  -h                   show this help
+  -v                   verbose output
+  -i input-path        input image path (jpg/png/webp) or directory
+  -o output-path       output image path (jpg/png/webp) or directory
+  -s scale             upscale ratio (4, default=4)
+  -t tile-size         tile size (>=32/0=auto, default=0) can be 0,0,0 for multi-gpu
+  -m model-path        folder path to pre-trained models(default=models)
+  -n model-name        model name (default=realesrgan-x4plus, can be realesrgan-x4plus | realesrgan-x4plus-anime | realesrnet-x4plus)
+  -g gpu-id            gpu device to use (default=0) can be 0,1,2 for multi-gpu
+  -j load:proc:save    thread count for load/proc/save (default=1:2:2) can be 1:2,2,2:2 for multi-gpu
+  -x                   enable tta mode
+  -f format            output image format (jpg/png/webp, default=ext/png)
+```
 
 Note that it may introduce block inconsistency (and also generate slightly different results from the PyTorch implementation), because this executable file first crops the input image into several tiles, and then processes them separately, finally stitches together.
 
@@ -181,28 +205,6 @@ A common command: python inference_realesrgan.py --model_path experiments/pretra
   --face_enhance       Whether to use GFPGAN to enhance face. Default: False
   --half               Whether to use half precision during inference. Default: False
   --ext                Image extension. Options: auto | jpg | png, auto means using the same extension as inputs. Default: auto
-```
-
-### Usage of executable files
-
-1. Please refer to [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan#computer-usages) for more details.
-1. Note that it does not support all the functions (such as `outscale`) as the python script `inference_realesrgan.py`.
-
-```console
-Usage: realesrgan-ncnn-vulkan.exe -i infile -o outfile [options]...
-
-  -h                   show this help
-  -v                   verbose output
-  -i input-path        input image path (jpg/png/webp) or directory
-  -o output-path       output image path (jpg/png/webp) or directory
-  -s scale             upscale ratio (4, default=4)
-  -t tile-size         tile size (>=32/0=auto, default=0) can be 0,0,0 for multi-gpu
-  -m model-path        folder path to pre-trained models(default=models)
-  -n model-name        model name (default=realesrgan-x4plus, can be realesrgan-x4plus | realesrgan-x4plus-anime | realesrnet-x4plus)
-  -g gpu-id            gpu device to use (default=0) can be 0,1,2 for multi-gpu
-  -j load:proc:save    thread count for load/proc/save (default=1:2:2) can be 1:2,2,2:2 for multi-gpu
-  -x                   enable tta mode
-  -f format            output image format (jpg/png/webp, default=ext/png)
 ```
 
 ## :european_castle: Model Zoo
