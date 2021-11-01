@@ -39,7 +39,3 @@ Here are some TODOs:
 - [ ] support controllable restoration strength
 
 :one: There are also [several issues](https://github.com/xinntao/Real-ESRGAN/issues) that require helpers to improve. If you can help, please let me know :smile:
-
-## Contributors
-
-- [AK391](https://github.com/AK391): Integrate RealESRGAN to [Huggingface Spaces](https://huggingface.co/spaces) with [Gradio](https://github.com/gradio-app/gradio). See [Gradio Web Demo](https://huggingface.co/spaces/akhaliq/Real-ESRGAN).

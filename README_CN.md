@@ -8,7 +8,7 @@
 [![python lint](https://github.com/xinntao/Real-ESRGAN/actions/workflows/pylint.yml/badge.svg)](https://github.com/xinntao/Real-ESRGAN/blob/master/.github/workflows/pylint.yml)
 [![Publish-pip](https://github.com/xinntao/Real-ESRGAN/actions/workflows/publish-pip.yml/badge.svg)](https://github.com/xinntao/Real-ESRGAN/blob/master/.github/workflows/publish-pip.yml)
 
-[English](README.md) | 中文
+[English](README.md) **|** [简体中文](README_CN.md)
 
 1. Real-ESRGAN的[Colab Demo](https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing) <a href="https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="google colab logo"></a>.
 2. **支持Intel/AMD/Nvidia显卡**的绿色版exe文件： [Windows版](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/realesrgan-ncnn-vulkan-20210901-windows.zip) / [Linux版](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/realesrgan-ncnn-vulkan-20210901-ubuntu.zip) / [macOS版](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/realesrgan-ncnn-vulkan-20210901-macos.zip)，详情请移步[这里](#Portable-executable-files)。
@@ -16,7 +16,7 @@
 Real-ESRGAN的目标是成为一个**通用实用的图像修复算法**
 我们在强大的ESRGAN的基础上完全使用人工合成的数据来进行训练，以让其能被应用于图片修复的使用场景（顾名思义：Real-ESRGAN）。
 
-:art: Real-ESRGAN需要，也很欢迎你的贡献，如新功能、模型、错误修复、建议、维护等等。详情可以查看[CONTRIBUTING.md](CONTRIBUTING.md)，所有的贡献者都会被列在[此处](CONTRIBUTING.md#Contributors)。
+:art: Real-ESRGAN需要，也很欢迎你的贡献，如新功能、模型、错误修复、建议、维护等等。详情可以查看[CONTRIBUTING.md](CONTRIBUTING.md)，所有的贡献者都会被列在[此处](README_CN.md#hugs-感谢)。
 
 :question: 大部分的问题你都能在[FAQ.md](FAQ.md)中找到答案
 
@@ -189,3 +189,9 @@ python inference_realesrgan.py --model_path experiments/pretrained_models/RealES
 
 如果你有任何问题，请通过`xintao.wang@outlook.com`或`xintaowang@tencent.com`联系我们。
 
+## :hugs: 感谢
+
+Thanks for all the contributors.
+
+- [AK391](https://github.com/AK391): Integrate RealESRGAN to [Huggingface Spaces](https://huggingface.co/spaces) with [Gradio](https://github.com/gradio-app/gradio). See [Gradio Web Demo](https://huggingface.co/spaces/akhaliq/Real-ESRGAN).
+- [Asiimoviet](https://github.com/Asiimoviet): Translate the README.md to Chinese (中文).
