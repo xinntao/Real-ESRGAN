@@ -185,7 +185,7 @@ python inference_realesrgan.py --model_path experiments/pretrained_models/RealES
 
 结果在`results`文件夹
 
-### Python 脚本的实用
+### Python 脚本的用法
 
 1. 虽然你实用了 X4 模型，但是你可以 **输出任意尺寸比例的图片**，只要实用了 `outscale` 参数. 程序会进一步对模型的输出图像进行缩放。
 
