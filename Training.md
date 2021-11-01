@@ -9,8 +9,8 @@
   - [Generate degraded images on the fly](#Generate-degraded-images-on-the-fly)
   - [Use paired training data](#use-your-own-paired-data)
 
-[Simplified Chinese 简体中文版](docs/Training_zh_Hans.md)<br>
-
+[English](Training.md) **|** [简体中文](Training_CN.md)
+ 
 ## Train Real-ESRGAN
 
 ### Overview

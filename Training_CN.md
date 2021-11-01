@@ -9,6 +9,8 @@
   - [动态生成降级图像](#动态生成降级图像)
   - [使用已配对的数据](#使用已配对的数据)
 
+[English](Training.md) **|** [简体中文](Training_CN.md)
+
 ## 训练 Real-ESRGAN
 
 ### 概述
