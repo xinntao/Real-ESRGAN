@@ -7,3 +7,5 @@
 1. 不可以调节: 像 Waifu2X 可以调节。可以根据自己的喜好，做调整，但是 Real-ESRGAN-anime 并不可以。导致有些恢复效果过了
 1. 把原来的风格改变了: 不同的动漫插画都有自己的风格，现在的 Real-ESRGAN-anime 倾向于恢复成一种风格（这是受到训练数据集影响的）。风格是动漫很重要的一个要素，所以要尽可能保持
 1. 模型太大: 目前的模型处理太慢，能够更快。这个我们有相关的工作在探究，希望能够尽快有结果，并应用到 Real-ESRGAN 这一系列的模型上
+
+Thanks for the [detailed and valuable feedbacks/suggestions](https://github.com/xinntao/Real-ESRGAN/issues/131) by [2ji3150](https://github.com/2ji3150).
