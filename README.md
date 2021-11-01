@@ -22,7 +22,7 @@ We extend the powerful ESRGAN to a practical restoration application (namely, Re
 
 :art: Real-ESRGAN needs your contributions. Any contributions are welcome, such as new features/models/typo fixes/suggestions/maintenance, *etc*. See [CONTRIBUTING.md](CONTRIBUTING.md). All contributors are list [here](README.md#hugs-acknowledgement).
 
-:question: Frequently Asked Questions can be found in [FAQ.md](FAQ.md).
+:question: Frequently Asked Questions can be found in [FAQ.md](FAQ.md) (Well, it is still empty there =-=||).
 
 :triangular_flag_on_post: **Updates**
 - :white_check_mark: Add the ncnn implementation [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
