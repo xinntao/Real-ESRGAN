@@ -11,8 +11,7 @@ from torchvision.transforms.functional import normalize
 class RealESRGANPairedDataset(data.Dataset):
     """Paired image dataset for image restoration.
 
-    Read LQ (Low Quality, e.g. LR (Low Resolution), blurry, noisy, etc) and
-    GT image pairs.
+    Read LQ (Low Quality, e.g. LR (Low Resolution), blurry, noisy, etc) and GT image pairs.
 
     There are three modes:
     1. 'lmdb': Use lmdb files.
@@ -28,8 +27,8 @@ class RealESRGANPairedDataset(data.Dataset):
             dataroot_lq (str): Data root path for lq.
             meta_info (str): Path for meta information file.
             io_backend (dict): IO backend type and other kwarg.
-            filename_tmpl (str): Template for each filename. Note that the
-                template excludes the file extension. Default: '{}'.
+            filename_tmpl (str): Template for each filename. Note that the template excludes the file extension.
+                Default: '{}'.
             gt_size (int): Cropped patched size for gt patches.
             use_hflip (bool): Use horizontal flips.
             use_rot (bool): Use rotation (use vertical flip and transposing h
@@ -42,25 +41,25 @@ class RealESRGANPairedDataset(data.Dataset):
     def __init__(self, opt):
         super(RealESRGANPairedDataset, self).__init__()
         self.opt = opt
-        # file client (io backend)
         self.file_client = None
         self.io_backend_opt = opt['io_backend']
+        # mean and std for normalizing the input images
         self.mean = opt['mean'] if 'mean' in opt else None
         self.std = opt['std'] if 'std' in opt else None
 
         self.gt_folder, self.lq_folder = opt['dataroot_gt'], opt['dataroot_lq']
-        if 'filename_tmpl' in opt:
-            self.filename_tmpl = opt['filename_tmpl']
-        else:
-            self.filename_tmpl = '{}'
+        self.filename_tmpl = opt['filename_tmpl'] if 'filename_tmpl' in opt else '{}'
 
+        # file client (lmdb io backend)
         if self.io_backend_opt['type'] == 'lmdb':
             self.io_backend_opt['db_paths'] = [self.lq_folder, self.gt_folder]
             self.io_backend_opt['client_keys'] = ['lq', 'gt']
             self.paths = paired_paths_from_lmdb([self.lq_folder, self.gt_folder], ['lq', 'gt'])
         elif 'meta_info' in self.opt and self.opt['meta_info'] is not None:
+            # disk backend with meta_info
+            # Each line in the meta_info describes the relative path to an image
             with open(self.opt['meta_info']) as fin:
-                paths = [line.strip() for line in fin]
+                paths = [line.strip().split(' ')[0] for line in fin]
             self.paths = []
             for path in paths:
                 gt_path, lq_path = path.split(', ')
@@ -68,6 +67,9 @@ class RealESRGANPairedDataset(data.Dataset):
                 lq_path = os.path.join(self.lq_folder, lq_path)
                 self.paths.append(dict([('gt_path', gt_path), ('lq_path', lq_path)]))
         else:
+            # disk backend
+            # it will scan the whole folder to get meta info
+            # it will be time-consuming for folders with too many files. It is recommended using an extra meta txt file
             self.paths = paired_paths_from_folder([self.lq_folder, self.gt_folder], ['lq', 'gt'], self.filename_tmpl)
 
     def __getitem__(self, index):

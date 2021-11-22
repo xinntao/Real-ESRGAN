@@ -5,6 +5,7 @@ import os
 
 def main(args):
     txt_file = open(args.meta_info, 'w')
+    # sca images
     img_paths_gt = sorted(glob.glob(os.path.join(args.input[0], '*')))
     img_paths_lq = sorted(glob.glob(os.path.join(args.input[1], '*')))
 
@@ -12,6 +13,7 @@ def main(args):
                                                     f'{len(img_paths_gt)} and {len(img_paths_lq)}.')
 
     for img_path_gt, img_path_lq in zip(img_paths_gt, img_paths_lq):
+        # get the relative paths
         img_name_gt = os.path.relpath(img_path_gt, args.root[0])
         img_name_lq = os.path.relpath(img_path_lq, args.root[1])
         print(f'{img_name_gt}, {img_name_lq}')
@@ -19,7 +21,7 @@ def main(args):
 
 
 if __name__ == '__main__':
-    """Generate meta info (txt file) for paired images.
+    """This script is used to generate meta info (txt file) for paired images.
     """
     parser = argparse.ArgumentParser()
     parser.add_argument(

@@ -14,34 +14,24 @@ def main(args):
 
     opt (dict): Configuration dict. It contains:
         n_thread (int): Thread number.
-        compression_level (int):  CV_IMWRITE_PNG_COMPRESSION from 0 to 9.
-            A higher value means a smaller size and longer compression time.
-            Use 0 for faster CPU decompression. Default: 3, same in cv2.
-
+        compression_level (int):  CV_IMWRITE_PNG_COMPRESSION from 0 to 9. A higher value means a smaller size
+            and longer compression time. Use 0 for faster CPU decompression. Default: 3, same in cv2.
         input_folder (str): Path to the input folder.
         save_folder (str): Path to save folder.
         crop_size (int): Crop size.
         step (int): Step for overlapped sliding window.
-        thresh_size (int): Threshold size. Patches whose size is lower
-            than thresh_size will be dropped.
+        thresh_size (int): Threshold size. Patches whose size is lower than thresh_size will be dropped.
 
     Usage:
         For each folder, run this script.
-        Typically, there are four folders to be processed for DIV2K dataset.
-            DIV2K_train_HR
-            DIV2K_train_LR_bicubic/X2
-            DIV2K_train_LR_bicubic/X3
-            DIV2K_train_LR_bicubic/X4
-        After process, each sub_folder should have the same number of
-        subimages.
+        Typically, there are GT folder and LQ folder to be processed for DIV2K dataset.
+        After process, each sub_folder should have the same number of subimages.
         Remember to modify opt configurations according to your settings.
     """
 
     opt = {}
     opt['n_thread'] = args.n_thread
     opt['compression_level'] = args.compression_level
-
-    # HR images
     opt['input_folder'] = args.input
     opt['save_folder'] = args.output
     opt['crop_size'] = args.crop_size
@@ -68,6 +58,7 @@ def extract_subimages(opt):
         print(f'Folder {save_folder} already exists. Exit.')
         sys.exit(1)
 
+    # scan all images
     img_list = list(scandir(input_folder, full_path=True))
 
     pbar = tqdm(total=len(img_list), unit='image', desc='Extract')
@@ -88,8 +79,7 @@ def worker(path, opt):
         opt (dict): Configuration dict. It contains:
             crop_size (int): Crop size.
             step (int): Step for overlapped sliding window.
-            thresh_size (int): Threshold size. Patches whose size is lower
-                than thresh_size will be dropped.
+            thresh_size (int): Threshold size. Patches whose size is lower than thresh_size will be dropped.
             save_folder (str): Path to save folder.
             compression_level (int): for cv2.IMWRITE_PNG_COMPRESSION.
 

@@ -125,7 +125,7 @@ train:
 #   save_img: True
 
 #   metrics:
-#     psnr: # metric name, can be arbitrary
+#     psnr: # metric name
 #       type: calculate_psnr
 #       crop_border: 4
 #       test_y_channel: false

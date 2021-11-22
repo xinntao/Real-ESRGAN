@@ -12,6 +12,19 @@ ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 class RealESRGANer():
+    """A helper class for upsampling images with RealESRGAN.
+
+    Args:
+        scale (int): Upsampling scale factor used in the networks. It is usually 2 or 4.
+        model_path (str): The path to the pretrained model. It can be urls (will first download it automatically).
+        model (nn.Module): The defined network. If None, the model will be constructed here. Default: None.
+        tile (int): As too large images result in the out of GPU memory issue, so this tile option will first crop
+            input images into tiles, and then process each of them. Finally, they will be merged into one image.
+            0 denotes for do not use tile. Default: 0.
+        tile_pad (int): The pad size for each tile, to remove border artifacts. Default: 10.
+        pre_pad (int): Pad the input images to avoid border artifacts. Default: 10.
+        half (float): Whether to use half precision during inference. Default: False.
+    """
 
     def __init__(self, scale, model_path, model=None, tile=0, tile_pad=10, pre_pad=10, half=False):
         self.scale = scale
@@ -26,10 +39,12 @@ class RealESRGANer():
         if model is None:
             model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=scale)
 
+        # if the model_path starts with https, it will first download models to the folder: realesrgan/weights
         if model_path.startswith('https://'):
             model_path = load_file_from_url(
                 url=model_path, model_dir='realesrgan/weights', progress=True, file_name=None)
         loadnet = torch.load(model_path)
+        # prefer to use params_ema
         if 'params_ema' in loadnet:
             keyname = 'params_ema'
         else:
@@ -41,6 +56,8 @@ class RealESRGANer():
             self.model = self.model.half()
 
     def pre_process(self, img):
+        """Pre-process, such as pre-pad and mod pad, so that the images can be divisible
+        """
         img = torch.from_numpy(np.transpose(img, (2, 0, 1))).float()
         self.img = img.unsqueeze(0).to(self.device)
         if self.half:
@@ -49,7 +66,7 @@ class RealESRGANer():
         # pre_pad
         if self.pre_pad != 0:
             self.img = F.pad(self.img, (0, self.pre_pad, 0, self.pre_pad), 'reflect')
-        # mod pad
+        # mod pad for divisible borders
         if self.scale == 2:
             self.mod_scale = 2
         elif self.scale == 1:
@@ -64,10 +81,14 @@ class RealESRGANer():
             self.img = F.pad(self.img, (0, self.mod_pad_w, 0, self.mod_pad_h), 'reflect')
 
     def process(self):
+        # model inference
         self.output = self.model(self.img)
 
     def tile_process(self):
-        """Modified from: https://github.com/ata4/esrgan-launcher
+        """It will first crop input images to tiles, and then process each tile.
+        Finally, all the processed tiles are merged into one images.
+
+        Modified from: https://github.com/ata4/esrgan-launcher
         """
         batch, channel, height, width = self.img.shape
         output_height = height * self.scale
@@ -188,7 +209,7 @@ class RealESRGANer():
                 output_alpha = output_alpha.data.squeeze().float().cpu().clamp_(0, 1).numpy()
                 output_alpha = np.transpose(output_alpha[[2, 1, 0], :, :], (1, 2, 0))
                 output_alpha = cv2.cvtColor(output_alpha, cv2.COLOR_BGR2GRAY)
-            else:
+            else:  # use the cv2 resize for alpha channel
                 h, w = alpha.shape[0:2]
                 output_alpha = cv2.resize(alpha, (w * self.scale, h * self.scale), interpolation=cv2.INTER_LINEAR)
 
@@ -213,7 +234,9 @@ class RealESRGANer():
 
 
 def load_file_from_url(url, model_dir=None, progress=True, file_name=None):
-    """Ref:https://github.com/1adrianb/face-alignment/blob/master/face_alignment/utils.py
+    """Load file form http url, will download models if necessary.
+
+    Ref:https://github.com/1adrianb/face-alignment/blob/master/face_alignment/utils.py
     """
     if model_dir is None:
         hub_dir = get_dir()
