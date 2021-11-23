@@ -94,7 +94,7 @@ def main():
                 _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
             else:
                 output, _ = upsampler.enhance(img, outscale=args.outscale)
-        except Exception as error:
+        except RuntimeError as error:
             print('Error', error)
             print('If you encounter CUDA out of memory, try to set --tile with a smaller number.')
         else:

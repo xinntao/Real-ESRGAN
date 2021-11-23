@@ -92,7 +92,7 @@ class RealESRGANDataset(data.Dataset):
         while retry > 0:
             try:
                 img_bytes = self.file_client.get(gt_path, 'gt')
-            except Exception as e:
+            except (IOError, OSError) as e:
                 logger = get_root_logger()
                 logger.warn(f'File client error: {e}, remaining retry times: {retry - 1}')
                 # change another file to read

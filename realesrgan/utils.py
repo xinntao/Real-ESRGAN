@@ -128,7 +128,7 @@ class RealESRGANer():
                 try:
                     with torch.no_grad():
                         output_tile = self.model(input_tile)
-                except Exception as error:
+                except RuntimeError as error:
                     print('Error', error)
                 print(f'\tTile {tile_idx}/{tiles_x * tiles_y}')
 
