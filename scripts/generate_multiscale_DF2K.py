@@ -5,7 +5,6 @@ from PIL import Image
 
 
 def main(args):
-
     # For DF2K, we consider the following three scales,
     # and the smallest image whose shortest edge is 400
     scale_list = [0.75, 0.5, 1 / 3]
@@ -37,6 +36,9 @@ def main(args):
 
 
 if __name__ == '__main__':
+    """Generate multi-scale versions for GT images with LANCZOS resampling.
+    It is now used for DF2K dataset (DIV2K + Flickr 2K)
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('--input', type=str, default='datasets/DF2K/DF2K_HR', help='Input folder')
     parser.add_argument('--output', type=str, default='datasets/DF2K/DF2K_multiscale', help='Output folder')

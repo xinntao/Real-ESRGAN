@@ -52,7 +52,6 @@ network_g:
   num_block: 23
   num_grow_ch: 32
 
-
 network_d:
   type: UNetDiscriminatorSN
   num_in_ch: 3
@@ -131,7 +130,7 @@ train:
 #   save_img: True
 
 #   metrics:
-#     psnr: # metric name, can be arbitrary
+#     psnr: # metric name
 #       type: calculate_psnr
 #       crop_border: 4
 #       test_y_channel: false

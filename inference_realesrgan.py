@@ -8,6 +8,8 @@ from realesrgan import RealESRGANer
 
 
 def main():
+    """Inference demo for Real-ESRGAN.
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('--input', type=str, default='inputs', help='Input image or folder')
     parser.add_argument(
@@ -53,7 +55,7 @@ def main():
         pre_pad=args.pre_pad,
         half=args.half)
 
-    if args.face_enhance:
+    if args.face_enhance:  # Use GFPGAN for face enhancement
         from gfpgan import GFPGANer
         face_enhancer = GFPGANer(
             model_path='https://github.com/TencentARC/GFPGAN/releases/download/v0.2.0/GFPGANCleanv1-NoCE-C2.pth',
@@ -78,6 +80,7 @@ def main():
         else:
             img_mode = None
 
+        # give warnings for too large/small images
         h, w = img.shape[0:2]
         if max(h, w) > 1000 and args.netscale == 4:
             import warnings
@@ -91,7 +94,7 @@ def main():
                 _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
             else:
                 output, _ = upsampler.enhance(img, outscale=args.outscale)
-        except Exception as error:
+        except RuntimeError as error:
             print('Error', error)
             print('If you encounter CUDA out of memory, try to set --tile with a smaller number.')
         else:

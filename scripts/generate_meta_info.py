@@ -11,15 +11,17 @@ def main(args):
         for img_path in img_paths:
             status = True
             if args.check:
+                # read the image once for check, as some images may have errors
                 try:
                     img = cv2.imread(img_path)
-                except Exception as error:
+                except (IOError, OSError) as error:
                     print(f'Read {img_path} error: {error}')
                     status = False
                 if img is None:
                     status = False
                     print(f'Img is None: {img_path}')
             if status:
+                # get the relative path
                 img_name = os.path.relpath(img_path, root)
                 print(img_name)
                 txt_file.write(f'{img_name}\n')
