@@ -7,7 +7,7 @@ from realesrgan.data.realesrgan_paired_dataset import RealESRGANPairedDataset
 
 def test_realesrgan_dataset():
 
-    with open('tests/data/demo_option_realesrgan_dataset.yml', mode='r') as f:
+    with open('tests/data/test_realesrgan_dataset.yml', mode='r') as f:
         opt = yaml.load(f, Loader=yaml.FullLoader)
 
     dataset = RealESRGANDataset(opt)
@@ -81,7 +81,7 @@ def test_realesrgan_dataset():
 
 def test_realesrgan_paired_dataset():
 
-    with open('tests/data/demo_option_realesrgan_paired_dataset.yml', mode='r') as f:
+    with open('tests/data/test_realesrgan_paired_dataset.yml', mode='r') as f:
         opt = yaml.load(f, Loader=yaml.FullLoader)
 
     dataset = RealESRGANPairedDataset(opt)
