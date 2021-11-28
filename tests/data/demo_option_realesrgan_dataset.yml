@@ -1,0 +1,28 @@
+name: Demo
+type: RealESRGANDataset
+dataroot_gt: tests/data/gt
+meta_info: tests/data/meta_info_gt.txt
+io_backend:
+  type: disk
+
+blur_kernel_size: 21
+kernel_list: ['iso', 'aniso', 'generalized_iso', 'generalized_aniso', 'plateau_iso', 'plateau_aniso']
+kernel_prob: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+sinc_prob: 1
+blur_sigma: [0.2, 3]
+betag_range: [0.5, 4]
+betap_range: [1, 2]
+
+blur_kernel_size2: 21
+kernel_list2: ['iso', 'aniso', 'generalized_iso', 'generalized_aniso', 'plateau_iso', 'plateau_aniso']
+kernel_prob2: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+sinc_prob2: 1
+blur_sigma2: [0.2, 1.5]
+betag_range2: [0.5, 4]
+betap_range2: [1, 2]
+
+final_sinc_prob: 1
+
+gt_size: 128
+use_hflip: True
+use_rot: False

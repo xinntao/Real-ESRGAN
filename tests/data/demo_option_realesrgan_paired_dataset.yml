@@ -1,0 +1,13 @@
+name: Demo
+type: RealESRGANPairedDataset
+scale: 4
+dataroot_gt: tests/data
+dataroot_lq: tests/data
+meta_info: tests/data/meta_info_pair.txt
+io_backend:
+  type: disk
+
+phase: train
+gt_size: 128
+use_hflip: True
+use_rot: False

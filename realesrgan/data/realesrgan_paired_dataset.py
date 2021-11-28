@@ -59,7 +59,7 @@ class RealESRGANPairedDataset(data.Dataset):
             # disk backend with meta_info
             # Each line in the meta_info describes the relative path to an image
             with open(self.opt['meta_info']) as fin:
-                paths = [line.strip().split(' ')[0] for line in fin]
+                paths = [line.strip() for line in fin]
             self.paths = []
             for path in paths:
                 gt_path, lq_path = path.split(', ')
