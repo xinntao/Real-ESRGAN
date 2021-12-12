@@ -5,6 +5,8 @@
   - [For Anime Images](#for-anime-images)
   - [For Anime Videos](#for-anime-videos)
 
+---
+
 ## For General Images
 
 | Models                                                                                                                          | Scale | Description                                  |

@@ -7,8 +7,6 @@
 | [RealESRGANv2-animevideo-xsx2](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/RealESRGANv2-animevideo-xsx2.pth) | X2    | Anime video model with XS size |
 | [RealESRGANv2-animevideo-xsx4](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/RealESRGANv2-animevideo-xsx4.pth) | X4    | Anime video model with XS size |
 
----
-
 - [Anime Video Models](#anime-video-models)
   - [How to Use](#how-to-use)
     - [PyTorch Inference](#pytorch-inference)
@@ -17,6 +15,8 @@
       - [Step 2: Inference with Real-ESRGAN executable file](#step-2-inference-with-real-esrgan-executable-file)
       - [Step 3: Merge the enhanced frames back into a video](#step-3-merge-the-enhanced-frames-back-into-a-video)
   - [More Demos](#more-demos)
+
+---
 
 The following are some demos (best view in the full screen mode).
 
