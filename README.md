@@ -166,7 +166,7 @@ wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_
 Inference!
 
 ```bash
-python inference_realesrgan.py --model_path experiments/pretrained_models/RealESRGAN_x4plus.pth --input inputs --face_enhance
+python inference_realesrgan.py -n RealESRGAN_x4plus -i inputs --face_enhance
 ```
 
 Results are in the `results` folder
@@ -184,7 +184,7 @@ Pre-trained models: [RealESRGAN_x4plus_anime_6B](https://github.com/xinntao/Real
 # download model
 wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth -P experiments/pretrained_models
 # inference
-python inference_realesrgan.py --model_path experiments/pretrained_models/RealESRGAN_x4plus_anime_6B.pth --input inputs
+python inference_realesrgan.py -n RealESRGAN_x4plus_anime_6B -i inputs
 ```
 
 Results are in the `results` folder
@@ -194,22 +194,22 @@ Results are in the `results` folder
 1. You can use X4 model for **arbitrary output size** with the argument `outscale`. The program will further perform cheap resize operation after the Real-ESRGAN output.
 
 ```console
-Usage: python inference_realesrgan.py --model_path experiments/pretrained_models/RealESRGAN_x4plus.pth --input infile --output outfile [options]...
+Usage: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile -o outfile [options]...
 
-A common command: python inference_realesrgan.py --model_path experiments/pretrained_models/RealESRGAN_x4plus.pth --input infile --netscale 4 --outscale 3.5 --half --face_enhance
+A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile --outscale 3.5 --half --face_enhance
 
   -h                   show this help
-  --input              Input image or folder. Default: inputs
-  --output             Output folder. Default: results
-  --model_path         Path to the pre-trained model. Default: experiments/pretrained_models/RealESRGAN_x4plus.pth
-  --netscale           Upsample scale factor of the network. Default: 4
-  --outscale           The final upsampling scale of the image. Default: 4
+  -i --input           Input image or folder. Default: inputs
+  -o --output          Output folder. Default: results
+  -n --model_name      Model name. Default: RealESRGAN_x4plus
+  -s, --outscale       The final upsampling scale of the image. Default: 4
   --suffix             Suffix of the restored image. Default: out
-  --tile               Tile size, 0 for no tile during testing. Default: 0
+  -t, --tile           Tile size, 0 for no tile during testing. Default: 0
   --face_enhance       Whether to use GFPGAN to enhance face. Default: False
   --half               Whether to use half precision during inference. Default: False
   --ext                Image extension. Options: auto | jpg | png, auto means using the same extension as inputs. Default: auto
 ```
+
 
 ## :european_castle: Model Zoo
 

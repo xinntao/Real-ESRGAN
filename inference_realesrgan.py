@@ -5,28 +5,30 @@ import os
 from basicsr.archs.rrdbnet_arch import RRDBNet
 
 from realesrgan import RealESRGANer
+from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 
 
 def main():
     """Inference demo for Real-ESRGAN.
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input', type=str, default='inputs', help='Input image or folder')
+    parser.add_argument('-i', '--input', type=str, default='inputs', help='Input image or folder')
     parser.add_argument(
-        '--model_path',
+        '-n',
+        '--model_name',
         type=str,
-        default='experiments/pretrained_models/RealESRGAN_x4plus.pth',
-        help='Path to the pre-trained model')
-    parser.add_argument('--output', type=str, default='results', help='Output folder')
-    parser.add_argument('--netscale', type=int, default=4, help='Upsample scale factor of the network')
-    parser.add_argument('--outscale', type=float, default=4, help='The final upsampling scale of the image')
+        default='RealESRGAN_x4plus',
+        help=('Model names: RealESRGAN_x4plus | RealESRNet_x4plus | RealESRGAN_x4plus_anime_6B | RealESRGAN_x2plus'
+              'RealESRGANv2-anime-xsx2 | RealESRGANv2-animevideo-xsx2-nousm | RealESRGANv2-animevideo-xsx2'
+              'RealESRGANv2-anime-xsx4 | RealESRGANv2-animevideo-xsx4-nousm | RealESRGANv2-animevideo-xsx4'))
+    parser.add_argument('-o', '--output', type=str, default='results', help='Output folder')
+    parser.add_argument('-s', '--outscale', type=float, default=4, help='The final upsampling scale of the image')
     parser.add_argument('--suffix', type=str, default='out', help='Suffix of the restored image')
-    parser.add_argument('--tile', type=int, default=0, help='Tile size, 0 for no tile during testing')
+    parser.add_argument('-t', '--tile', type=int, default=0, help='Tile size, 0 for no tile during testing')
     parser.add_argument('--tile_pad', type=int, default=10, help='Tile padding')
     parser.add_argument('--pre_pad', type=int, default=0, help='Pre padding size at each border')
     parser.add_argument('--face_enhance', action='store_true', help='Use GFPGAN to enhance face')
     parser.add_argument('--half', action='store_true', help='Use half precision during inference')
-    parser.add_argument('--block', type=int, default=23, help='num_block in RRDB')
     parser.add_argument(
         '--alpha_upsampler',
         type=str,
@@ -39,16 +41,39 @@ def main():
         help='Image extension. Options: auto | jpg | png, auto means using the same extension as inputs')
     args = parser.parse_args()
 
-    if 'RealESRGAN_x4plus_anime_6B.pth' in args.model_path:
-        args.block = 6
-    elif 'RealESRGAN_x2plus.pth' in args.model_path:
-        args.netscale = 2
+    # determine models according to model names
+    args.model_name = args.model_name.split('.')[0]
+    if args.model_name in ['RealESRGAN_x4plus', 'RealESRNet_x4plus']:  # x4 RRDBNet model
+        model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
+        netscale = 4
+    elif args.model_name in ['RealESRGAN_x4plus_anime_6B']:  # x4 RRDBNet model with 6 blocks
+        model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=6, num_grow_ch=32, scale=4)
+        netscale = 4
+    elif args.model_name in ['RealESRGAN_x2plus']:  # x2 RRDBNet model
+        model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=2)
+        netscale = 2
+    elif args.model_name in [
+            'RealESRGANv2-anime-xsx2', 'RealESRGANv2-animevideo-xsx2-nousm', 'RealESRGANv2-animevideo-xsx2'
+    ]:  # x2 VGG-style model (XS size)
+        model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64, num_conv=16, upscale=2, act_type='prelu')
+        netscale = 2
+    elif args.model_name in [
+            'RealESRGANv2-anime-xsx4', 'RealESRGANv2-animevideo-xsx4-nousm', 'RealESRGANv2-animevideo-xsx4'
+    ]:  # x4 VGG-style model (XS size)
+        model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64, num_conv=16, upscale=4, act_type='prelu')
+        netscale = 4
 
-    model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=args.block, num_grow_ch=32, scale=args.netscale)
+    # determine model paths
+    model_path = os.path.join('experiments/pretrained_models', args.model_name + '.pth')
+    if not os.path.isfile(model_path):
+        model_path = os.path.join('realesrgan/weights', args.model_name + '.pth')
+    if not os.path.isfile(model_path):
+        raise ValueError(f'Model {args.model_name} does not exist.')
 
+    # restorer
     upsampler = RealESRGANer(
-        scale=args.netscale,
-        model_path=args.model_path,
+        scale=netscale,
+        model_path=model_path,
         model=model,
         tile=args.tile,
         tile_pad=args.tile_pad,
@@ -79,15 +104,6 @@ def main():
             img_mode = 'RGBA'
         else:
             img_mode = None
-
-        # give warnings for too large/small images
-        h, w = img.shape[0:2]
-        if max(h, w) > 1000 and args.netscale == 4:
-            import warnings
-            warnings.warn('The input image is large, try X2 model for better performance.')
-        if max(h, w) < 500 and args.netscale == 2:
-            import warnings
-            warnings.warn('The input image is small, try X4 model for better performance.')
 
         try:
             if args.face_enhance:
