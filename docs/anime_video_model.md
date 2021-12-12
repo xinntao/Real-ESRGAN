@@ -42,8 +42,10 @@ python inference_realesrgan_video.py -i inputs/video/onepiece_demo.mp4 -n RealES
 #### Step 1: Use ffmpeg to extract frames from video
 
 ```bash
-ffmpeg -i inputs/video/onepiece_demo.mp4 -qscale:v 1 -qmin 1 -qmax 1 -vsync 0  tmp_frames/frame%08d.png
+ffmpeg -i onepiece_demo.mp4 -qscale:v 1 -qmin 1 -qmax 1 -vsync 0 tmp_frames/frame%08d.png
 ```
+
+- Remember to create the folder `tmp_frames` ahead
 
 #### Step 2: Inference with Real-ESRGAN executable file
 
@@ -52,27 +54,53 @@ ffmpeg -i inputs/video/onepiece_demo.mp4 -qscale:v 1 -qmin 1 -qmax 1 -vsync 0  t
 1. Taking the Windows as example, run:
 
     ```bash
-    ./realesrgan-ncnn-vulkan.exe -i tmp_frames -o out_frames -n realesrgan-x4plus-anime RealESRGANv2-animevideo-xsx2 -s 2 -f jpg
+    ./realesrgan-ncnn-vulkan.exe -i tmp_frames -o out_frames -n RealESRGANv2-animevideo-xsx2 -s 2 -f jpg
     ```
+
+    - Remember to create the folder `out_frames` ahead
 
 #### Step 3: Merge the enhanced frames back into a video
 
 1. First obtain fps from input videos by
 
     ```bash
-    ffmpeg -i inputs/video/onepiece_demo.mp4
+    ffmpeg -i onepiece_demo.mp4
     ```
+
+    ```console
+    -i                   input video path
+    ```
+
+    You will get the output similar to the following screenshot.
+
+    <p align="center">
+        <img src="https://user-images.githubusercontent.com/17445847/145710145-c4f3accf-b82f-4307-9f20-3803a2c73f57.png">
+    </p>
 
 2. Merge frames
 
     ```bash
-    ffmpeg -i out_frames/frame%08d_out.jpg -c:v libx264 -r [fps] -pix_fmt yuv420p output.mp4
+    ffmpeg -i out_frames/frame%08d.jpg -c:v libx264 -r 23.98 -pix_fmt yuv420p output.mp4
+    ```
+
+    ```console
+    -i                   input video path
+    -c:v                 video encoder (usually we use libx264)
+    -r                   fps, remember to modify it to meet your needs
+    -pix_fmt             pixel format in video
     ```
 
     If you also want to copy audio from the input videos, run:
 
      ```bash
-    ffmpeg -i out_frames/frame%08d_out.jpg -i inputs/video/onepiece_demo.mp4 -map 0:v:0 -map 1:a:0 -c:a copy -c:v libx264 -r [fps] -pix_fmt yuv420p  output.mp4
+    ffmpeg -i out_frames/frame%08d.jpg -i onepiece_demo.mp4 -map 0:v:0 -map 1:a:0 -c:a copy -c:v libx264 -r 23.98 -pix_fmt yuv420p output_w_audio.mp4
+    ```
+
+    ```console
+    -i                   input video path, here we use two input streams
+    -c:v                 video encoder (usually we use libx264)
+    -r                   fps, remember to modify it to meet your needs
+    -pix_fmt             pixel format in video
     ```
 
 ## More Demos
@@ -82,6 +110,7 @@ ffmpeg -i inputs/video/onepiece_demo.mp4 -qscale:v 1 -qmin 1 -qmax 1 -vsync 0  t
     https://user-images.githubusercontent.com/17445847/145706822-0e83d9c4-78ef-40ee-b2a4-d8b8c3692d17.mp4
 
 - Out video for One Piece
+
     https://user-images.githubusercontent.com/17445847/145706827-384108c0-78f6-4aa7-9621-99d1aaf65682.mp4
 
 **More comparisons**
