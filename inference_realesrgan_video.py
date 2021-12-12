@@ -39,6 +39,8 @@ def main():
     parser.add_argument('-v', '--video', action='store_true', help='Output a video using ffmpeg')
     parser.add_argument('-a', '--audio', action='store_true', help='Keep audio')
     parser.add_argument('--fps', type=float, default=None, help='FPS of the output video')
+    parser.add_argument('--consumer', type=int, default=4, help='Number of IO consumers')
+
     parser.add_argument(
         '--alpha_upsampler',
         type=str,
@@ -133,8 +135,7 @@ def main():
     reader.start()
 
     que = queue.Queue()
-    num_consumer = 4
-    consumers = [IOConsumer(args, que, f'IO_{i}') for i in range(num_consumer)]
+    consumers = [IOConsumer(args, que, f'IO_{i}') for i in range(args.consumer)]
     for consumer in consumers:
         consumer.start()
 
@@ -171,7 +172,7 @@ def main():
         avg_fps = 1. / (timer.get_avg_time() + 1e-7)
         pbar.set_description(f'idx {idx}, fps {avg_fps:.2f}')
 
-    for _ in range(num_consumer):
+    for _ in range(args.consumer):
         que.put('quit')
     for consumer in consumers:
         consumer.join()
