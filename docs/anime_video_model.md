@@ -2,10 +2,10 @@
 
 :white_check_mark: We add small models that are optimized for anime videos :-)
 
-| Models                       | Scale | Description                    |
-| ---------------------------- | :---- | :----------------------------- |
-| RealESRGANv2-animevideo-xsx2 | X2    | Anime video model with XS size |
-| RealESRGANv2-animevideo-xsx4 | X3    | Anime video model with XS size |
+| Models                                                                                                                             | Scale | Description                    |
+| ---------------------------------------------------------------------------------------------------------------------------------- | :---- | :----------------------------- |
+| [RealESRGANv2-animevideo-xsx2](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/RealESRGANv2-animevideo-xsx2.pth) | X2    | Anime video model with XS size |
+| [RealESRGANv2-animevideo-xsx4](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/RealESRGANv2-animevideo-xsx4.pth) | X4    | Anime video model with XS size |
 
 ---
 
