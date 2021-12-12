@@ -23,6 +23,7 @@ Real-ESRGAN 的目标是开发出**实用的图像修复算法**。<br>
 :question: 常见的问题可以在[FAQ.md](FAQ.md)中找到答案。（好吧，现在还是空白的=-=||）
 
 :triangular_flag_on_post: **更新**
+- :white_check_mark: 添加了针对动漫视频的小模型, 更多信息在 [anime video models](docs/anime_video_model.md) 中.
 - :white_check_mark: 添加了ncnn 实现：[Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
 - :white_check_mark: 添加了 [*RealESRGAN_x4plus_anime_6B.pth*](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth)，对二次元图片进行了优化，并减少了model的大小。详情 以及 与[waifu2x](https://github.com/nihui/waifu2x-ncnn-vulkan)的对比请查看[**anime_model.md**](docs/anime_model.md)
 - :white_check_mark: 支持用户在自己的数据上进行微调 (finetune)：[详情](Training.md#Finetune-Real-ESRGAN-on-your-own-dataset)

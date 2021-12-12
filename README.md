@@ -15,8 +15,6 @@
 
 Thanks for your interests and use:-) There are still many problems about the anime/illustration model, mainly including: 1. It cannot deal with videos; 2. It cannot be aware of depth/depth-of-field; 3. It is not adjustable; 4. May change the original style. Thanks for your valuable feedbacks/suggestions. All the feedbacks are updated in [feedback.md](feedback.md). Hopefully, a new model will be available soon.
 
-感谢大家的关注和使用:-) 关于动漫插画的模型，目前还有很多问题，主要有: 1. 视频处理不了; 2. 景深虚化有问题; 3. 不可调节, 效果过了; 4. 改变原来的风格。大家提供了很好的反馈。这些反馈会逐步更新在 [这个文档](feedback.md)。希望不久之后，有新模型可以使用.
-
 Real-ESRGAN aims at developing **Practical Algorithms for General Image Restoration**.<br>
 We extend the powerful ESRGAN to a practical restoration application (namely, Real-ESRGAN), which is trained with pure synthetic data.
 
@@ -25,6 +23,7 @@ We extend the powerful ESRGAN to a practical restoration application (namely, Re
 :question: Frequently Asked Questions can be found in [FAQ.md](FAQ.md) (Well, it is still empty there =-=||).
 
 :triangular_flag_on_post: **Updates**
+- :white_check_mark: Add small models for anime videos. More details are in [anime video models](docs/anime_video_model.md).
 - :white_check_mark: Add the ncnn implementation [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
 - :white_check_mark: Add [*RealESRGAN_x4plus_anime_6B.pth*](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth), which is optimized for **anime** images with much smaller model size. More details and comparisons with [waifu2x](https://github.com/nihui/waifu2x-ncnn-vulkan) are in [**anime_model.md**](docs/anime_model.md)
 - :white_check_mark: Support finetuning on your own data or paired data (*i.e.*, finetuning ESRGAN). See [here](Training.md#Finetune-Real-ESRGAN-on-your-own-dataset)
