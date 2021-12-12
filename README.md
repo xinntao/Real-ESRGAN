@@ -216,7 +216,7 @@ A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile 
 
 ## :european_castle: Model Zoo
 
-Please see [docs/model_zoo.md).md](docs/model_zoo.md)
+Please see [docs/model_zoo.md](docs/model_zoo.md)
 
 ## :computer: Training and Finetuning on your own dataset
 

@@ -213,7 +213,7 @@ A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile 
 
 ## :european_castle: 模型库
 
-请参见 [docs/model_zoo.md).md](docs/model_zoo.md)
+请参见 [docs/model_zoo.md](docs/model_zoo.md)
 
 ## :computer: 训练，在你的数据上微调（Fine-tune）
 

@@ -18,7 +18,7 @@
       - [Step 3: Merge the enhanced frames back into a video](#step-3-merge-the-enhanced-frames-back-into-a-video)
   - [More Demos](#more-demos)
 
-The following are some demos.
+The following are some demos (best view in the full screen mode).
 
 https://user-images.githubusercontent.com/17445847/145706977-98bc64a4-af27-481c-8abe-c475e15db7ff.MP4
 
@@ -68,6 +68,7 @@ ffmpeg -i onepiece_demo.mp4 -qscale:v 1 -qmin 1 -qmax 1 -vsync 0 tmp_frames/fram
     ```
 
     ```console
+    Usage:
     -i                   input video path
     ```
 
@@ -84,6 +85,7 @@ ffmpeg -i onepiece_demo.mp4 -qscale:v 1 -qmin 1 -qmax 1 -vsync 0 tmp_frames/fram
     ```
 
     ```console
+    Usage:
     -i                   input video path
     -c:v                 video encoder (usually we use libx264)
     -r                   fps, remember to modify it to meet your needs
@@ -97,6 +99,7 @@ ffmpeg -i onepiece_demo.mp4 -qscale:v 1 -qmin 1 -qmax 1 -vsync 0 tmp_frames/fram
     ```
 
     ```console
+    Usage:
     -i                   input video path, here we use two input streams
     -c:v                 video encoder (usually we use libx264)
     -r                   fps, remember to modify it to meet your needs

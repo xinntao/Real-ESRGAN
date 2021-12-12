@@ -1,6 +1,11 @@
 # :european_castle: Model Zoo
 
-## For general images
+- [:european_castle: Model Zoo](#european_castle-model-zoo)
+  - [For General Images](#for-general-images)
+  - [For Anime Images](#for-anime-images)
+  - [For Anime Videos](#for-anime-videos)
+
+## For General Images
 
 | Models                                                                                                                          | Scale | Description                                  |
 | ------------------------------------------------------------------------------------------------------------------------------- | :---- | :------------------------------------------- |
@@ -16,7 +21,7 @@ The following models are **discriminators**, which are usually used for fine-tun
 | [RealESRGAN_x4plus_netD](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.3/RealESRGAN_x4plus_netD.pth) | RealESRGAN_x4plus   |
 | [RealESRGAN_x2plus_netD](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.3/RealESRGAN_x2plus_netD.pth) | RealESRGAN_x2plus   |
 
-## For anime images
+## For Anime Images
 
 | Models                                                                                                                         | Scale | Description                                                 |
 | ------------------------------------------------------------------------------------------------------------------------------ | :---- | :---------------------------------------------------------- |
@@ -28,7 +33,7 @@ The following models are **discriminators**, which are usually used for fine-tun
 | ---------------------------------------------------------------------------------------------------------------------------------------- | :------------------------- |
 | [RealESRGAN_x4plus_anime_6B_netD](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B_netD.pth) | RealESRGAN_x4plus_anime_6B |
 
-## For anime video
+## For Anime Videos
 
 | Models                                                                                                                             | Scale | Description                    |
 | ---------------------------------------------------------------------------------------------------------------------------------- | :---- | :----------------------------- |
