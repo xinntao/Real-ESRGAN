@@ -186,7 +186,7 @@ def main():
                 f'ffmpeg -r {args.fps} -i {save_frame_folder}/frame%08d_out.{extension} -i {args.input}'
                 f' -map 0:v:0 -map 1:a:0 -c:a copy -c:v libx264 -r {args.fps} -pix_fmt yuv420p  {video_save_path}')
         else:
-            os.system(f'ffmpeg -i {save_frame_folder}/frame%08d_out.{extension} '
+            os.system(f'ffmpeg -r {args.fps} -i {save_frame_folder}/frame%08d_out.{extension} '
                       f'-c:v libx264 -r {args.fps} -pix_fmt yuv420p {video_save_path}')
 
         # delete tmp file
