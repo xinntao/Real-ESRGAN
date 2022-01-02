@@ -8,7 +8,7 @@
 [![python lint](https://github.com/xinntao/Real-ESRGAN/actions/workflows/pylint.yml/badge.svg)](https://github.com/xinntao/Real-ESRGAN/blob/master/.github/workflows/pylint.yml)
 [![Publish-pip](https://github.com/xinntao/Real-ESRGAN/actions/workflows/publish-pip.yml/badge.svg)](https://github.com/xinntao/Real-ESRGAN/blob/master/.github/workflows/publish-pip.yml)
 
-[English](README.md) **|** [简体中文](README_CN.md)
+English **|** [简体中文](README_CN.md)
 
 :fire: :fire: :fire: Add **small video models** for anime videos (**针对动漫视频的小模型**). Please see [anime video models](docs/anime_video_model.md).
 
@@ -243,3 +243,4 @@ Thanks for all the contributors.
 - [AK391](https://github.com/AK391): Integrate RealESRGAN to [Huggingface Spaces](https://huggingface.co/spaces) with [Gradio](https://github.com/gradio-app/gradio). See [Gradio Web Demo](https://huggingface.co/spaces/akhaliq/Real-ESRGAN).
 - [Asiimoviet](https://github.com/Asiimoviet): Translate the README.md to Chinese (中文).
 - [2ji3150](https://github.com/2ji3150): Thanks for the [detailed and valuable feedbacks/suggestions](https://github.com/xinntao/Real-ESRGAN/issues/131).
+- [Wit-Wang](https://github.com/Wit-Wang):Translate the documents in /docs into Simplified Chinese(简体中文).

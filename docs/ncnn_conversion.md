@@ -1,5 +1,7 @@
 # Instructions on converting to NCNN models
 
+English **|** [简体中文](ncnn_conversion_CN.md)
+
 1. Convert to onnx model with `scripts/pytorch2onnx.py`. Remember to modify codes accordingly
 1. Convert onnx model to ncnn model
     1. `cd ncnn-master\ncnn\build\tools\onnx`

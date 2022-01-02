@@ -8,9 +8,9 @@
 [![python lint](https://github.com/xinntao/Real-ESRGAN/actions/workflows/pylint.yml/badge.svg)](https://github.com/xinntao/Real-ESRGAN/blob/master/.github/workflows/pylint.yml)
 [![Publish-pip](https://github.com/xinntao/Real-ESRGAN/actions/workflows/publish-pip.yml/badge.svg)](https://github.com/xinntao/Real-ESRGAN/blob/master/.github/workflows/publish-pip.yml)
 
-[English](README.md) **|** [简体中文](README_CN.md)
+[English](README.md) **|** 简体中文
 
-:fire: :fire: :fire: 添加了**针对动漫视频的小模型**, 更多信息在 [anime video models](docs/anime_video_model.md) 中.
+:fire: :fire: :fire: 添加了**针对动漫视频的小模型**, 更多信息在 [anime video models](docs/anime_video_model_CN.md) 中.
 
 1. Real-ESRGAN的[Colab Demo](https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing) <a href="https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="google colab logo"></a>.
 2. Real-ESRGAN的 **动漫视频** 的[Colab Demo](https://colab.research.google.com/drive/1yNl9ORUxxlL4N0keJa2SEPB61imPQd1B?usp=sharing) <a href="https://colab.research.google.com/drive/1yNl9ORUxxlL4N0keJa2SEPB61imPQd1B?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="google colab logo"></a>.
@@ -26,9 +26,9 @@ Real-ESRGAN 的目标是开发出**实用的图像修复算法**。<br>
 :question: 常见的问题可以在[FAQ.md](FAQ.md)中找到答案。（好吧，现在还是空白的=-=||）
 
 :triangular_flag_on_post: **更新**
-- :white_check_mark: 添加了针对动漫视频的小模型, 更多信息在 [anime video models](docs/anime_video_model.md) 中.
+- :white_check_mark: 添加了针对动漫视频的小模型, 更多信息在 [anime video models](docs/anime_video_model_CN.md) 中.
 - :white_check_mark: 添加了ncnn 实现：[Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
-- :white_check_mark: 添加了 [*RealESRGAN_x4plus_anime_6B.pth*](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth)，对二次元图片进行了优化，并减少了model的大小。详情 以及 与[waifu2x](https://github.com/nihui/waifu2x-ncnn-vulkan)的对比请查看[**anime_model.md**](docs/anime_model.md)
+- :white_check_mark: 添加了 [*RealESRGAN_x4plus_anime_6B.pth*](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth)，对二次元图片进行了优化，并减少了model的大小。详情 以及 与[waifu2x](https://github.com/nihui/waifu2x-ncnn-vulkan)的对比请查看[**anime_model_CN.md**](docs/anime_model_CN.md)
 - :white_check_mark: 支持用户在自己的数据上进行微调 (finetune)：[详情](Training.md#Finetune-Real-ESRGAN-on-your-own-dataset)
 - :white_check_mark: 支持使用[GFPGAN](https://github.com/TencentARC/GFPGAN)**增强人脸**
 - :white_check_mark: 通过[Gradio](https://github.com/gradio-app/gradio)添加到了[Huggingface Spaces](https://huggingface.co/spaces)（一个机器学习应用的在线平台）：[Gradio在线版](https://huggingface.co/spaces/akhaliq/Real-ESRGAN)。感谢[@AK391](https://github.com/AK391)
@@ -180,7 +180,7 @@ python inference_realesrgan.py -n RealESRGAN_x4plus -i inputs --face_enhance
 </p>
 
 训练好的模型: [RealESRGAN_x4plus_anime_6B](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth)<br>
-有关[waifu2x](https://github.com/nihui/waifu2x-ncnn-vulkan)的更多信息和对比在[**anime_model.md**](docs/anime_model.md)中。
+有关[waifu2x](https://github.com/nihui/waifu2x-ncnn-vulkan)的更多信息和对比在[**anime_model_CN.md**](docs/anime_model_CN.md)中。
 
 ```bash
 # 下载模型
@@ -214,7 +214,7 @@ A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile 
 
 ## :european_castle: 模型库
 
-请参见 [docs/model_zoo.md](docs/model_zoo.md)
+请参见 [docs/model_zoo.md](docs/model_zoo_CN.md)
 
 ## :computer: 训练，在你的数据上微调（Fine-tune）
 
@@ -238,5 +238,6 @@ A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile 
 感谢所有的贡献者大大们~
 
 - [AK391](https://github.com/AK391): 通过[Gradio](https://github.com/gradio-app/gradio)添加到了[Huggingface Spaces](https://huggingface.co/spaces)（一个机器学习应用的在线平台）：[Gradio在线版](https://huggingface.co/spaces/akhaliq/Real-ESRGAN)。
-- [Asiimoviet](https://github.com/Asiimoviet): 把 README.md 文档 翻译成了中文。
-- [2ji3150](https://github.com/2ji3150): 感谢详尽并且富有价值的[反馈、建议](https://github.com/xinntao/Real-ESRGAN/issues/131).
+- [Asiimoviet](https://github.com/Asiimoviet): 把 README.md 文档翻译成了中文。
+- [2ji3150](https://github.com/2ji3150): 感谢详尽并且富有价值的[反馈、建议](https://github.com/xinntao/Real-ESRGAN/issues/131)。
+- [Wit-Wang](https://github.com/Wit-Wang):把 /docs中的文档 翻译成了中文。

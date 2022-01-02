@@ -1,5 +1,7 @@
 # :european_castle: Model Zoo
 
+English **|** [简体中文](model_zoo_CN.md)
+
 - [:european_castle: Model Zoo](#european_castle-model-zoo)
   - [For General Images](#for-general-images)
   - [For Anime Images](#for-anime-images)
