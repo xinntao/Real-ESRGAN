@@ -34,7 +34,7 @@ https://user-images.githubusercontent.com/17445847/145783523-f4553729-9f03-44a8-
 # download model
 wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/RealESRGANv2-animevideo-xsx2.pth -P experiments/pretrained_models
 # inference
-python inference_realesrgan_video.py -i inputs/video/onepiece_demo.mp4 -n RealESRGANv2-animevideo-xsx2 -s 2 -v -a --half --suffix outx2
+python inference_realesrgan_video.py -i inputs/video/onepiece_demo.mp4 -n RealESRGANv2-animevideo-xsx2 -s 2 --half --suffix outx2
 ```
 
 ### ncnn Executable File
