@@ -241,3 +241,4 @@ A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile 
 - [Asiimoviet](https://github.com/Asiimoviet): 把 README.md 文档翻译成了中文。
 - [2ji3150](https://github.com/2ji3150): 感谢详尽并且富有价值的[反馈、建议](https://github.com/xinntao/Real-ESRGAN/issues/131)。
 - [Wit-Wang](https://github.com/Wit-Wang):把 /docs中的文档 翻译成了中文。
+- [Jared-02](https://github.com/Jared-02): 把 Training.md 文档 翻译成了中文。

@@ -244,3 +244,4 @@ Thanks for all the contributors.
 - [Asiimoviet](https://github.com/Asiimoviet): Translate the README.md to Chinese (中文).
 - [2ji3150](https://github.com/2ji3150): Thanks for the [detailed and valuable feedbacks/suggestions](https://github.com/xinntao/Real-ESRGAN/issues/131).
 - [Wit-Wang](https://github.com/Wit-Wang):Translate the documents in /docs into Simplified Chinese(简体中文).
+- [Jared-02](https://github.com/Jared-02): Translate the Training.md to Chinese (中文).
