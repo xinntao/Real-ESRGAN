@@ -214,11 +214,11 @@ A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile 
 
 ## :european_castle: 模型库
 
-请参见 [docs/model_zoo.md](docs/model_zoo_CN.md)
+请参见 [docs/model_zoo_CN.md](docs/model_zoo_CN.md)
 
 ## :computer: 训练，在你的数据上微调（Fine-tune）
 
-这里有一份详细的指南：[Training.md](Training.md).
+这里有一份详细的指南：[Training_CN.md](Training_CN.md).
 
 ## BibTeX 引用
 
@@ -240,5 +240,5 @@ A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile 
 - [AK391](https://github.com/AK391): 通过[Gradio](https://github.com/gradio-app/gradio)添加到了[Huggingface Spaces](https://huggingface.co/spaces)（一个机器学习应用的在线平台）：[Gradio在线版](https://huggingface.co/spaces/akhaliq/Real-ESRGAN)。
 - [Asiimoviet](https://github.com/Asiimoviet): 把 README.md 文档翻译成了中文。
 - [2ji3150](https://github.com/2ji3150): 感谢详尽并且富有价值的[反馈、建议](https://github.com/xinntao/Real-ESRGAN/issues/131)。
-- [Wit-Wang](https://github.com/Wit-Wang):把 /docs中的文档 翻译成了中文。
+- [Wit-Wang](https://github.com/Wit-Wang):把 /docs 中的文档 翻译成了中文。
 - [Jared-02](https://github.com/Jared-02): 把 Training.md 文档 翻译成了中文。
