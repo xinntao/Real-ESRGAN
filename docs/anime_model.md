@@ -1,5 +1,7 @@
 # Anime Model
 
+English **|** [简体中文](anime_model_CN.md)
+
 :white_check_mark: We add [*RealESRGAN_x4plus_anime_6B.pth*](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth), which is optimized for **anime** images with much smaller model size.
 
 - [Anime Model](#anime-model)

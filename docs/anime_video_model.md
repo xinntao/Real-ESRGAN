@@ -1,5 +1,7 @@
 # Anime Video Models
 
+English **|** [简体中文](anime_video_model_CN.md)
+
 :white_check_mark: We add small models that are optimized for anime videos :-)
 
 | Models                                                                                                                             | Scale | Description                    |

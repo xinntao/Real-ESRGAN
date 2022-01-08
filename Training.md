@@ -1,13 +1,19 @@
 # :computer: How to Train/Finetune Real-ESRGAN
 
-- [Train Real-ESRGAN](#train-real-esrgan)
-  - [Overview](#overview)
-  - [Dataset Preparation](#dataset-preparation)
-  - [Train Real-ESRNet](#Train-Real-ESRNet)
-  - [Train Real-ESRGAN](#Train-Real-ESRGAN)
-- [Finetune Real-ESRGAN on your own dataset](#Finetune-Real-ESRGAN-on-your-own-dataset)
-  - [Generate degraded images on the fly](#Generate-degraded-images-on-the-fly)
-  - [Use paired training data](#use-your-own-paired-data)
+- [:computer: How to Train/Finetune Real-ESRGAN](#computer-how-to-trainfinetune-real-esrgan)
+  - [Train Real-ESRGAN](#train-real-esrgan)
+    - [Overview](#overview)
+    - [Dataset Preparation](#dataset-preparation)
+      - [Step 1: [Optional] Generate multi-scale images](#step-1-optional-generate-multi-scale-images)
+      - [Step 2: [Optional] Crop to sub-images](#step-2-optional-crop-to-sub-images)
+      - [Step 3: Prepare a txt for meta information](#step-3-prepare-a-txt-for-meta-information)
+    - [Train Real-ESRNet](#train-real-esrnet)
+    - [Train Real-ESRGAN](#train-real-esrgan-1)
+  - [Finetune Real-ESRGAN on your own dataset](#finetune-real-esrgan-on-your-own-dataset)
+    - [Generate degraded images on the fly](#generate-degraded-images-on-the-fly)
+    - [Use your own paired data](#use-your-own-paired-data)
+
+English **|** [简体中文](Training_CN.md)
 
 ## Train Real-ESRGAN
 
@@ -251,9 +257,9 @@ train:
     type: RealESRGANPairedDataset
     dataroot_gt: datasets/DF2K  # modify to the root path of your folder
     dataroot_lq: datasets/DF2K  # modify to the root path of your folder
-    meta_info: datasets/DF2K/meta_info/meta_info_DIV2K_sub_pair.txt  # modify to the root path of your folder
+    meta_info: datasets/DF2K/meta_info/meta_info_DIV2K_sub_pair.txt  # modify to your own generate meta info txt
     io_backend:
-    type: disk
+        type: disk
 ```
 
 We use four GPUs for training. We use the `--auto_resume` argument to automatically resume the training if necessary.
