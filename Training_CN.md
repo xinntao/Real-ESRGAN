@@ -1,15 +1,19 @@
 # :computer: 如何训练/微调 Real-ESRGAN
 
-- [训练 Real-ESRGAN](#训练-real-esrgan)
-  - [概述](#概述)
-  - [准备数据集](#准备数据集)
-  - [训练 Real-ESRNet 模型](#训练-real-esrnet-模型)
-  - [训练 Real-ESRGAN 模型](#训练-real-esrgan-模型)
-- [用自己的数据集微调 Real-ESRGAN](#用自己的数据集微调-real-esrgan)
-  - [动态生成降级图像](#动态生成降级图像)
-  - [使用已配对的数据](#使用已配对的数据)
+- [:computer: 如何训练/微调 Real-ESRGAN](#computer-如何训练微调-real-esrgan)
+  - [训练 Real-ESRGAN](#训练-real-esrgan)
+    - [概述](#概述)
+    - [准备数据集](#准备数据集)
+      - [第1步：【可选】生成多尺寸图片](#第1步可选生成多尺寸图片)
+      - [第2步：【可选】裁切为子图像](#第2步可选裁切为子图像)
+      - [第3步：准备元信息 txt](#第3步准备元信息-txt)
+    - [训练 Real-ESRNet 模型](#训练-real-esrnet-模型)
+    - [训练 Real-ESRGAN 模型](#训练-real-esrgan-模型)
+  - [用自己的数据集微调 Real-ESRGAN](#用自己的数据集微调-real-esrgan)
+    - [动态生成降级图像](#动态生成降级图像)
+    - [使用已配对的数据](#使用已配对的数据)
 
-[English](Training.md) **|** [简体中文](Training_CN.md)
+[English](Training.md) **|** 简体中文
 
 ## 训练 Real-ESRGAN
 
