@@ -26,7 +26,7 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
     && rm -f Miniconda3-latest-Linux-x86_64.sh \
     && /root/miniconda3/bin/conda init bash
 
-RUN git clone https://github.com/levityai/Real-ESRGAN.git /root/workspace/Real-ESRGAN \
+RUN git clone -b feature/customize-repo-to-meet-our-needs https://github.com/levityai/Real-ESRGAN.git /root/workspace/Real-ESRGAN \
     && wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth \
         -P /root/workspace/Real-ESRGAN/experiments/pretrained_models \
     && mkdir /root/workspace/Real-ESRGAN/outputs \
