@@ -41,7 +41,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input', type=str, default='inputs', help='Input image or folder')
     parser.add_argument('-d', '--max_depth', type=int, default=1, help='Maximum depth used to look for files')
-    parser.add_argument('-e', '--extensions', type=list, default=None, help='Allowed extensions of files, comma separated')
+    parser.add_argument('-e', '--extensions', type=str, default=None, help='Allowed extensions of files, comma separated')
     parser.add_argument(
         '-n',
         '--model_name',
