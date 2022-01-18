@@ -1,6 +1,7 @@
 import argparse
 import cv2
 import os
+from tqdm import tqdm
 from basicsr.archs.rrdbnet_arch import RRDBNet
 
 from realesrgan import RealESRGANer
@@ -123,9 +124,8 @@ def main():
     os.makedirs(args.output, exist_ok=True)
 
     paths = get_files(args.input, args.max_depth, extensions=args.extensions)
-    for idx, path in enumerate(paths):
+    for idx, path in enumerate(tqdm(paths)):
         imgname, extension = os.path.splitext(os.path.basename(path))
-        print('Testing', idx, imgname)
 
         img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
         if len(img.shape) == 3 and img.shape[2] == 4:
