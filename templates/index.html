@@ -1,0 +1,61 @@
+<html>
+<head>
+    <title>Super Resolution API</title>
+    <link rel="stylesheet" href="{{ url_for('.static', filename = 'style.css') }}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <h1><a href="super_resolution" style="color:white">Super Resolution API</a></h1>
+    <div class="agile-its">
+        <div class="w3layouts">
+            <div class="photos-upload-view">
+                <form id="upload" action="infer" method="POST" enctype="multipart/form-data">
+                    <div class = "scale_select">
+                        <label><input type="checkbox" name="scale_class" value="scale_3.0" onclick='checkOnlyOne(this)' checked> x3  </label>
+                        <label><input type="checkbox" name="scale_class" value="scale_2.0" onclick='checkOnlyOne(this)'> x2  </label>
+                        <label><input type="checkbox" name="scale_class" value="scale_1.5" onclick='checkOnlyOne(this)'> x1.5</label>
+                    </div>
+                    <div class="upload-btn-wrapper" id="drag">
+                        <button class="btn">이미지 업로드</button>
+                        <input id="inputs" type="file" value="Upload" name="image" accept=".jpg,.jpeg,.png" >
+                    </div>
+                    <input type="submit" value="예측 결과" style="visibility:hidden">
+                </form>
+                <div class="result-area">
+                {% if uploaded %}
+                    <div class="filename">
+                        <span>
+                            {{ filename }}
+                        </span>
+                    </div>
+                    <img src="{{ url_for('.static', filename=filepath) }}">
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </body>
+    <script type="text/javascript">
+        var div = document.getElementById('drag');
+
+        document.ondragover = function(e) {
+            e.preventDefault();
+        };
+
+        document.ondrop = function(e) {
+            e.preventDefault();
+            var data = e.dataTransfer;
+
+            var input = document.getElementById('inputs')
+            input.setAttribute('type', 'file');
+            input.files = data.files;
+            document.getElementById('upload').submit()
+        };
+
+        document.getElementById('inputs').onchange = function(){
+            document.getElementById('upload').submit()
+        };
+    </script>
+</html>
