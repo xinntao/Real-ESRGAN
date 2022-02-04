@@ -11,7 +11,8 @@ WORKDIR ./Real-ESRGAN
 COPY requirements.txt ./
 
 RUN apt-get update
-RUN pip install basicsr --no-cache-dir -r requirements.txt
+RUN pip install basicsr
+RUN pip install --no-cache-dir -r requirements.txt
 RUN python setup.py develop
 RUN wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth -P experiments/pretrained_models
 
