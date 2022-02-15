@@ -27,6 +27,17 @@ Real-ESRGAN 的目标是开发出**实用的图像/视频修复算法**。<br>
 
 :question: 常见的问题可以在[FAQ.md](FAQ.md)中找到答案。（好吧，现在还是空白的=-=||）
 
+---
+
+如果 Real-ESRGAN 对你有帮助，可以给本项目一个 Star :star: ，或者推荐给你的朋友们，谢谢！:blush: <br/>
+其他推荐的项目：<br/>
+:arrow_forward: [GFPGAN](https://github.com/TencentARC/GFPGAN): 实用的人脸复原算法 <br>
+:arrow_forward: [BasicSR](https://github.com/xinntao/BasicSR): 开源的图像和视频工具箱<br>
+:arrow_forward: [facexlib](https://github.com/xinntao/facexlib): 提供与人脸相关的工具箱<br>
+:arrow_forward: [HandyView](https://github.com/xinntao/HandyView): 基于PyQt5的图片查看器，方便查看以及比较 <br>
+
+---
+
 <!---------------------------------- Updates --------------------------->
 <details open>
 <summary>🚩<b>更新</b></summary>
@@ -42,17 +53,6 @@ Real-ESRGAN 的目标是开发出**实用的图像/视频修复算法**。<br>
 - ✅ 训练代码已经发布，具体做法可查看：[Training.md](Training.md)。
 
 </details>
-
----
-
-如果 Real-ESRGAN 对你有帮助，可以给本项目一个 Star :star: ，或者推荐给你的朋友们，谢谢！:blush: <br/>
-其他推荐的项目：<br/>
-:arrow_forward: [GFPGAN](https://github.com/TencentARC/GFPGAN): 实用的人脸复原算法 <br>
-:arrow_forward: [BasicSR](https://github.com/xinntao/BasicSR): 开源的图像和视频工具箱<br>
-:arrow_forward: [facexlib](https://github.com/xinntao/facexlib): 提供与人脸相关的工具箱<br>
-:arrow_forward: [HandyView](https://github.com/xinntao/HandyView): 基于PyQt5的图片查看器，方便查看以及比较 <br>
-
----
 
 <!---------------------------------- Projects that use Real-ESRGAN --------------------------->
 <details open>
@@ -72,6 +72,13 @@ Real-ESRGAN 的目标是开发出**实用的图像/视频修复算法**。<br>
 - [Real-ESRGAN_GUI](https://github.com/net2cn/Real-ESRGAN_GUI) by [net2cn](https://github.com/net2cn)
 - [Real-ESRGAN-EGUI](https://github.com/WGzeyu/Real-ESRGAN-EGUI) by [WGzeyu](https://github.com/WGzeyu)
 - [anime_upscaler](https://github.com/shangar21/anime_upscaler) by [shangar21](https://github.com/shangar21)
+
+</details>
+
+<details open>
+<summary>👀<b>Demo视频（B站）</b></summary>
+
+- [大闹天宫片段](https://www.bilibili.com/video/BV1ja41117zb)
 
 </details>
 

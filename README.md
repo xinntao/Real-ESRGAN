@@ -27,6 +27,17 @@ We extend the powerful ESRGAN to a practical restoration application (namely, Re
 
 :milky_way: Thanks for your valuable feedbacks/suggestions. All the feedbacks are updated in [feedback.md](feedback.md).
 
+---
+
+If Real-ESRGAN is helpful in your photos/projects, please help to :star: this repo or recommend it to your friends. Thanks:blush: <br>
+Other recommended projects:<br>
+:arrow_forward: [GFPGAN](https://github.com/TencentARC/GFPGAN): A practical algorithm for real-world face restoration <br>
+:arrow_forward: [BasicSR](https://github.com/xinntao/BasicSR): An open-source image and video restoration toolbox<br>
+:arrow_forward: [facexlib](https://github.com/xinntao/facexlib): A collection that provides useful face-relation functions.<br>
+:arrow_forward: [HandyView](https://github.com/xinntao/HandyView): A PyQt5-based image viewer that is handy for view and comparison. <br>
+
+---
+
 <!---------------------------------- Updates --------------------------->
 <details open>
 <summary>🚩<b>Updates</b></summary>
@@ -42,17 +53,6 @@ We extend the powerful ESRGAN to a practical restoration application (namely, Re
 - ✅ The training codes have been released. A detailed guide can be found in [Training.md](Training.md).
 
 </details>
-
----
-
-If Real-ESRGAN is helpful in your photos/projects, please help to :star: this repo or recommend it to your friends. Thanks:blush: <br>
-Other recommended projects:<br>
-:arrow_forward: [GFPGAN](https://github.com/TencentARC/GFPGAN): A practical algorithm for real-world face restoration <br>
-:arrow_forward: [BasicSR](https://github.com/xinntao/BasicSR): An open-source image and video restoration toolbox<br>
-:arrow_forward: [facexlib](https://github.com/xinntao/facexlib): A collection that provides useful face-relation functions.<br>
-:arrow_forward: [HandyView](https://github.com/xinntao/HandyView): A PyQt5-based image viewer that is handy for view and comparison. <br>
-
----
 
 <!---------------------------------- Projects that use Real-ESRGAN --------------------------->
 <details open>
@@ -72,6 +72,14 @@ If you develop/use Real-ESRGAN in your projects, welcome to let me know 👋
 - [Real-ESRGAN_GUI](https://github.com/net2cn/Real-ESRGAN_GUI) by [net2cn](https://github.com/net2cn)
 - [Real-ESRGAN-EGUI](https://github.com/WGzeyu/Real-ESRGAN-EGUI) by [WGzeyu](https://github.com/WGzeyu)
 - [anime_upscaler](https://github.com/shangar21/anime_upscaler) by [shangar21](https://github.com/shangar21)
+
+</details>
+
+<!---------------------------------- Demo videos --------------------------->
+<details open>
+<summary>👀<b>Demo videos</b></summary>
+
+- [大闹天宫片段](https://www.bilibili.com/video/BV1ja41117zb)
 
 </details>
 
