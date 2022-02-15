@@ -32,7 +32,7 @@ We extend the powerful ESRGAN to a practical restoration application (namely, Re
 - ✅ Add small models for anime videos. More details are in [anime video models](docs/anime_video_model.md).
 
 <details>
-<summary>🚩More Updates</summary>
+<summary>More Updates🚩</summary>
 - ✅ Add the ncnn implementation [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
 - ✅ Add [*RealESRGAN_x4plus_anime_6B.pth*](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth), which is optimized for **anime** images with much smaller model size. More details and comparisons with [waifu2x](https://github.com/nihui/waifu2x-ncnn-vulkan) are in [**anime_model.md**](docs/anime_model.md)
 - ✅ Support finetuning on your own data or paired data (*i.e.*, finetuning ESRGAN). See [here](Training.md#Finetune-Real-ESRGAN-on-your-own-dataset)
