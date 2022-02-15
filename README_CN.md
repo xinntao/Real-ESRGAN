@@ -64,7 +64,7 @@ Real-ESRGAN 的目标是开发出**实用的图像/视频修复算法**。<br>
 - VapourSynth: [vs-realesrgan](https://github.com/HolyWu/vs-realesrgan) by [HolyWu](https://github.com/HolyWu)
 - NCNN: [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan)
 
-**易用的图形界面**
+&nbsp;&nbsp;&nbsp;&nbsp;**易用的图形界面**
 
 - [Waifu2x-Extension-GUI](https://github.com/AaronFeng753/Waifu2x-Extension-GUI) by [AaronFeng753](https://github.com/AaronFeng753)
 - [Squirrel-RIFE](https://github.com/Justin62628/Squirrel-RIFE) by [Justin62628](https://github.com/Justin62628)
