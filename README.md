@@ -1,4 +1,8 @@
-# Real-ESRGAN
+<p align="center">
+  <img src="assets/realesrgan_logo.png" height=100>
+</p>
+
+**[English](README.md) | [简体中文](README_CN.md)**
 
 [![download](https://img.shields.io/github/downloads/xinntao/Real-ESRGAN/total.svg)](https://github.com/xinntao/Real-ESRGAN/releases)
 [![PyPI](https://img.shields.io/pypi/v/realesrgan)](https://pypi.org/project/realesrgan/)
@@ -7,8 +11,6 @@
 [![LICENSE](https://img.shields.io/github/license/xinntao/Real-ESRGAN.svg)](https://github.com/xinntao/Real-ESRGAN/blob/master/LICENSE)
 [![python lint](https://github.com/xinntao/Real-ESRGAN/actions/workflows/pylint.yml/badge.svg)](https://github.com/xinntao/Real-ESRGAN/blob/master/.github/workflows/pylint.yml)
 [![Publish-pip](https://github.com/xinntao/Real-ESRGAN/actions/workflows/publish-pip.yml/badge.svg)](https://github.com/xinntao/Real-ESRGAN/blob/master/.github/workflows/publish-pip.yml)
-
-[English](README.md) **|** [简体中文](README_CN.md)
 
 :fire: :fire: :fire: Add **small video models** for anime videos (**针对动漫视频的小模型**). Please see [anime video models](docs/anime_video_model.md).
 

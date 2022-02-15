@@ -19,15 +19,16 @@ def main():
 
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--input', type=str, default='inputs', help='Input image or folder')
+    parser.add_argument('-i', '--input', type=str, default='inputs', help='Input video, image or folder')
     parser.add_argument(
         '-n',
         '--model_name',
         type=str,
         default='RealESRGAN_x4plus',
-        help=('Model names: RealESRGAN_x4plus | RealESRNet_x4plus | RealESRGAN_x4plus_anime_6B | RealESRGAN_x2plus'
-              'RealESRGANv2-anime-xsx2 | RealESRGANv2-animevideo-xsx2-nousm | RealESRGANv2-animevideo-xsx2'
-              'RealESRGANv2-anime-xsx4 | RealESRGANv2-animevideo-xsx4-nousm | RealESRGANv2-animevideo-xsx4'))
+        help=('Model names: RealESRGAN_x4plus | RealESRNet_x4plus | RealESRGAN_x4plus_anime_6B | RealESRGAN_x2plus | '
+              'RealESRGANv2-anime-xsx2 | RealESRGANv2-animevideo-xsx2-nousm | RealESRGANv2-animevideo-xsx2 | '
+              'RealESRGANv2-anime-xsx4 | RealESRGANv2-animevideo-xsx4-nousm | RealESRGANv2-animevideo-xsx4. '
+              'Default: RealESRGAN_x4plus'))
     parser.add_argument('-o', '--output', type=str, default='results', help='Output folder')
     parser.add_argument('-s', '--outscale', type=float, default=4, help='The final upsampling scale of the image')
     parser.add_argument('--suffix', type=str, default='out', help='Suffix of the restored video')
