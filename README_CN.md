@@ -58,7 +58,7 @@ Real-ESRGAN 的目标是开发出**实用的图像/视频修复算法**。<br>
 <details open>
 <summary>🧩<b>使用Real-ESRGAN的项目</b></summary>
 
-如果你开发/使用/集成了Real-ESRGAN, 欢迎联系我添加 👋
+&nbsp;&nbsp;&nbsp;&nbsp;如果你开发/使用/集成了Real-ESRGAN, 欢迎联系我添加 👋
 
 - NCNN-Android: [RealSR-NCNN-Android](https://github.com/tumuyan/RealSR-NCNN-Android) by [tumuyan](https://github.com/tumuyan)
 - VapourSynth: [vs-realesrgan](https://github.com/HolyWu/vs-realesrgan) by [HolyWu](https://github.com/HolyWu)

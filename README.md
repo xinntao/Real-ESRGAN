@@ -58,7 +58,7 @@ Other recommended projects:<br>
 <details open>
 <summary>🧩<b>Projects that use Real-ESRGAN</b></summary>
 
-If you develop/use Real-ESRGAN in your projects, welcome to let me know 👋
+&nbsp;&nbsp;&nbsp;&nbsp;If you develop/use Real-ESRGAN in your projects, welcome to let me know 👋
 
 - NCNN-Android: [RealSR-NCNN-Android](https://github.com/tumuyan/RealSR-NCNN-Android) by [tumuyan](https://github.com/tumuyan)
 - VapourSynth: [vs-realesrgan](https://github.com/HolyWu/vs-realesrgan) by [HolyWu](https://github.com/HolyWu)
