@@ -28,8 +28,8 @@ We extend the powerful ESRGAN to a practical restoration application (namely, Re
 :milky_way: Thanks for your valuable feedbacks/suggestions. All the feedbacks are updated in [feedback.md](feedback.md).
 
 <!---------------------------------- Updates --------------------------->
-<details>
-<summary>(click to see all) 🚩🚩<b>Updates</b></summary>
+<details open>
+<summary>🚩<b>Updates</b></summary>
 
 - ✅ Add small models for anime videos. More details are in [anime video models](docs/anime_video_model.md).
 - ✅ Add the ncnn implementation [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
@@ -53,6 +53,27 @@ Other recommended projects:<br>
 :arrow_forward: [HandyView](https://github.com/xinntao/HandyView): A PyQt5-based image viewer that is handy for view and comparison. <br>
 
 ---
+
+<!---------------------------------- Projects that use Real-ESRGAN --------------------------->
+<details open>
+<summary>🧩<b>Projects that use Real-ESRGAN</b></summary>
+
+If you develop/use Real-ESRGAN in your projects, welcome to let me know 👋
+
+- NCNN-Android: [RealSR-NCNN-Android](https://github.com/tumuyan/RealSR-NCNN-Android) by [tumuyan](https://github.com/tumuyan)
+- VapourSynth: [vs-realesrgan](https://github.com/HolyWu/vs-realesrgan) by [HolyWu](https://github.com/HolyWu)
+- NCNN: [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan)
+
+**GUI**
+
+- [Waifu2x-Extension-GUI](https://github.com/AaronFeng753/Waifu2x-Extension-GUI) by [AaronFeng753](https://github.com/AaronFeng753)
+- [Squirrel-RIFE](https://github.com/Justin62628/Squirrel-RIFE) by [Justin62628](https://github.com/Justin62628)
+- [Real-GUI](https://github.com/scifx/Real-GUI) by [scifx](https://github.com/scifx)
+- [Real-ESRGAN_GUI](https://github.com/net2cn/Real-ESRGAN_GUI) by [net2cn](https://github.com/net2cn)
+- [Real-ESRGAN-EGUI](https://github.com/WGzeyu/Real-ESRGAN-EGUI) by [WGzeyu](https://github.com/WGzeyu)
+- [anime_upscaler](https://github.com/shangar21/anime_upscaler) by [shangar21](https://github.com/shangar21)
+
+</details>
 
 ### :book: Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
 
