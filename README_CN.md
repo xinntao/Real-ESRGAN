@@ -76,7 +76,7 @@ Real-ESRGAN 的目标是开发出**实用的图像/视频修复算法**。<br>
 </details>
 
 <details open>
-<summary>👀<b>Demo视频（B站）</b></summary>
+<summary>👀<b>Demo视频（B站）</b>👀</summary>
 
 - [大闹天宫片段](https://www.bilibili.com/video/BV1ja41117zb)
 

@@ -77,7 +77,7 @@ If you develop/use Real-ESRGAN in your projects, welcome to let me know 👋
 
 <!---------------------------------- Demo videos --------------------------->
 <details open>
-<summary>👀<b>Demo videos</b></summary>
+<summary>👀<b>Demo videos</b>👀</summary>
 
 - [大闹天宫片段](https://www.bilibili.com/video/BV1ja41117zb)
 
