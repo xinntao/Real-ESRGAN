@@ -27,12 +27,11 @@ We extend the powerful ESRGAN to a practical restoration application (namely, Re
 
 :milky_way: Thanks for your valuable feedbacks/suggestions. All the feedbacks are updated in [feedback.md](feedback.md).
 
-:triangular_flag_on_post: **Updates**
+<!---------------------------------- Updates --------------------------->
+<details>
+<summary>(click to see all) 🚩🚩<b>Updates</b></summary>
 
 - ✅ Add small models for anime videos. More details are in [anime video models](docs/anime_video_model.md).
-
-<details>
-<summary>More Updates🚩</summary>
 - ✅ Add the ncnn implementation [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
 - ✅ Add [*RealESRGAN_x4plus_anime_6B.pth*](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth), which is optimized for **anime** images with much smaller model size. More details and comparisons with [waifu2x](https://github.com/nihui/waifu2x-ncnn-vulkan) are in [**anime_model.md**](docs/anime_model.md)
 - ✅ Support finetuning on your own data or paired data (*i.e.*, finetuning ESRGAN). See [here](Training.md#Finetune-Real-ESRGAN-on-your-own-dataset)
@@ -41,6 +40,7 @@ We extend the powerful ESRGAN to a practical restoration application (namely, Re
 - ✅ Support arbitrary scale with `--outscale` (It actually further resizes outputs with `LANCZOS4`). Add *RealESRGAN_x2plus.pth* model.
 - ✅ [The inference code](inference_realesrgan.py) supports: 1) **tile** options; 2) images with **alpha channel**; 3) **gray** images; 4) **16-bit** images.
 - ✅ The training codes have been released. A detailed guide can be found in [Training.md](Training.md).
+
 </details>
 
 ---
