@@ -1,11 +1,39 @@
 import argparse
 import cv2
-import glob
 import os
+from tqdm import tqdm
 from basicsr.archs.rrdbnet_arch import RRDBNet
 
 from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
+
+
+def is_file_extension_allowed(file: str, allowed_extensions: list):
+    file_ext = os.path.splitext(file)[-1][1:]
+    return file_ext in allowed_extensions
+
+
+def get_files(input: str, max_depth: int, extensions: list = None, depth: int = 1):
+    files = []
+    if os.path.isfile(input) and (extensions is None or is_file_extension_allowed(input, extensions)):
+        files.append(input)
+    elif os.path.isdir(input) and depth <= max_depth:
+        for file in os.listdir(input):
+            files += get_files(os.path.join(input, file), max_depth, extensions=extensions, depth=depth+1)
+
+    return files
+
+
+def add_tailing_slash(directory: str):
+    return directory + ('' if directory[-1] == '/' else '/')
+
+
+def get_output_filename(path: str, in_dir: str, out_dir):
+    out_folder = add_tailing_slash(os.path.dirname(path))
+    out_folder = out_folder.replace(add_tailing_slash(in_dir), add_tailing_slash(out_dir))
+    if os.path.isdir(out_dir) and not os.path.isdir(out_folder):
+        os.mkdir(out_folder)
+    return out_folder
 
 
 def main():
@@ -13,6 +41,8 @@ def main():
     """
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input', type=str, default='inputs', help='Input image or folder')
+    parser.add_argument('-d', '--max_depth', type=int, default=1, help='Maximum depth used to look for files')
+    parser.add_argument('-e', '--extensions', type=str, default=None, help='Allowed extensions of files, comma separated')
     parser.add_argument(
         '-n',
         '--model_name',
@@ -63,6 +93,9 @@ def main():
         model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64, num_conv=16, upscale=4, act_type='prelu')
         netscale = 4
 
+    if args.extensions is not None:
+        args.extensions = args.extensions.split(',')
+
     # determine model paths
     model_path = os.path.join('experiments/pretrained_models', args.model_name + '.pth')
     if not os.path.isfile(model_path):
@@ -90,14 +123,9 @@ def main():
             bg_upsampler=upsampler)
     os.makedirs(args.output, exist_ok=True)
 
-    if os.path.isfile(args.input):
-        paths = [args.input]
-    else:
-        paths = sorted(glob.glob(os.path.join(args.input, '*')))
-
-    for idx, path in enumerate(paths):
+    paths = get_files(args.input, args.max_depth, extensions=args.extensions)
+    for idx, path in enumerate(tqdm(paths)):
         imgname, extension = os.path.splitext(os.path.basename(path))
-        print('Testing', idx, imgname)
 
         img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
         if len(img.shape) == 3 and img.shape[2] == 4:
@@ -120,7 +148,9 @@ def main():
                 extension = args.ext
             if img_mode == 'RGBA':  # RGBA images should be saved in png format
                 extension = 'png'
-            save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
+            out_dir = get_output_filename(path, args.input, args.output)
+            filename = f'{imgname}.{extension}' if args.suffix == '' else f'{imgname}_{args.suffix}.{extension}'
+            save_path = os.path.join(out_dir, filename)
             cv2.imwrite(save_path, output)
 
 

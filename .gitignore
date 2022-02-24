@@ -1,3 +1,6 @@
+.idea/
+**/.DS_Store
+
 # ignored folders
 datasets/*
 experiments/*
