@@ -65,7 +65,7 @@ You can use the [scripts/generate_meta_info.py](scripts/generate_meta_info.py) s
 You can merge several folders into one meta_info txt. Here is the example:
 
 ```bash
- python scripts/generate_meta_info.py --input datasets/DF2K/DF2K_HR, datasets/DF2K/DF2K_multiscale --root datasets/DF2K, datasets/DF2K --meta_info datasets/DF2K/meta_info/meta_info_DF2Kmultiscale.txt
+ python scripts/generate_meta_info.py --input datasets/DF2K/DF2K_HR datasets/DF2K/DF2K_multiscale --root datasets/DF2K datasets/DF2K --meta_info datasets/DF2K/meta_info/meta_info_DF2Kmultiscale.txt
 ```
 
 ### Train Real-ESRNet
