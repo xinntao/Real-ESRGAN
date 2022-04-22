@@ -253,7 +253,7 @@ def main():
                 extension = args.ext
             if img_mode == "RGBA":  # RGBA images should be saved in png format
                 extension = "png"
-            save_path = os.path.join(save_frame_folder, f"{imgname}_out.{extension}")
+            save_path = os.path.join(save_frame_folder, f"{imgname}.{extension}")
 
             que.put({"output": output, "save_path": save_path})
 
