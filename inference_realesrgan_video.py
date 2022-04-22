@@ -180,8 +180,11 @@ def main():
         )
     os.makedirs(args.output, exist_ok=True)
     # for saving restored frames
-    save_frame_folder = os.path.join(args.output, "frames_tmpout")
-    os.makedirs(save_frame_folder, exist_ok=True)
+    if args.video:
+        save_frame_folder = os.path.join(args.output, "frames_tmpout")
+        os.makedirs(save_frame_folder, exist_ok=True)
+    else:
+        save_frame_folder = os.path.join(args.output)
 
     input_mime = mimetypes.guess_type(args.input)[0]
 
@@ -253,7 +256,8 @@ def main():
                 extension = args.ext
             if img_mode == "RGBA":  # RGBA images should be saved in png format
                 extension = "png"
-            save_path = os.path.join(args.output, f"{imgname}.{extension}")
+
+            save_path = os.path.join(save_frame_folder, f"{imgname}.{extension}")
 
             que.put({"output": output, "save_path": save_path})
 
@@ -274,12 +278,12 @@ def main():
         video_save_path = os.path.join(args.output, f"{video_name}_{args.suffix}.mp4")
         if args.audio:
             os.system(
-                f"ffmpeg -r {args.fps} -i {save_frame_folder}/frame%08d_out.{extension} -i {args.input}"
+                f"ffmpeg -r {args.fps} -i {save_frame_folder}/frame%08d.{extension} -i {args.input}"
                 f" -map 0:v:0 -map 1:a:0 -c:a copy -c:v libx264 -r {args.fps} -pix_fmt yuv420p  {video_save_path}"
             )
         else:
             os.system(
-                f"ffmpeg -r {args.fps} -i {save_frame_folder}/frame%08d_out.{extension} "
+                f"ffmpeg -r {args.fps} -i {save_frame_folder}/frame%08d.{extension} "
                 f"-c:v libx264 -r {args.fps} -pix_fmt yuv420p {video_save_path}"
             )
 
