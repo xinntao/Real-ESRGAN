@@ -19,7 +19,7 @@
 
 You may need to **zoom in** for comparing details, or **click the image** to see in the full size.
 
-| Input | waifu2x | Real-CUGAN | RealESRGAN-AnimeVideo-v3 (ours)
+| Input | waifu2x | Real-CUGAN | RealESRGAN<br>AnimeVideo-v3 |
 | :---: | :---:        |     :---:      |  :---:      |
 |![00000053_patch](https://user-images.githubusercontent.com/11482921/164448411-148a7e5c-cfcd-4504-8bc7-e318eb883bb6.png) | ![](https://user-images.githubusercontent.com/11482921/164448633-dfc15224-b6d2-4403-a3c9-4bb819979364.png) | ![](https://user-images.githubusercontent.com/11482921/164448771-0d359509-5293-4d4c-8e3c-86a2a314ea88.png) | ![](https://user-images.githubusercontent.com/11482921/164448848-1a4ff99e-075b-4458-9db7-2c89e8160aa0.png) |
 |![00000044_patch](https://user-images.githubusercontent.com/11482921/164451232-bacf64fc-e55a-44db-afbb-6b31ab0f8973.png) | ![](https://user-images.githubusercontent.com/11482921/164451318-f309b61a-75b8-4b74-b5f3-595725f1cf0b.png) | ![](https://user-images.githubusercontent.com/11482921/164451348-994f8a35-adbe-4a4b-9c61-feaa294af06a.png) | ![](https://user-images.githubusercontent.com/11482921/164451361-9b7d376e-6f75-4648-b752-542b44845d1c.png) |
