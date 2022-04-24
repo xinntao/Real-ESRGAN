@@ -273,3 +273,4 @@ A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile 
 - [AK391](https://github.com/AK391): 通过[Gradio](https://github.com/gradio-app/gradio)添加到了[Huggingface Spaces](https://huggingface.co/spaces)（一个机器学习应用的在线平台）：[Gradio在线版](https://huggingface.co/spaces/akhaliq/Real-ESRGAN)。
 - [Asiimoviet](https://github.com/Asiimoviet): 把 README.md 文档 翻译成了中文。
 - [2ji3150](https://github.com/2ji3150): 感谢详尽并且富有价值的[反馈、建议](https://github.com/xinntao/Real-ESRGAN/issues/131).
+- [Jared-02](https://github.com/Jared-02): 把 Training.md 文档 翻译成了中文。

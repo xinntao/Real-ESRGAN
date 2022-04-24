@@ -9,6 +9,8 @@
   - [Generate degraded images on the fly](#Generate-degraded-images-on-the-fly)
   - [Use paired training data](#use-your-own-paired-data)
 
+[English](Training.md) **|** [简体中文](Training_CN.md)
+ 
 ## Train Real-ESRGAN
 
 ### Overview
@@ -251,9 +253,9 @@ train:
     type: RealESRGANPairedDataset
     dataroot_gt: datasets/DF2K  # modify to the root path of your folder
     dataroot_lq: datasets/DF2K  # modify to the root path of your folder
-    meta_info: datasets/DF2K/meta_info/meta_info_DIV2K_sub_pair.txt  # modify to the root path of your folder
+    meta_info: datasets/DF2K/meta_info/meta_info_DIV2K_sub_pair.txt  # modify to your own generate meta info txt
     io_backend:
-    type: disk
+        type: disk
 ```
 
 We use four GPUs for training. We use the `--auto_resume` argument to automatically resume the training if necessary.
