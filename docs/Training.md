@@ -10,7 +10,7 @@
   - [Use paired training data](#use-your-own-paired-data)
 
 [English](Training.md) **|** [简体中文](Training_CN.md)
- 
+
 ## Train Real-ESRGAN
 
 ### Overview

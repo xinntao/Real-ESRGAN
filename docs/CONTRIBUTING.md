@@ -19,6 +19,7 @@ We like open-source and want to develop practical algorithms for general image r
 1. Create a PR
 
 **Note**:
+
 1. Please check the code style and linting
     1. The style configuration is specified in [setup.cfg](setup.cfg)
     1. If you use VSCode, the settings are configured in [.vscode/settings.json](.vscode/settings.json)
