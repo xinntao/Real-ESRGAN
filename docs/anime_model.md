@@ -15,7 +15,7 @@
 
 The following is a video comparison with sliding bar. You may need to use the full-screen mode for better visual quality, as the original image is large; otherwise, you may encounter aliasing issue.
 
-https://user-images.githubusercontent.com/17445847/131535127-613250d4-f754-4e20-9720-2f9608ad0675.mp4
+<https://user-images.githubusercontent.com/17445847/131535127-613250d4-f754-4e20-9720-2f9608ad0675.mp4>
 
 ## How to Use
 
@@ -32,7 +32,7 @@ python inference_realesrgan.py -n RealESRGAN_x4plus_anime_6B -i inputs
 
 ### ncnn Executable File
 
-Download the latest portable [Windows](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-windows.zip) / [Linux](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-ubuntu.zip) / [MacOS](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-macos.zip) **executable files for Intel/AMD/Nvidia GPU**.
+Download the latest portable [Windows](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip) / [Linux](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.zip) / [MacOS](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-macos.zip) **executable files for Intel/AMD/Nvidia GPU**.
 
 Taking the Windows as example, run:
 
@@ -64,6 +64,6 @@ We compare Real-ESRGAN-anime with [waifu2x](https://github.com/nihui/waifu2x-ncn
 
 The following are video comparisons with sliding bar. You may need to use the full-screen mode for better visual quality, as the original image is large; otherwise, you may encounter aliasing issue.
 
-https://user-images.githubusercontent.com/17445847/131536647-a2fbf896-b495-4a9f-b1dd-ca7bbc90101a.mp4
+<https://user-images.githubusercontent.com/17445847/131536647-a2fbf896-b495-4a9f-b1dd-ca7bbc90101a.mp4>
 
-https://user-images.githubusercontent.com/17445847/131536742-6d9d82b6-9765-4296-a15f-18f9aeaa5465.mp4
+<https://user-images.githubusercontent.com/17445847/131536742-6d9d82b6-9765-4296-a15f-18f9aeaa5465.mp4>

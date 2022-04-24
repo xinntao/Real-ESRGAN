@@ -1,9 +1,8 @@
 # :european_castle: Model Zoo
 
-- [:european_castle: Model Zoo](#european_castle-model-zoo)
-  - [For General Images](#for-general-images)
-  - [For Anime Images](#for-anime-images)
-  - [For Anime Videos](#for-anime-videos)
+- [For General Images](#for-general-images)
+- [For Anime Images](#for-anime-images)
+- [For Anime Videos](#for-anime-videos)
 
 ---
 
@@ -23,7 +22,7 @@ The following models are **discriminators**, which are usually used for fine-tun
 | [RealESRGAN_x4plus_netD](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.3/RealESRGAN_x4plus_netD.pth) | RealESRGAN_x4plus   |
 | [RealESRGAN_x2plus_netD](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.3/RealESRGAN_x2plus_netD.pth) | RealESRGAN_x2plus   |
 
-## For Anime Images
+## For Anime Images / Illustrations
 
 | Models                                                                                                                         | Scale | Description                                                 |
 | ------------------------------------------------------------------------------------------------------------------------------ | :---- | :---------------------------------------------------------- |
@@ -35,12 +34,14 @@ The following models are **discriminators**, which are usually used for fine-tun
 | ---------------------------------------------------------------------------------------------------------------------------------------- | :------------------------- |
 | [RealESRGAN_x4plus_anime_6B_netD](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B_netD.pth) | RealESRGAN_x4plus_anime_6B |
 
-## For Anime Videos
+## For Animation Videos
 
 | Models                                                                                                                             | Scale | Description                    |
 | ---------------------------------------------------------------------------------------------------------------------------------- | :---- | :----------------------------- |
-| [RealESRGANv2-animevideo-xsx2](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/RealESRGANv2-animevideo-xsx2.pth) | X2    | Anime video model with XS size |
-| [RealESRGANv2-animevideo-xsx4](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/RealESRGANv2-animevideo-xsx4.pth) | X4    | Anime video model with XS size |
+| [realesr-animevideov3](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-animevideov3.pth) | X4<sup>1</sup>    | Anime video model with XS size |
+
+Note: <br>
+<sup>1</sup> This model can also be used for X1, X2, X3.
 
 The following models are **discriminators**, which are usually used for fine-tuning.
 

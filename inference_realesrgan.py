@@ -18,9 +18,8 @@ def main():
         '--model_name',
         type=str,
         default='RealESRGAN_x4plus',
-        help=('Model names: RealESRGAN_x4plus | RealESRNet_x4plus | RealESRGAN_x4plus_anime_6B | RealESRGAN_x2plus'
-              'RealESRGANv2-anime-xsx2 | RealESRGANv2-animevideo-xsx2-nousm | RealESRGANv2-animevideo-xsx2'
-              'RealESRGANv2-anime-xsx4 | RealESRGANv2-animevideo-xsx4-nousm | RealESRGANv2-animevideo-xsx4'))
+        help=('Model names: RealESRGAN_x4plus | RealESRNet_x4plus | RealESRGAN_x4plus_anime_6B | RealESRGAN_x2plus | '
+              'realesr-animevideov3'))
     parser.add_argument('-o', '--output', type=str, default='results', help='Output folder')
     parser.add_argument('-s', '--outscale', type=float, default=4, help='The final upsampling scale of the image')
     parser.add_argument('--suffix', type=str, default='out', help='Suffix of the restored image')
@@ -28,7 +27,8 @@ def main():
     parser.add_argument('--tile_pad', type=int, default=10, help='Tile padding')
     parser.add_argument('--pre_pad', type=int, default=0, help='Pre padding size at each border')
     parser.add_argument('--face_enhance', action='store_true', help='Use GFPGAN to enhance face')
-    parser.add_argument('--half', action='store_true', help='Use half precision during inference')
+    parser.add_argument(
+        '--fp32', action='store_true', help='Use fp32 precision during inference. Default: fp16 (half precision).')
     parser.add_argument(
         '--alpha_upsampler',
         type=str,
@@ -52,14 +52,7 @@ def main():
     elif args.model_name in ['RealESRGAN_x2plus']:  # x2 RRDBNet model
         model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=2)
         netscale = 2
-    elif args.model_name in [
-            'RealESRGANv2-anime-xsx2', 'RealESRGANv2-animevideo-xsx2-nousm', 'RealESRGANv2-animevideo-xsx2'
-    ]:  # x2 VGG-style model (XS size)
-        model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64, num_conv=16, upscale=2, act_type='prelu')
-        netscale = 2
-    elif args.model_name in [
-            'RealESRGANv2-anime-xsx4', 'RealESRGANv2-animevideo-xsx4-nousm', 'RealESRGANv2-animevideo-xsx4'
-    ]:  # x4 VGG-style model (XS size)
+    elif args.model_name in ['realesr-animevideov3']:  # x4 VGG-style model (XS size)
         model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64, num_conv=16, upscale=4, act_type='prelu')
         netscale = 4
 
@@ -78,7 +71,7 @@ def main():
         tile=args.tile,
         tile_pad=args.tile_pad,
         pre_pad=args.pre_pad,
-        half=args.half)
+        half=not args.fp32)
 
     if args.face_enhance:  # Use GFPGAN for face enhancement
         from gfpgan import GFPGANer
@@ -120,7 +113,10 @@ def main():
                 extension = args.ext
             if img_mode == 'RGBA':  # RGBA images should be saved in png format
                 extension = 'png'
-            save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
+            if args.suffix == '':
+                save_path = os.path.join(args.output, f'{imgname}.{extension}')
+            else:
+                save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
             cv2.imwrite(save_path, output)
 
 

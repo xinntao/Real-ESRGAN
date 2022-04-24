@@ -16,14 +16,14 @@
 
 1. [Colab Demo](https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing) for Real-ESRGAN <a href="https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="google colab logo"></a>.
 2. [Colab Demo](https://colab.research.google.com/drive/1yNl9ORUxxlL4N0keJa2SEPB61imPQd1B?usp=sharing) for Real-ESRGAN (**anime videos**) <a href="https://colab.research.google.com/drive/1yNl9ORUxxlL4N0keJa2SEPB61imPQd1B?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="google colab logo"></a>.
-3. Portable [Windows](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-windows.zip) / [Linux](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-ubuntu.zip) / [MacOS](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-macos.zip) **executable files for Intel/AMD/Nvidia GPU**. You can find more information [here](#Portable-executable-files). The ncnn implementation is in [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
+3. Portable [Windows](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip) / [Linux](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.zip) / [MacOS](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-macos.zip) **executable files for Intel/AMD/Nvidia GPU**. You can find more information [here](#Portable-executable-files). The ncnn implementation is in [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
 
 Real-ESRGAN aims at developing **Practical Algorithms for General Image/Video Restoration**.<br>
 We extend the powerful ESRGAN to a practical restoration application (namely, Real-ESRGAN), which is trained with pure synthetic data.
 
 :art: Real-ESRGAN needs your contributions. Any contributions are welcome, such as new features/models/typo fixes/suggestions/maintenance, *etc*. See [CONTRIBUTING.md](CONTRIBUTING.md). All contributors are list [here](README.md#hugs-acknowledgement).
 
-:question: Frequently Asked Questions can be found in [FAQ.md](FAQ.md) (Well, it is still empty there =-=||).
+:question: Frequently Asked Questions can be found in [FAQ.md](FAQ.md).
 
 :milky_way: Thanks for your valuable feedbacks/suggestions. All the feedbacks are updated in [feedback.md](feedback.md).
 
@@ -118,7 +118,7 @@ If you have some images that Real-ESRGAN could not well restored, please also op
 
 ### Portable executable files
 
-You can download [Windows](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-windows.zip) / [Linux](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-ubuntu.zip) / [MacOS](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-macos.zip) **executable files for Intel/AMD/Nvidia GPU**.
+You can download [Windows](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip) / [Linux](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.zip) / [MacOS](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-macos.zip) **executable files for Intel/AMD/Nvidia GPU**.
 
 This executable file is **portable** and includes all the binaries and models required. No CUDA or PyTorch environment is needed.<br>
 
@@ -133,8 +133,7 @@ We have provided five models:
 1. realesrgan-x4plus  (default)
 2. realesrnet-x4plus
 3. realesrgan-x4plus-anime (optimized for anime images, small model size)
-4. RealESRGANv2-animevideo-xsx2 (anime video, X2)
-5. RealESRGANv2-animevideo-xsx4 (anime video, X4)
+4. realesr-animevideov3 (animation video)
 
 You can use the `-n` argument for other models, for example, `./realesrgan-ncnn-vulkan.exe -i input.jpg -o output.png -n realesrnet-x4plus`
 
@@ -147,22 +146,20 @@ You can use the `-n` argument for other models, for example, `./realesrgan-ncnn-
 Usage: realesrgan-ncnn-vulkan.exe -i infile -o outfile [options]...
 
   -h                   show this help
-  -v                   verbose output
   -i input-path        input image path (jpg/png/webp) or directory
   -o output-path       output image path (jpg/png/webp) or directory
-  -s scale             upscale ratio (4, default=4)
+  -s scale             upscale ratio (can be 2, 3, 4. default=4)
   -t tile-size         tile size (>=32/0=auto, default=0) can be 0,0,0 for multi-gpu
-  -m model-path        folder path to pre-trained models(default=models)
-  -n model-name        model name (default=realesrgan-x4plus, can be realesrgan-x4plus | realesrgan-x4plus-anime | realesrnet-x4plus)
-  -g gpu-id            gpu device to use (default=0) can be 0,1,2 for multi-gpu
+  -m model-path        folder path to the pre-trained models. default=models
+  -n model-name        model name (default=realesr-animevideov3, can be realesr-animevideov3 | realesrgan-x4plus | realesrgan-x4plus-anime | realesrnet-x4plus)
+  -g gpu-id            gpu device to use (default=auto) can be 0,1,2 for multi-gpu
   -j load:proc:save    thread count for load/proc/save (default=1:2:2) can be 1:2,2,2:2 for multi-gpu
-  -x                   enable tta mode
+  -x                   enable tta mode"
   -f format            output image format (jpg/png/webp, default=ext/png)
+  -v                   verbose output
 ```
 
 Note that it may introduce block inconsistency (and also generate slightly different results from the PyTorch implementation), because this executable file first crops the input image into several tiles, and then processes them separately, finally stitches together.
-
-This executable file is based on the wonderful [Tencent/ncnn](https://github.com/Tencent/ncnn) and [realsr-ncnn-vulkan](https://github.com/nihui/realsr-ncnn-vulkan) by [nihui](https://github.com/nihui).
 
 ---
 
@@ -236,7 +233,7 @@ Results are in the `results` folder
 ```console
 Usage: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile -o outfile [options]...
 
-A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile --outscale 3.5 --half --face_enhance
+A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile --outscale 3.5 --face_enhance
 
   -h                   show this help
   -i --input           Input image or folder. Default: inputs
@@ -246,10 +243,9 @@ A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile 
   --suffix             Suffix of the restored image. Default: out
   -t, --tile           Tile size, 0 for no tile during testing. Default: 0
   --face_enhance       Whether to use GFPGAN to enhance face. Default: False
-  --half               Whether to use half precision during inference. Default: False
+  --fp32               Use fp32 precision during inference. Default: fp16 (half precision).
   --ext                Image extension. Options: auto | jpg | png, auto means using the same extension as inputs. Default: auto
 ```
-
 
 ## :european_castle: Model Zoo
 
