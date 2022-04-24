@@ -2,29 +2,30 @@
 
 :white_check_mark: We add small models that are optimized for anime videos :-)
 
+- [How to Use](#how-to-use)
+- [PyTorch Inference](#pytorch-inference)
+- [ncnn Executable File](#ncnn-executable-file)
+  - [Step 1: Use ffmpeg to extract frames from video](#step-1-use-ffmpeg-to-extract-frames-from-video)
+  - [Step 2: Inference with Real-ESRGAN executable file](#step-2-inference-with-real-esrgan-executable-file)
+  - [Step 3: Merge the enhanced frames back into a video](#step-3-merge-the-enhanced-frames-back-into-a-video)
+- [More Demos](#more-demos)
+
 | Models                                                                                                                             | Scale | Description                    |
 | ---------------------------------------------------------------------------------------------------------------------------------- | :---- | :----------------------------- |
-| [RealESRGANv2-animevideo-xsx2](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/RealESRGANv2-animevideo-xsx2.pth) | X2    | Anime video model with XS size |
-| [RealESRGANv2-animevideo-xsx4](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/RealESRGANv2-animevideo-xsx4.pth) | X4    | Anime video model with XS size |
+| [realesr-animevideov3](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-animevideov3.pth) | X4 <sup>1</sup>   | Anime video model with XS size |
 
-- [Anime Video Models](#anime-video-models)
-  - [How to Use](#how-to-use)
-    - [PyTorch Inference](#pytorch-inference)
-    - [ncnn Executable File](#ncnn-executable-file)
-      - [Step 1: Use ffmpeg to extract frames from video](#step-1-use-ffmpeg-to-extract-frames-from-video)
-      - [Step 2: Inference with Real-ESRGAN executable file](#step-2-inference-with-real-esrgan-executable-file)
-      - [Step 3: Merge the enhanced frames back into a video](#step-3-merge-the-enhanced-frames-back-into-a-video)
-  - [More Demos](#more-demos)
+Note: <br>
+<sup>1</sup> This model can also be used for X1, X2, X3.
 
 ---
 
 The following are some demos (best view in the full screen mode).
 
-https://user-images.githubusercontent.com/17445847/145706977-98bc64a4-af27-481c-8abe-c475e15db7ff.MP4
+<https://user-images.githubusercontent.com/17445847/145706977-98bc64a4-af27-481c-8abe-c475e15db7ff.MP4>
 
-https://user-images.githubusercontent.com/17445847/145707055-6a4b79cb-3d9d-477f-8610-c6be43797133.MP4
+<https://user-images.githubusercontent.com/17445847/145707055-6a4b79cb-3d9d-477f-8610-c6be43797133.MP4>
 
-https://user-images.githubusercontent.com/17445847/145783523-f4553729-9f03-44a8-a7cc-782aadf67b50.MP4
+<https://user-images.githubusercontent.com/17445847/145783523-f4553729-9f03-44a8-a7cc-782aadf67b50.MP4>
 
 ## How to Use
 
@@ -32,12 +33,12 @@ https://user-images.githubusercontent.com/17445847/145783523-f4553729-9f03-44a8-
 
 ```bash
 # download model
-wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/RealESRGANv2-animevideo-xsx2.pth -P experiments/pretrained_models
+wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-animevideov3.pth -P realesrgan/weights
 # inference
-python inference_realesrgan_video.py -i inputs/video/onepiece_demo.mp4 -n RealESRGANv2-animevideo-xsx2 -s 2 -v -a --half --suffix outx2
+python inference_realesrgan_video.py -i inputs/video/onepiece_demo.mp4 -n realesr-animevideov3 -s 2 --suffix outx2
 ```
 
-### ncnn Executable File
+### NCNN Executable File
 
 #### Step 1: Use ffmpeg to extract frames from video
 
@@ -49,12 +50,12 @@ ffmpeg -i onepiece_demo.mp4 -qscale:v 1 -qmin 1 -qmax 1 -vsync 0 tmp_frames/fram
 
 #### Step 2: Inference with Real-ESRGAN executable file
 
-1. Download the latest portable [Windows](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-windows.zip) / [Linux](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-ubuntu.zip) / [MacOS](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-macos.zip) **executable files for Intel/AMD/Nvidia GPU**
+1. Download the latest portable [Windows](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip) / [Linux](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.zip) / [MacOS](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-macos.zip) **executable files for Intel/AMD/Nvidia GPU**
 
 1. Taking the Windows as example, run:
 
     ```bash
-    ./realesrgan-ncnn-vulkan.exe -i tmp_frames -o out_frames -n RealESRGANv2-animevideo-xsx2 -s 2 -f jpg
+    ./realesrgan-ncnn-vulkan.exe -i tmp_frames -o out_frames -n realesr-animevideov3 -s 2 -f jpg
     ```
 
     - Remember to create the folder `out_frames` ahead
@@ -110,12 +111,12 @@ ffmpeg -i onepiece_demo.mp4 -qscale:v 1 -qmin 1 -qmax 1 -vsync 0 tmp_frames/fram
 
 - Input video for One Piece:
 
-    https://user-images.githubusercontent.com/17445847/145706822-0e83d9c4-78ef-40ee-b2a4-d8b8c3692d17.mp4
+    <https://user-images.githubusercontent.com/17445847/145706822-0e83d9c4-78ef-40ee-b2a4-d8b8c3692d17.mp4>
 
 - Out video for One Piece
 
-    https://user-images.githubusercontent.com/17445847/145706827-384108c0-78f6-4aa7-9621-99d1aaf65682.mp4
+    <https://user-images.githubusercontent.com/17445847/164960481-759658cf-fcb8-480c-b888-cecb606e8744.mp4>
 
 **More comparisons**
 
-https://user-images.githubusercontent.com/17445847/145707458-04a5e9b9-2edd-4d1f-b400-380a72e5f5e6.MP4
+<https://user-images.githubusercontent.com/17445847/145707458-04a5e9b9-2edd-4d1f-b400-380a72e5f5e6.MP4>
