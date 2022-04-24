@@ -2,12 +2,11 @@
 
 :white_check_mark: We add [*RealESRGAN_x4plus_anime_6B.pth*](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth), which is optimized for **anime** images with much smaller model size.
 
-- [Anime Model](#anime-model)
-  - [How to Use](#how-to-use)
-    - [PyTorch Inference](#pytorch-inference)
-    - [ncnn Executable File](#ncnn-executable-file)
-  - [Comparisons with waifu2x](#comparisons-with-waifu2x)
-  - [Comparisons with Sliding Bars](#comparisons-with-sliding-bars)
+- [How to Use](#how-to-use)
+  - [PyTorch Inference](#pytorch-inference)
+  - [ncnn Executable File](#ncnn-executable-file)
+- [Comparisons with waifu2x](#comparisons-with-waifu2x)
+- [Comparisons with Sliding Bars](#comparisons-with-sliding-bars)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/xinntao/public-figures/master/Real-ESRGAN/cmp_realesrgan_anime_1.png">
