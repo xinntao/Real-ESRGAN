@@ -12,7 +12,7 @@
 [![python lint](https://github.com/xinntao/Real-ESRGAN/actions/workflows/pylint.yml/badge.svg)](https://github.com/xinntao/Real-ESRGAN/blob/master/.github/workflows/pylint.yml)
 [![Publish-pip](https://github.com/xinntao/Real-ESRGAN/actions/workflows/publish-pip.yml/badge.svg)](https://github.com/xinntao/Real-ESRGAN/blob/master/.github/workflows/publish-pip.yml)
 
-:fire: :fire: :fire: Add **small video models** for anime videos (**针对动漫视频的小模型**). Please see [anime video models](docs/anime_video_model.md).
+:fire: Update the **RealESRGAN AnimeVideo-v3** model **更新动漫视频的小模型**. Please see [anime video models](docs/anime_video_model.md) and [comparisons](docs/anime_comparisons.md) for more details.
 
 1. [Colab Demo](https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing) for Real-ESRGAN <a href="https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="google colab logo"></a>.
 2. [Colab Demo](https://colab.research.google.com/drive/1yNl9ORUxxlL4N0keJa2SEPB61imPQd1B?usp=sharing) for Real-ESRGAN (**anime videos**) <a href="https://colab.research.google.com/drive/1yNl9ORUxxlL4N0keJa2SEPB61imPQd1B?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="google colab logo"></a>.
@@ -39,9 +39,10 @@ Other recommended projects:<br>
 ---
 
 <!---------------------------------- Updates --------------------------->
-<details open>
+<details>
 <summary>🚩<b>Updates</b></summary>
 
+- ✅ Update the **RealESRGAN AnimeVideo-v3** model. Please see [anime video models](docs/anime_video_model.md) and [comparisons](docs/anime_comparisons.md) for more details.
 - ✅ Add small models for anime videos. More details are in [anime video models](docs/anime_video_model.md).
 - ✅ Add the ncnn implementation [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
 - ✅ Add [*RealESRGAN_x4plus_anime_6B.pth*](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth), which is optimized for **anime** images with much smaller model size. More details and comparisons with [waifu2x](https://github.com/nihui/waifu2x-ncnn-vulkan) are in [**anime_model.md**](docs/anime_model.md)
@@ -55,10 +56,10 @@ Other recommended projects:<br>
 </details>
 
 <!---------------------------------- Projects that use Real-ESRGAN --------------------------->
-<details open>
+<details>
 <summary>🧩<b>Projects that use Real-ESRGAN</b></summary>
 
-&nbsp;&nbsp;&nbsp;&nbsp;If you develop/use Real-ESRGAN in your projects, welcome to let me know 👋
+&nbsp;&nbsp;&nbsp;&nbsp;👋 If you develop/use Real-ESRGAN in your projects, welcome to let me know.
 
 - NCNN-Android: [RealSR-NCNN-Android](https://github.com/tumuyan/RealSR-NCNN-Android) by [tumuyan](https://github.com/tumuyan)
 - VapourSynth: [vs-realesrgan](https://github.com/HolyWu/vs-realesrgan) by [HolyWu](https://github.com/HolyWu)
@@ -77,7 +78,7 @@ Other recommended projects:<br>
 
 <!---------------------------------- Demo videos --------------------------->
 <details open>
-<summary>👀<b>Demo videos</b>👀</summary>
+<summary>👀<b>Demo videos</b></summary>
 
 - [大闹天宫片段](https://www.bilibili.com/video/BV1ja41117zb)
 

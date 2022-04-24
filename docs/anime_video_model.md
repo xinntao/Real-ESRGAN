@@ -1,6 +1,7 @@
 # Anime Video Models
 
-:white_check_mark: We add small models that are optimized for anime videos :-)
+:white_check_mark: We add small models that are optimized for anime videos :-)<br>
+More comparisons can be found in [anime_comparisons.md](docs/anime_comparisons.md)
 
 - [How to Use](#how-to-use)
 - [PyTorch Inference](#pytorch-inference)
