@@ -51,9 +51,10 @@ def get_frames(args, extract_frames=False):
 def inference_stream(args, upsampler, face_enhancer):
     try:
         import ffmpeg
-    except ImportError as e:
-        print("please install ffmpeg-python package! The command line may be: pip3 install ffmpeg-python")
-        raise e
+    except ImportError:
+        import pip
+        pip.main(['install', '--user', 'ffmpeg-python'])
+        import ffmpeg
 
     is_video, paths = get_frames(args, extract_frames=False)
     video_name = os.path.splitext(os.path.basename(args.input))[0]
@@ -69,11 +70,8 @@ def inference_stream(args, upsampler, face_enhancer):
 
         # set up frame decoder
         decoder = (
-            ffmpeg
-                .input(args.input)
-                .output('pipe:', format='rawvideo', pix_fmt='rgb24', loglevel='warning')
-                .run_async(pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin)
-        )  # yapf: disable  # noqa
+            ffmpeg.input(args.input).output('pipe:', format='rawvideo', pix_fmt='rgb24', loglevel='warning').run_async(
+                pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin))
     else:
         from PIL import Image
         tmp_img = Image.open(paths[0])
@@ -88,20 +86,17 @@ def inference_stream(args, upsampler, face_enhancer):
     if is_video:
         audio = ffmpeg.input(args.input).audio
         encoder = (
-            ffmpeg
-                .input('pipe:', format='rawvideo', pix_fmt='rgb24', s=f'{out_width}x{out_height}', framerate=args.fps)
-                .output(audio, video_save_path, pix_fmt='yuv420p', vcodec='libx264', loglevel='info', acodec='copy')
-                .overwrite_output()
-                .run_async(pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin)
-        )  # yapf: disable  # noqa
+            ffmpeg.input(
+                'pipe:', format='rawvideo', pix_fmt='rgb24', s=f'{out_width}x{out_height}', framerate=args.fps).output(
+                    audio, video_save_path, pix_fmt='yuv420p', vcodec='libx264', loglevel='info',
+                    acodec='copy').overwrite_output().run_async(pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin))
     else:
         encoder = (
-            ffmpeg
-                .input('pipe:', format='rawvideo', pix_fmt='rgb24', s=f'{out_width}x{out_height}', framerate=args.fps)
-                .output(video_save_path, pix_fmt='yuv420p', vcodec='libx264', loglevel='info')
-                .overwrite_output()
-                .run_async(pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin)
-        )  # yapf: disable  # noqa
+            ffmpeg.input(
+                'pipe:', format='rawvideo', pix_fmt='rgb24', s=f'{out_width}x{out_height}',
+                framerate=args.fps).output(video_save_path, pix_fmt='yuv420p', vcodec='libx264',
+                                           loglevel='info').overwrite_output().run_async(
+                                               pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin))
 
     while True:
         if is_video:
