@@ -36,7 +36,12 @@ The following are some demos (best view in the full screen mode).
 # download model
 wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-animevideov3.pth -P realesrgan/weights
 # inference
-python inference_realesrgan_video.py -i inputs/video/onepiece_demo.mp4 -n realesr-animevideov3 -s 2 --suffix outx2
+python inference_realesrgan_video.py -i inputs/video/onepiece_demo.mp4 -n realesr-animevideov3 -s 2 --suffix outx2 --stream
+```
+```console
+Usage:
+--stream                 with this option, the enhanced frames are sent directly to a ffmpeg stream,
+                         avoiding storing large (usually tens of GB) intermediate results.        
 ```
 
 ### NCNN Executable File
