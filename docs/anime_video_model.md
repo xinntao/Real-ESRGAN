@@ -46,9 +46,9 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 python inference_realesrgan_video.py -i inputs/vide
 Usage:
 --num_process_per_gpu    The total number of process is num_gpu * num_process_per_gpu. The bottleneck of
                          the program lies on the IO, so the GPUs are usually not fully utilized. To alleviate
-                         this issue, you can use multi-processing by setting this parameter. As long as it 
+                         this issue, you can use multi-processing by setting this parameter. As long as it
                          does not exceed the CUDA memory
---extract_frame_first    If you encounter ffmpeg error when using multi-processing, you can turn this otion on.
+--extract_frame_first    If you encounter ffmpeg error when using multi-processing, you can turn this option on.
 ```
 
 ### NCNN Executable File
