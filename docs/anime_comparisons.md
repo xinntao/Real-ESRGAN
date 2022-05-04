@@ -22,7 +22,8 @@ Our RealESRGAN-AnimeVideo-v3 can achieve better results with faster inference sp
 
 ## Results
 
-You may need to **zoom in** for comparing details, or **click the image** to see in the full size.
+You may need to **zoom in** for comparing details, or **click the image** to see in the full size. Please note that the images
+in the table below are the resized and cropped patches from the original images, you can download the original inputs and outputs from [Google Drive](https://drive.google.com/drive/folders/1bc_Hje1Nqop9NDkUvci2VACSjL7HZMRp?usp=sharing) .
 
 **More natural results, better background restoration**
 | Input | waifu2x | Real-CUGAN | RealESRGAN<br>AnimeVideo-v3 |

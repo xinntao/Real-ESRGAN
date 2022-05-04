@@ -21,7 +21,8 @@
 
 ## 结果
 
-您可能需要**放大**以比较详细信息, 或者**单击图像**以查看完整尺寸.
+您可能需要**放大**以比较详细信息, 或者**单击图像**以查看完整尺寸。 请注意下面表格的图片是从原图里裁剪patch并且resize后的结果，您可以从
+[Google Drive](https://drive.google.com/drive/folders/1bc_Hje1Nqop9NDkUvci2VACSjL7HZMRp?usp=sharing) 里下载原始的输入和输出。
 
 **更自然的结果，更好的虚化背景恢复**
 
