@@ -35,13 +35,20 @@ The following are some demos (best view in the full screen mode).
 ```bash
 # download model
 wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-animevideov3.pth -P realesrgan/weights
-# inference
-python inference_realesrgan_video.py -i inputs/video/onepiece_demo.mp4 -n realesr-animevideov3 -s 2 --suffix outx2 --stream
+# single gpu and single process inference
+CUDA_VISIBLE_DEVICES=0 python inference_realesrgan_video.py -i inputs/video/onepiece_demo.mp4 -n realesr-animevideov3 -s 2 --suffix outx2
+# single gpu and multi process inference (you can use multi-processing to improve GPU utilization)
+CUDA_VISIBLE_DEVICES=0 python inference_realesrgan_video.py -i inputs/video/onepiece_demo.mp4 -n realesr-animevideov3 -s 2 --suffix outx2 --num_process_per_gpu 2
+# multi gpu and multi process inference
+CUDA_VISIBLE_DEVICES=0,1,2,3 python inference_realesrgan_video.py -i inputs/video/onepiece_demo.mp4 -n realesr-animevideov3 -s 2 --suffix outx2 --num_process_per_gpu 2
 ```
 ```console
 Usage:
---stream                 with this option, the enhanced frames are sent directly to a ffmpeg stream,
-                         avoiding storing large (usually tens of GB) intermediate results.        
+--num_process_per_gpu    The total number of process is num_gpu * num_process_per_gpu. The bottleneck of
+                         the program lies on the IO, so the GPUs are usually not fully utilized. To alleviate
+                         this issue, you can use multi-processing by setting this parameter. As long as it
+                         does not exceed the CUDA memory
+--extract_frame_first    If you encounter ffmpeg error when using multi-processing, you can turn this option on.
 ```
 
 ### NCNN Executable File
