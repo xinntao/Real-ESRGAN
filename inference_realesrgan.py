@@ -39,6 +39,9 @@ def main():
         type=str,
         default='auto',
         help='Image extension. Options: auto | jpg | png, auto means using the same extension as inputs')
+    parser.add_argument(
+        '-g', '--gpu-id', type=int, default=None, help='gpu device to use (default=None) can be 0,1,2 for multi-gpu')
+
     args = parser.parse_args()
 
     # determine models according to model names
@@ -71,7 +74,8 @@ def main():
         tile=args.tile,
         tile_pad=args.tile_pad,
         pre_pad=args.pre_pad,
-        half=not args.fp32)
+        half=not args.fp32,
+        gpu_id=args.gpu_id)
 
     if args.face_enhance:  # Use GFPGAN for face enhancement
         from gfpgan import GFPGANer
