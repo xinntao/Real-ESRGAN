@@ -4,7 +4,7 @@
 
 ## <div align="center"><b><a href="README.md">English</a> | <a href="README_CN.md">简体中文</a></b></div>
 
-👀[Demos]() **|** 🚩[Updates]() **|** ⚡[Quick Inference](#zap-quick-inference) **|** 🏰[Model Zoo](docs/model_zoo.md) **|**
+👀[Demos](#-demos-videos) **|** 🚩[Updates](#-updates) **|** ⚡[Quick Inference](#zap-quick-inference) **|** 🏰[Model Zoo](docs/model_zoo.md) **|**
 
 [![download](https://img.shields.io/github/downloads/xinntao/Real-ESRGAN/total.svg)](https://github.com/xinntao/Real-ESRGAN/releases)
 [![PyPI](https://img.shields.io/pypi/v/realesrgan)](https://pypi.org/project/realesrgan/)
@@ -31,13 +31,14 @@ We extend the powerful ESRGAN to a practical restoration application (namely, Re
 
 ---
 
-If Real-ESRGAN is helpful, please help to :star: this repo or recommend it to your friends:blush: <br>
+If Real-ESRGAN is helpful, please help to :star: this repo or recommend it to your friends :blush: <br>
 Other recommended projects:<br>
 :arrow_forward: [GFPGAN](https://github.com/TencentARC/GFPGAN): A practical algorithm for real-world face restoration <br>
 :arrow_forward: [BasicSR](https://github.com/xinntao/BasicSR): An open-source image and video restoration toolbox<br>
 :arrow_forward: [facexlib](https://github.com/xinntao/facexlib): A collection that provides useful face-relation functions.<br>
 :arrow_forward: [HandyView](https://github.com/xinntao/HandyView): A PyQt5-based image viewer that is handy for view and comparison <br>
 :arrow_forward: [HandyFigure](https://github.com/xinntao/HandyFigure): Open source of paper figures <br>
+
 ---
 
 ### :book: Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
