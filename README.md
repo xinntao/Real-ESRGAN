@@ -4,6 +4,8 @@
 
 ## <div align="center"><b><a href="README.md">English</a> | <a href="README_CN.md">简体中文</a></b></div>
 
+👀[Demos]() **|** 🚩[Updates]() **|** ⚡[Quick Inference](#zap-quick-inference) **|** 🏰[Model Zoo](docs/model_zoo.md) **|**
+
 [![download](https://img.shields.io/github/downloads/xinntao/Real-ESRGAN/total.svg)](https://github.com/xinntao/Real-ESRGAN/releases)
 [![PyPI](https://img.shields.io/pypi/v/realesrgan)](https://pypi.org/project/realesrgan/)
 [![Open issue](https://img.shields.io/github/issues/xinntao/Real-ESRGAN)](https://github.com/xinntao/Real-ESRGAN/issues)
@@ -14,6 +16,7 @@
 
 :fire: Update the **RealESRGAN AnimeVideo-v3** model **更新动漫视频的小模型**. Please see [[anime video models](docs/anime_video_model.md)] and [[comparisons](docs/anime_comparisons.md)] for more details.
 
+1. You can try it in our website: [ARC Demo](https://arc.tencent.com/en/ai-demos/imgRestore)
 1. [Colab Demo](https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing) for Real-ESRGAN | [Colab Demo](https://colab.research.google.com/drive/1yNl9ORUxxlL4N0keJa2SEPB61imPQd1B?usp=sharing) for Real-ESRGAN (**anime videos**).
 2. Portable [Windows](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip) / [Linux](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.zip) / [MacOS](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-macos.zip) **executable files for Intel/AMD/Nvidia GPU**. You can find more information [here](#Portable-executable-files). The ncnn implementation is in [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
 
@@ -28,18 +31,29 @@ We extend the powerful ESRGAN to a practical restoration application (namely, Re
 
 ---
 
-If Real-ESRGAN is helpful in your photos/projects, please help to :star: this repo or recommend it to your friends. Thanks:blush: <br>
+If Real-ESRGAN is helpful, please help to :star: this repo or recommend it to your friends:blush: <br>
 Other recommended projects:<br>
 :arrow_forward: [GFPGAN](https://github.com/TencentARC/GFPGAN): A practical algorithm for real-world face restoration <br>
 :arrow_forward: [BasicSR](https://github.com/xinntao/BasicSR): An open-source image and video restoration toolbox<br>
 :arrow_forward: [facexlib](https://github.com/xinntao/facexlib): A collection that provides useful face-relation functions.<br>
-:arrow_forward: [HandyView](https://github.com/xinntao/HandyView): A PyQt5-based image viewer that is handy for view and comparison. <br>
+:arrow_forward: [HandyView](https://github.com/xinntao/HandyView): A PyQt5-based image viewer that is handy for view and comparison <br>
+:arrow_forward: [HandyFigure](https://github.com/xinntao/HandyFigure): Open source of paper figures <br>
+---
+
+### :book: Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
+
+> [[Paper](https://arxiv.org/abs/2107.10833)] &emsp; [[YouTube Video](https://www.youtube.com/watch?v=fxHWoDSSvSc)] &emsp; [[B站讲解](https://www.bilibili.com/video/BV1H34y1m7sS/)] &emsp; [[Poster](https://xinntao.github.io/projects/RealESRGAN_src/RealESRGAN_poster.pdf)] &emsp; [[PPT slides](https://docs.google.com/presentation/d/1QtW6Iy8rm8rGLsJ0Ldti6kP-7Qyzy6XL/edit?usp=sharing&ouid=109799856763657548160&rtpof=true&sd=true)]<br>
+> [Xintao Wang](https://xinntao.github.io/), Liangbin Xie, [Chao Dong](https://scholar.google.com.hk/citations?user=OSDCB0UAAAAJ), [Ying Shan](https://scholar.google.com/citations?user=4oXBp9UAAAAJ&hl=en) <br>
+> [Tencent ARC Lab](https://arc.tencent.com/en/ai-demos/imgRestore); Shenzhen Institutes of Advanced Technology, Chinese Academy of Sciences
+
+<p align="center">
+  <img src="assets/teaser.jpg">
+</p>
 
 ---
 
 <!---------------------------------- Updates --------------------------->
-<details>
-<summary>🚩<b>Updates</b></summary>
+## 🚩 Updates
 
 - ✅ Update the **RealESRGAN AnimeVideo-v3** model. Please see [anime video models](docs/anime_video_model.md) and [comparisons](docs/anime_comparisons.md) for more details.
 - ✅ Add small models for anime videos. More details are in [anime video models](docs/anime_video_model.md).
@@ -52,69 +66,16 @@ Other recommended projects:<br>
 - ✅ [The inference code](inference_realesrgan.py) supports: 1) **tile** options; 2) images with **alpha channel**; 3) **gray** images; 4) **16-bit** images.
 - ✅ The training codes have been released. A detailed guide can be found in [Training.md](docs/Training.md).
 
-</details>
-
-<!---------------------------------- Projects that use Real-ESRGAN --------------------------->
-<details>
-<summary>🧩<b>Projects that use Real-ESRGAN</b></summary>
-
-&nbsp;&nbsp;&nbsp;&nbsp;👋 If you develop/use Real-ESRGAN in your projects, welcome to let me know.
-
-- NCNN-Android: [RealSR-NCNN-Android](https://github.com/tumuyan/RealSR-NCNN-Android) by [tumuyan](https://github.com/tumuyan)
-- VapourSynth: [vs-realesrgan](https://github.com/HolyWu/vs-realesrgan) by [HolyWu](https://github.com/HolyWu)
-- NCNN: [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan)
-
-&nbsp;&nbsp;&nbsp;&nbsp;**GUI**
-
-- [Waifu2x-Extension-GUI](https://github.com/AaronFeng753/Waifu2x-Extension-GUI) by [AaronFeng753](https://github.com/AaronFeng753)
-- [Squirrel-RIFE](https://github.com/Justin62628/Squirrel-RIFE) by [Justin62628](https://github.com/Justin62628)
-- [Real-GUI](https://github.com/scifx/Real-GUI) by [scifx](https://github.com/scifx)
-- [Real-ESRGAN_GUI](https://github.com/net2cn/Real-ESRGAN_GUI) by [net2cn](https://github.com/net2cn)
-- [Real-ESRGAN-EGUI](https://github.com/WGzeyu/Real-ESRGAN-EGUI) by [WGzeyu](https://github.com/WGzeyu)
-- [anime_upscaler](https://github.com/shangar21/anime_upscaler) by [shangar21](https://github.com/shangar21)
-
-</details>
-
 <!---------------------------------- Demo videos --------------------------->
-<details open>
-<summary>👀<b>Demo videos</b></summary>
+## 👀 Demos Videos
+
+#### Bilibili
 
 - [大闹天宫片段](https://www.bilibili.com/video/BV1ja41117zb)
+- [Anime dance cut 动漫魔性舞蹈](https://www.bilibili.com/video/BV1wY4y1L7hT/)
+- [海贼王片段](https://www.bilibili.com/video/BV1i3411L7Gy/)
 
-</details>
-
-### :book: Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
-
-> [[Paper](https://arxiv.org/abs/2107.10833)] &emsp; [Project Page] &emsp; [[YouTube Video](https://www.youtube.com/watch?v=fxHWoDSSvSc)] &emsp; [[B站讲解](https://www.bilibili.com/video/BV1H34y1m7sS/)] &emsp; [[Poster](https://xinntao.github.io/projects/RealESRGAN_src/RealESRGAN_poster.pdf)] &emsp; [[PPT slides](https://docs.google.com/presentation/d/1QtW6Iy8rm8rGLsJ0Ldti6kP-7Qyzy6XL/edit?usp=sharing&ouid=109799856763657548160&rtpof=true&sd=true)]<br>
-> [Xintao Wang](https://xinntao.github.io/), Liangbin Xie, [Chao Dong](https://scholar.google.com.hk/citations?user=OSDCB0UAAAAJ), [Ying Shan](https://scholar.google.com/citations?user=4oXBp9UAAAAJ&hl=en) <br>
-> Tencent ARC Lab; Shenzhen Institutes of Advanced Technology, Chinese Academy of Sciences
-
-<p align="center">
-  <img src="assets/teaser.jpg">
-</p>
-
----
-
-We have provided a pretrained model (*RealESRGAN_x4plus.pth*) with upsampling X4.<br>
-**Note that RealESRGAN may still fail in some cases as the real-world degradations are really too complex.**<br>
-Moreover, it **may not** perform well on **human faces, text**, *etc*, which will be optimized later.
-<br>
-
-Real-ESRGAN will be a long-term supported project (in my current plan :smiley:). It will be continuously updated
-in my spare time.
-
-Here is a TODO list in the near future:
-
-- [ ] optimize for human faces
-- [ ] optimize for texts
-- [x] optimize for anime images
-- [ ] support more scales
-- [ ] support controllable restoration strength
-
-If you have any good ideas or demands, please open an issue/discussion to let me know. <br>
-If you have some images that Real-ESRGAN could not well restored, please also open an issue/discussion. I will record it (but I cannot guarantee to resolve it:stuck_out_tongue:). If necessary, I will open a page to specially record these real-world cases that need to be solved, but the current technology is difficult to handle well.
-
----
+#### YouTube
 
 ### Portable executable files
 
@@ -247,10 +208,6 @@ A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile 
   --ext                Image extension. Options: auto | jpg | png, auto means using the same extension as inputs. Default: auto
 ```
 
-## :european_castle: Model Zoo
-
-Please see [docs/model_zoo.md](docs/model_zoo.md)
-
 ## :computer: Training and Finetuning on your own dataset
 
 A detailed guide can be found in [Training.md](docs/Training.md).
@@ -267,6 +224,24 @@ A detailed guide can be found in [Training.md](docs/Training.md).
 ## :e-mail: Contact
 
 If you have any question, please email `xintao.wang@outlook.com` or `xintaowang@tencent.com`.
+
+<!---------------------------------- Projects that use Real-ESRGAN --------------------------->
+## 🧩 Projects that use Real-ESRGAN
+
+&nbsp;&nbsp;&nbsp;&nbsp;👋 If you develop/use Real-ESRGAN in your projects, welcome to let me know.
+
+- NCNN-Android: [RealSR-NCNN-Android](https://github.com/tumuyan/RealSR-NCNN-Android) by [tumuyan](https://github.com/tumuyan)
+- VapourSynth: [vs-realesrgan](https://github.com/HolyWu/vs-realesrgan) by [HolyWu](https://github.com/HolyWu)
+- NCNN: [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan)
+
+&nbsp;&nbsp;&nbsp;&nbsp;**GUI**
+
+- [Waifu2x-Extension-GUI](https://github.com/AaronFeng753/Waifu2x-Extension-GUI) by [AaronFeng753](https://github.com/AaronFeng753)
+- [Squirrel-RIFE](https://github.com/Justin62628/Squirrel-RIFE) by [Justin62628](https://github.com/Justin62628)
+- [Real-GUI](https://github.com/scifx/Real-GUI) by [scifx](https://github.com/scifx)
+- [Real-ESRGAN_GUI](https://github.com/net2cn/Real-ESRGAN_GUI) by [net2cn](https://github.com/net2cn)
+- [Real-ESRGAN-EGUI](https://github.com/WGzeyu/Real-ESRGAN-EGUI) by [WGzeyu](https://github.com/WGzeyu)
+- [anime_upscaler](https://github.com/shangar21/anime_upscaler) by [shangar21](https://github.com/shangar21)
 
 ## :hugs: Acknowledgement
 
