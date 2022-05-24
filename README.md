@@ -4,7 +4,9 @@
 
 ## <div align="center"><b><a href="README.md">English</a> | <a href="README_CN.md">简体中文</a></b></div>
 
-👀[Demos](#-demos-videos) **|** 🚩[Updates](#-updates) **|** ⚡[Quick Inference](#zap-quick-inference) **|** 🏰[Model Zoo](docs/model_zoo.md) **|** ❓[FAQ](docs/FAQ.md) **|** 💻[Training](docs/Training.md)
+<div align="center">
+
+👀[**Demos**](#-demos-videos) **|** 🚩[**Updates**](#-updates) **|** ⚡[**Usage**](#zap-quick-inference) **|** 🏰[**Model Zoo**](docs/model_zoo.md) **|** ❓[**FAQ**](docs/FAQ.md) **|** 💻[**Train**](docs/Training.md) **|** 🎨[**Contribution**](docs/CONTRIBUTING.md)
 
 [![download](https://img.shields.io/github/downloads/xinntao/Real-ESRGAN/total.svg)](https://github.com/xinntao/Real-ESRGAN/releases)
 [![PyPI](https://img.shields.io/pypi/v/realesrgan)](https://pypi.org/project/realesrgan/)
@@ -14,16 +16,17 @@
 [![python lint](https://github.com/xinntao/Real-ESRGAN/actions/workflows/pylint.yml/badge.svg)](https://github.com/xinntao/Real-ESRGAN/blob/master/.github/workflows/pylint.yml)
 [![Publish-pip](https://github.com/xinntao/Real-ESRGAN/actions/workflows/publish-pip.yml/badge.svg)](https://github.com/xinntao/Real-ESRGAN/blob/master/.github/workflows/publish-pip.yml)
 
-:fire: Update the **RealESRGAN AnimeVideo-v3** model **更新动漫视频的小模型**. Please see [[anime video models](docs/anime_video_model.md)] and [[comparisons](docs/anime_comparisons.md)] for more details.
+</div>
+
+:fire: **AnimeVideo-v3 model (动漫视频小模型)**. Please see [[*anime video models*](docs/anime_video_model.md)] and [[*comparisons*](docs/anime_comparisons.md)].<br>
+:fire: **RealESRGAN_x4plus_anime_6B for anime images (动漫插图模型)**. Please see [*anime_model*](docs/anime_model.md)
 
 1. You can try it in our website: [ARC Demo](https://arc.tencent.com/en/ai-demos/imgRestore)
-1. [Colab Demo](https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing) for Real-ESRGAN | [Colab Demo](https://colab.research.google.com/drive/1yNl9ORUxxlL4N0keJa2SEPB61imPQd1B?usp=sharing) for Real-ESRGAN (**anime videos**).
-2. Portable [Windows](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip) / [Linux](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.zip) / [MacOS](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-macos.zip) **executable files for Intel/AMD/Nvidia GPU**. You can find more information [here](#Portable-executable-files). The ncnn implementation is in [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
+1. [Colab Demo](https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing) for Real-ESRGAN **|** [Colab Demo](https://colab.research.google.com/drive/1yNl9ORUxxlL4N0keJa2SEPB61imPQd1B?usp=sharing) for Real-ESRGAN (**anime videos**).
+2. Portable [Windows](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip) / [Linux](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.zip) / [MacOS](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-macos.zip) **executable files for Intel/AMD/Nvidia GPU**. You can find more information [here](#portable-executable-files-ncnn). The ncnn implementation is in [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
 
 Real-ESRGAN aims at developing **Practical Algorithms for General Image/Video Restoration**.<br>
 We extend the powerful ESRGAN to a practical restoration application (namely, Real-ESRGAN), which is trained with pure synthetic data.
-
-:art: Real-ESRGAN needs your contributions. Any contributions are welcome, such as new features/models/typo fixes/suggestions/maintenance, *etc*. See [CONTRIBUTING.md](docs/CONTRIBUTING.md). All contributors are list [here](README.md#hugs-acknowledgement).
 
 :milky_way: Thanks for your valuable feedbacks/suggestions. All the feedbacks are updated in [feedback.md](docs/feedback.md).
 
@@ -111,8 +114,8 @@ Other recommended projects:<br>
 
 ## :zap: Quick Inference
 
-1. [Portable executable files (NCNN)]()
-1. [Python script]()
+1. [Portable executable files (NCNN)](#portable-executable-files-ncnn)
+1. [Python script](#python-script)
 
 ### Portable executable files (NCNN)
 
@@ -234,7 +237,7 @@ If you have any question, please email `xintao.wang@outlook.com` or `xintaowang@
 <!---------------------------------- Projects that use Real-ESRGAN --------------------------->
 ## 🧩 Projects that use Real-ESRGAN
 
-&nbsp;&nbsp;&nbsp;&nbsp;👋 If you develop/use Real-ESRGAN in your projects, welcome to let me know.
+If you develop/use Real-ESRGAN in your projects, welcome to let me know.
 
 - NCNN-Android: [RealSR-NCNN-Android](https://github.com/tumuyan/RealSR-NCNN-Android) by [tumuyan](https://github.com/tumuyan)
 - VapourSynth: [vs-realesrgan](https://github.com/HolyWu/vs-realesrgan) by [HolyWu](https://github.com/HolyWu)

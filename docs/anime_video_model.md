@@ -1,7 +1,7 @@
 # Anime Video Models
 
 :white_check_mark: We add small models that are optimized for anime videos :-)<br>
-More comparisons can be found in [anime_comparisons.md](docs/anime_comparisons.md)
+More comparisons can be found in [anime_comparisons.md](anime_comparisons.md)
 
 - [How to Use](#how-to-use)
 - [PyTorch Inference](#pytorch-inference)
@@ -42,6 +42,7 @@ CUDA_VISIBLE_DEVICES=0 python inference_realesrgan_video.py -i inputs/video/onep
 # multi gpu and multi process inference
 CUDA_VISIBLE_DEVICES=0,1,2,3 python inference_realesrgan_video.py -i inputs/video/onepiece_demo.mp4 -n realesr-animevideov3 -s 2 --suffix outx2 --num_process_per_gpu 2
 ```
+
 ```console
 Usage:
 --num_process_per_gpu    The total number of process is num_gpu * num_process_per_gpu. The bottleneck of
