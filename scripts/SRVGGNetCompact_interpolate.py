@@ -2,16 +2,19 @@ import sys
 import torch
 from collections import OrderedDict
 
+
 def load_nets(net_a_path, net_b_path, loc='cpu'):
     net_a = torch.load(net_a_path, map_location=torch.device(loc))
     net_b = torch.load(net_b_path, map_location=torch.device(loc))
     return net_a, net_b
+
 
 def interpolate(net_a, net_b, net_interp, alpha):
     for k, v_a in net_a['params'].items():
         print(k)
         v_b = net_b['params'][k]
         net_interp['params'][k] = (1 - alpha) * v_a + alpha * v_b
+
 
 def main():
     alpha = float(sys.argv[1])
@@ -28,6 +31,7 @@ def main():
 
     interpolate(net_a, net_b, net_interp, alpha)
     torch.save(net_interp, net_interp_path)
+
 
 if __name__ == '__main__':
     main()
