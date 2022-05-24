@@ -82,8 +82,6 @@ Other recommended projects:<br>
 
 #### YouTube
 
----
-
 ## 🔧 Dependencies and Installation
 
 - Python >= 3.7 (Recommend to use [Anaconda](https://www.anaconda.com/download/#linux) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html))
