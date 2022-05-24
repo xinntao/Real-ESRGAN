@@ -6,7 +6,7 @@
 
 <div align="center">
 
-👀[**Demos**](#-demos-videos) **|** 🚩[**Updates**](#-updates) **|** ⚡[**Usage**](#zap-quick-inference) **|** 🏰[**Model Zoo**](docs/model_zoo.md) **|** ❓[**FAQ**](docs/FAQ.md) **|** 💻[**Train**](docs/Training.md) **|** 🎨[**Contribution**](docs/CONTRIBUTING.md)
+👀[**Demos**](#-demos-videos) **|** 🚩[**Updates**](#-updates) **|** ⚡[**Usage**](#quick-inference) **|** 🏰[**Model Zoo**](docs/model_zoo.md) **|** 🔧[Install](#dependencies-and-installation)  **|** 💻[Train](docs/Training.md) **|** ❓[FAQ](docs/FAQ.md) **|** 🎨[Contribution](docs/CONTRIBUTING.md)
 
 [![download](https://img.shields.io/github/downloads/xinntao/Real-ESRGAN/total.svg)](https://github.com/xinntao/Real-ESRGAN/releases)
 [![PyPI](https://img.shields.io/pypi/v/realesrgan)](https://pypi.org/project/realesrgan/)
@@ -18,31 +18,31 @@
 
 </div>
 
-:fire: **AnimeVideo-v3 model (动漫视频小模型)**. Please see [[*anime video models*](docs/anime_video_model.md)] and [[*comparisons*](docs/anime_comparisons.md)].<br>
-:fire: **RealESRGAN_x4plus_anime_6B for anime images (动漫插图模型)**. Please see [*anime_model*](docs/anime_model.md)
+🔥 **AnimeVideo-v3 model (动漫视频小模型)**. Please see [[*anime video models*](docs/anime_video_model.md)] and [[*comparisons*](docs/anime_comparisons.md)]<br>
+🔥 **RealESRGAN_x4plus_anime_6B** for anime images **(动漫插图模型)**. Please see [[*anime_model*](docs/anime_model.md)]
 
-1. You can try it in our website: [ARC Demo](https://arc.tencent.com/en/ai-demos/imgRestore)
+1. You can try in our website: [ARC Demo](https://arc.tencent.com/en/ai-demos/imgRestore) (now only support RealESRGAN_x4plus_anime_6B)
 1. [Colab Demo](https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing) for Real-ESRGAN **|** [Colab Demo](https://colab.research.google.com/drive/1yNl9ORUxxlL4N0keJa2SEPB61imPQd1B?usp=sharing) for Real-ESRGAN (**anime videos**).
-2. Portable [Windows](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip) / [Linux](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.zip) / [MacOS](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-macos.zip) **executable files for Intel/AMD/Nvidia GPU**. You can find more information [here](#portable-executable-files-ncnn). The ncnn implementation is in [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
+1. Portable [Windows](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip) / [Linux](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.zip) / [MacOS](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-macos.zip) **executable files for Intel/AMD/Nvidia GPU**. You can find more information [here](#portable-executable-files-ncnn). The ncnn implementation is in [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
 
 Real-ESRGAN aims at developing **Practical Algorithms for General Image/Video Restoration**.<br>
 We extend the powerful ESRGAN to a practical restoration application (namely, Real-ESRGAN), which is trained with pure synthetic data.
 
-:milky_way: Thanks for your valuable feedbacks/suggestions. All the feedbacks are updated in [feedback.md](docs/feedback.md).
+🌌 Thanks for your valuable feedbacks/suggestions. All the feedbacks are updated in [feedback.md](docs/feedback.md).
 
 ---
 
-If Real-ESRGAN is helpful, please help to :star: this repo or recommend it to your friends :blush: <br>
+If Real-ESRGAN is helpful, please help to ⭐ this repo or recommend it to your friends 😊 <br>
 Other recommended projects:<br>
-:arrow_forward: [GFPGAN](https://github.com/TencentARC/GFPGAN): A practical algorithm for real-world face restoration <br>
-:arrow_forward: [BasicSR](https://github.com/xinntao/BasicSR): An open-source image and video restoration toolbox<br>
-:arrow_forward: [facexlib](https://github.com/xinntao/facexlib): A collection that provides useful face-relation functions.<br>
-:arrow_forward: [HandyView](https://github.com/xinntao/HandyView): A PyQt5-based image viewer that is handy for view and comparison <br>
-:arrow_forward: [HandyFigure](https://github.com/xinntao/HandyFigure): Open source of paper figures <br>
+▶️ [GFPGAN](https://github.com/TencentARC/GFPGAN): A practical algorithm for real-world face restoration <br>
+▶️ [BasicSR](https://github.com/xinntao/BasicSR): An open-source image and video restoration toolbox<br>
+▶️ [facexlib](https://github.com/xinntao/facexlib): A collection that provides useful face-relation functions.<br>
+▶️ [HandyView](https://github.com/xinntao/HandyView): A PyQt5-based image viewer that is handy for view and comparison <br>
+▶️ [HandyFigure](https://github.com/xinntao/HandyFigure): Open source of paper figures <br>
 
 ---
 
-### :book: Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
+### 📖 Real-ESRGAN: Training Real-World Blind Super-Resolution with Pure Synthetic Data
 
 > [[Paper](https://arxiv.org/abs/2107.10833)] &emsp; [[YouTube Video](https://www.youtube.com/watch?v=fxHWoDSSvSc)] &emsp; [[B站讲解](https://www.bilibili.com/video/BV1H34y1m7sS/)] &emsp; [[Poster](https://xinntao.github.io/projects/RealESRGAN_src/RealESRGAN_poster.pdf)] &emsp; [[PPT slides](https://docs.google.com/presentation/d/1QtW6Iy8rm8rGLsJ0Ldti6kP-7Qyzy6XL/edit?usp=sharing&ouid=109799856763657548160&rtpof=true&sd=true)]<br>
 > [Xintao Wang](https://xinntao.github.io/), Liangbin Xie, [Chao Dong](https://scholar.google.com.hk/citations?user=OSDCB0UAAAAJ), [Ying Shan](https://scholar.google.com/citations?user=4oXBp9UAAAAJ&hl=en) <br>
@@ -83,7 +83,7 @@ Other recommended projects:<br>
 
 ---
 
-## :wrench: Dependencies and Installation
+## 🔧 Dependencies and Installation
 
 - Python >= 3.7 (Recommend to use [Anaconda](https://www.anaconda.com/download/#linux) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html))
 - [PyTorch >= 1.7](https://pytorch.org/)
@@ -112,10 +112,18 @@ Other recommended projects:<br>
 
 ---
 
-## :zap: Quick Inference
+## ⚡ Quick Inference
 
+There are usually three ways to inference Real-ESRGAN.
+
+1. [Online inference](#online-inference)
 1. [Portable executable files (NCNN)](#portable-executable-files-ncnn)
 1. [Python script](#python-script)
+
+### Online inference
+
+1. You can try in our website: [ARC Demo](https://arc.tencent.com/en/ai-demos/imgRestore) (now only support RealESRGAN_x4plus_anime_6B)
+1. [Colab Demo](https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing) for Real-ESRGAN **|** [Colab Demo](https://colab.research.google.com/drive/1yNl9ORUxxlL4N0keJa2SEPB61imPQd1B?usp=sharing) for Real-ESRGAN (**anime videos**).
 
 ### Portable executable files (NCNN)
 
@@ -230,7 +238,7 @@ Results are in the `results` folder
         date      = {2021}
     }
 
-## :e-mail: Contact
+## 📧 Contact
 
 If you have any question, please email `xintao.wang@outlook.com` or `xintaowang@tencent.com`.
 
@@ -252,7 +260,7 @@ If you develop/use Real-ESRGAN in your projects, welcome to let me know.
 - [Real-ESRGAN-EGUI](https://github.com/WGzeyu/Real-ESRGAN-EGUI) by [WGzeyu](https://github.com/WGzeyu)
 - [anime_upscaler](https://github.com/shangar21/anime_upscaler) by [shangar21](https://github.com/shangar21)
 
-## :hugs: Acknowledgement
+## 🤗 Acknowledgement
 
 Thanks for all the contributors.
 
