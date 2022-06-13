@@ -248,9 +248,11 @@ if __name__ == '__main__':
     parser.add_argument('--output_path', type=str, required=True, help='specify output model path')
     parser.add_argument('--output_scale', type=int, default=4, help='specify the output scale, defaults to 4')
     parser.add_argument('--num_threads', type=int, default=-1, help='specify num threads of onnx')
+    parser.add_argument('--providers', type=str, default='CPUExecutionProvider',
+                        help='specify the providers, splitting by `,`, defaults to CPUExecutionProvider')
     args = parser.parse_args()
 
-    model = RealESRGAN(args.model_path, intra_op_num_threads=args.num_threads)
+    model = RealESRGAN(args.model_path, intra_op_num_threads=args.num_threads, providers=args.providers.split(','))
     img = cv2.imread(args.input_path, cv2.IMREAD_UNCHANGED)
     print('start to enhance...')
     start_time = time.time()
