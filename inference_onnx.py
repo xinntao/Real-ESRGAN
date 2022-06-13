@@ -36,7 +36,7 @@ class BaseModel:
 
 class RealESRGAN:
     def __init__(self,
-                 model_path: int,
+                 model_path: str,
                  scale: int = 4,
                  tile: int = 0,
                  tile_pad: int = 10,
@@ -46,8 +46,8 @@ class RealESRGAN:
         """A helper class for upsampling images with RealESRGAN.
 
         Args:
+            model_path (str): The path to the pretrained model.
             scale (int): Upsampling scale factor used in the networks. It is usually 2 or 4.
-            model_path (str): The path to the pretrained model. It can be urls (will first download it automatically).
             tile (int): As too large images result in the out of GPU memory issue, so this tile option will first crop
                 input images into tiles, and then process each of them. Finally, they will be merged into one image.
                 0 denotes for do not use tile. Default: 0.
