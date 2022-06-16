@@ -258,6 +258,7 @@ If you develop/use Real-ESRGAN in your projects, welcome to let me know.
 - [Real-ESRGAN_GUI](https://github.com/net2cn/Real-ESRGAN_GUI) by [net2cn](https://github.com/net2cn)
 - [Real-ESRGAN-EGUI](https://github.com/WGzeyu/Real-ESRGAN-EGUI) by [WGzeyu](https://github.com/WGzeyu)
 - [anime_upscaler](https://github.com/shangar21/anime_upscaler) by [shangar21](https://github.com/shangar21)
+- [RealESRGAN-GUI-RAM](https://github.com/Baiyuetribe/paper2gui/blob/main/Video%20Super%20Resolution/RealESRGAN-GUI-RAM.md) by [Baiyuetribe](https://github.com/Baiyuetribe)
 
 ## 🤗 Acknowledgement
 
