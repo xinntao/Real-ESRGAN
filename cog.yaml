@@ -1,0 +1,27 @@
+build:
+  gpu: true
+
+  # a list of ubuntu apt packages to install
+  system_packages:
+    - "libgl1-mesa-glx"
+    - "libglib2.0-0"
+
+  # python version in the form '3.8' or '3.8.12'
+  python_version: "3.8"
+  python_packages:
+    - "numpy==1.20"
+    - "torch==1.11.0"
+    - "torchvision==0.12.0"
+    - "facexlib==0.2.3"
+    - "opencv-python==4.6.0.66"
+    - "Pillow==9.1.1"
+    - "tqdm==4.64.0"
+
+  run:
+    - "pip install basicsr"
+    - "pip install gfpgan"
+    - "mkdir -p /root/.cache/realesrgan; wget --quiet --output-document=/root/.cache/realesrgan/RealESRGAN_x4plus.pth https://models.nmb.ai/RealESRGAN_x4plus.pth; wget --quiet --output-document=/root/.cache/realesrgan/GFPGANv1.3.pth https://models.nmb.ai/majesty/GFPGANv1.3.pth"
+
+# predict.py defines how predictions are run on your model
+image: "r8.im/nightmareai/real-esrgan"
+predict: "predict.py:Predictor"
