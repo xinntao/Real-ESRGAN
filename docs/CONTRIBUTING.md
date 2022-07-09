@@ -1,5 +1,7 @@
 # Contributing to Real-ESRGAN
 
+:art: Real-ESRGAN needs your contributions. Any contributions are welcome, such as new features/models/typo fixes/suggestions/maintenance, *etc*. See [CONTRIBUTING.md](docs/CONTRIBUTING.md). All contributors are list [here](README.md#hugs-acknowledgement).
+
 We like open-source and want to develop practical algorithms for general image restoration. However, individual strength is limited. So, any kinds of contributions are welcome, such as:
 
 - New features
@@ -19,6 +21,7 @@ We like open-source and want to develop practical algorithms for general image r
 1. Create a PR
 
 **Note**:
+
 1. Please check the code style and linting
     1. The style configuration is specified in [setup.cfg](setup.cfg)
     1. If you use VSCode, the settings are configured in [.vscode/settings.json](.vscode/settings.json)

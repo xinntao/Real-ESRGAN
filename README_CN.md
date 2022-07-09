@@ -12,20 +12,19 @@
 [![python lint](https://github.com/xinntao/Real-ESRGAN/actions/workflows/pylint.yml/badge.svg)](https://github.com/xinntao/Real-ESRGAN/blob/master/.github/workflows/pylint.yml)
 [![Publish-pip](https://github.com/xinntao/Real-ESRGAN/actions/workflows/publish-pip.yml/badge.svg)](https://github.com/xinntao/Real-ESRGAN/blob/master/.github/workflows/publish-pip.yml)
 
-:fire: :fire: :fire: 添加了**针对动漫视频的小模型**, 更多信息在 [anime video models](docs/anime_video_model.md) 中.
+:fire: 更新动漫视频的小模型 **RealESRGAN AnimeVideo-v3**. 更多信息在 [[动漫视频模型介绍](docs/anime_video_model.md)] 和 [[比较](docs/anime_comparisons_CN.md)] 中.
 
-1. Real-ESRGAN的[Colab Demo](https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing) <a href="https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="google colab logo"></a>.
-2. Real-ESRGAN的 **动漫视频** 的[Colab Demo](https://colab.research.google.com/drive/1yNl9ORUxxlL4N0keJa2SEPB61imPQd1B?usp=sharing) <a href="https://colab.research.google.com/drive/1yNl9ORUxxlL4N0keJa2SEPB61imPQd1B?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="google colab logo"></a>.
-3. **支持Intel/AMD/Nvidia显卡**的绿色版exe文件： [Windows版](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-windows.zip) / [Linux版](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-ubuntu.zip) / [macOS版](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-macos.zip)，详情请移步[这里](#便携版（绿色版）可执行文件)。NCNN的实现在 [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan)。
+1. Real-ESRGAN的[Colab Demo](https://colab.research.google.com/drive/1k2Zod6kSHEvraybHl50Lys0LerhyTMCo?usp=sharing) | Real-ESRGAN**动漫视频** 的[Colab Demo](https://colab.research.google.com/drive/1yNl9ORUxxlL4N0keJa2SEPB61imPQd1B?usp=sharing)
+2. **支持Intel/AMD/Nvidia显卡**的绿色版exe文件： [Windows版](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip) / [Linux版](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.zip) / [macOS版](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-macos.zip)，详情请移步[这里](#便携版（绿色版）可执行文件)。NCNN的实现在 [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan)。
 
 Real-ESRGAN 的目标是开发出**实用的图像/视频修复算法**。<br>
 我们在 ESRGAN 的基础上使用纯合成的数据来进行训练，以使其能被应用于实际的图片修复的场景（顾名思义：Real-ESRGAN）。
 
-:art: Real-ESRGAN 需要，也很欢迎你的贡献，如新功能、模型、bug修复、建议、维护等等。详情可以查看[CONTRIBUTING.md](CONTRIBUTING.md)，所有的贡献者都会被列在[此处](README_CN.md#hugs-感谢)。
+:art: Real-ESRGAN 需要，也很欢迎你的贡献，如新功能、模型、bug修复、建议、维护等等。详情可以查看[CONTRIBUTING.md](docs/CONTRIBUTING.md)，所有的贡献者都会被列在[此处](README_CN.md#hugs-感谢)。
 
-:milky_way: 感谢大家提供了很好的反馈。这些反馈会逐步更新在 [这个文档](feedback.md)。
+:milky_way: 感谢大家提供了很好的反馈。这些反馈会逐步更新在 [这个文档](docs/feedback.md)。
 
-:question: 常见的问题可以在[FAQ.md](FAQ.md)中找到答案。（好吧，现在还是空白的=-=||）
+:question: 常见的问题可以在[FAQ.md](docs/FAQ.md)中找到答案。（好吧，现在还是空白的=-=||）
 
 ---
 
@@ -39,26 +38,27 @@ Real-ESRGAN 的目标是开发出**实用的图像/视频修复算法**。<br>
 ---
 
 <!---------------------------------- Updates --------------------------->
-<details open>
+<details>
 <summary>🚩<b>更新</b></summary>
 
+- ✅ 更新动漫视频的小模型 **RealESRGAN AnimeVideo-v3**. 更多信息在 [anime video models](docs/anime_video_model.md) 和 [comparisons](docs/anime_comparisons.md)中.
 - ✅ 添加了针对动漫视频的小模型, 更多信息在 [anime video models](docs/anime_video_model.md) 中.
 - ✅ 添加了ncnn 实现：[Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
 - ✅ 添加了 [*RealESRGAN_x4plus_anime_6B.pth*](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth)，对二次元图片进行了优化，并减少了model的大小。详情 以及 与[waifu2x](https://github.com/nihui/waifu2x-ncnn-vulkan)的对比请查看[**anime_model.md**](docs/anime_model.md)
-- ✅支持用户在自己的数据上进行微调 (finetune)：[详情](Training.md#Finetune-Real-ESRGAN-on-your-own-dataset)
+- ✅支持用户在自己的数据上进行微调 (finetune)：[详情](docs/Training.md#Finetune-Real-ESRGAN-on-your-own-dataset)
 - ✅ 支持使用[GFPGAN](https://github.com/TencentARC/GFPGAN)**增强人脸**
 - ✅ 通过[Gradio](https://github.com/gradio-app/gradio)添加到了[Huggingface Spaces](https://huggingface.co/spaces)（一个机器学习应用的在线平台）：[Gradio在线版](https://huggingface.co/spaces/akhaliq/Real-ESRGAN)。感谢[@AK391](https://github.com/AK391)
 - ✅ 支持任意比例的缩放：`--outscale`（实际上使用`LANCZOS4`来更进一步调整输出图像的尺寸）。添加了*RealESRGAN_x2plus.pth*模型
 - ✅ [推断脚本](inference_realesrgan.py)支持: 1) 分块处理**tile**; 2) 带**alpha通道**的图像; 3) **灰色**图像; 4) **16-bit**图像.
-- ✅ 训练代码已经发布，具体做法可查看：[Training.md](Training.md)。
+- ✅ 训练代码已经发布，具体做法可查看：[Training.md](docs/Training.md)。
 
 </details>
 
 <!---------------------------------- Projects that use Real-ESRGAN --------------------------->
-<details open>
+<details>
 <summary>🧩<b>使用Real-ESRGAN的项目</b></summary>
 
-&nbsp;&nbsp;&nbsp;&nbsp;如果你开发/使用/集成了Real-ESRGAN, 欢迎联系我添加 👋
+&nbsp;&nbsp;&nbsp;&nbsp;👋 如果你开发/使用/集成了Real-ESRGAN, 欢迎联系我添加
 
 - NCNN-Android: [RealSR-NCNN-Android](https://github.com/tumuyan/RealSR-NCNN-Android) by [tumuyan](https://github.com/tumuyan)
 - VapourSynth: [vs-realesrgan](https://github.com/HolyWu/vs-realesrgan) by [HolyWu](https://github.com/HolyWu)
@@ -72,11 +72,12 @@ Real-ESRGAN 的目标是开发出**实用的图像/视频修复算法**。<br>
 - [Real-ESRGAN_GUI](https://github.com/net2cn/Real-ESRGAN_GUI) by [net2cn](https://github.com/net2cn)
 - [Real-ESRGAN-EGUI](https://github.com/WGzeyu/Real-ESRGAN-EGUI) by [WGzeyu](https://github.com/WGzeyu)
 - [anime_upscaler](https://github.com/shangar21/anime_upscaler) by [shangar21](https://github.com/shangar21)
+- [RealESRGAN-GUI](https://github.com/Baiyuetribe/paper2gui/blob/main/Video%20Super%20Resolution/RealESRGAN-GUI.md) by [Baiyuetribe](https://github.com/Baiyuetribe)
 
 </details>
 
-<details open>
-<summary>👀<b>Demo视频（B站）</b>👀</summary>
+<details>
+<summary>👀<b>Demo视频（B站）</b></summary>
 
 - [大闹天宫片段](https://www.bilibili.com/video/BV1ja41117zb)
 
@@ -115,7 +116,7 @@ Real-ESRGAN 将会被长期支持，我会在空闲的时间中持续维护更�
 
 ### 便携版（绿色版）可执行文件
 
-你可以下载**支持Intel/AMD/Nvidia显卡**的绿色版exe文件： [Windows版](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-windows.zip) / [Linux版](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-ubuntu.zip) / [macOS版](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.3.0/realesrgan-ncnn-vulkan-20211212-macos.zip)。
+你可以下载**支持Intel/AMD/Nvidia显卡**的绿色版exe文件： [Windows版](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-windows.zip) / [Linux版](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-ubuntu.zip) / [macOS版](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesrgan-ncnn-vulkan-20220424-macos.zip)。
 
 绿色版指的是这些exe你可以直接运行（放U盘里拷走都没问题），因为里面已经有所需的文件和模型了。它不需要 CUDA 或者 PyTorch运行环境。<br>
 
@@ -130,8 +131,7 @@ Real-ESRGAN 将会被长期支持，我会在空闲的时间中持续维护更�
 1. realesrgan-x4plus（默认）
 2. reaesrnet-x4plus
 3. realesrgan-x4plus-anime（针对动漫插画图像优化，有更小的体积）
-4. RealESRGANv2-animevideo-xsx2 (针对动漫视频, X2)
-5. RealESRGANv2-animevideo-xsx4 (针对动漫视频, X4)
+4. realesr-animevideov3 (针对动漫视频)
 
 你可以通过`-n`参数来使用其他模型，例如`./realesrgan-ncnn-vulkan.exe -i 二次元图片.jpg -o 二刺螈图片.png -n realesrgan-x4plus-anime`
 
@@ -144,22 +144,20 @@ Real-ESRGAN 将会被长期支持，我会在空闲的时间中持续维护更�
 Usage: realesrgan-ncnn-vulkan.exe -i infile -o outfile [options]...
 
   -h                   show this help
-  -v                   verbose output
   -i input-path        input image path (jpg/png/webp) or directory
   -o output-path       output image path (jpg/png/webp) or directory
-  -s scale             upscale ratio (4, default=4)
+  -s scale             upscale ratio (can be 2, 3, 4. default=4)
   -t tile-size         tile size (>=32/0=auto, default=0) can be 0,0,0 for multi-gpu
-  -m model-path        folder path to pre-trained models(default=models)
-  -n model-name        model name (default=realesrgan-x4plus, can be realesrgan-x4plus | realesrgan-x4plus-anime | realesrnet-x4plus)
-  -g gpu-id            gpu device to use (default=0) can be 0,1,2 for multi-gpu
+  -m model-path        folder path to the pre-trained models. default=models
+  -n model-name        model name (default=realesr-animevideov3, can be realesr-animevideov3 | realesrgan-x4plus | realesrgan-x4plus-anime | realesrnet-x4plus)
+  -g gpu-id            gpu device to use (default=auto) can be 0,1,2 for multi-gpu
   -j load:proc:save    thread count for load/proc/save (default=1:2:2) can be 1:2,2,2:2 for multi-gpu
-  -x                   enable tta mode
+  -x                   enable tta mode"
   -f format            output image format (jpg/png/webp, default=ext/png)
+  -v                   verbose output
 ```
 
 由于这些exe文件会把图像分成几个板块，然后来分别进行处理，再合成导出，输出的图像可能会有一点割裂感（而且可能跟PyTorch的输出不太一样）
-
-这些exe文件均基于[Tencent/ncnn](https://github.com/Tencent/ncnn)以及[nihui](https://github.com/nihui)的[realsr-ncnn-vulkan](https://github.com/nihui/realsr-ncnn-vulkan)，感谢！
 
 ---
 
@@ -233,7 +231,7 @@ python inference_realesrgan.py -n RealESRGAN_x4plus_anime_6B -i inputs
 ```console
 Usage: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile -o outfile [options]...
 
-A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile --outscale 3.5 --half --face_enhance
+A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile --outscale 3.5 --face_enhance
 
   -h                   show this help
   -i --input           Input image or folder. Default: inputs
@@ -243,7 +241,7 @@ A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile 
   --suffix             Suffix of the restored image. Default: out
   -t, --tile           Tile size, 0 for no tile during testing. Default: 0
   --face_enhance       Whether to use GFPGAN to enhance face. Default: False
-  --half               Whether to use half precision during inference. Default: False
+  --fp32               Whether to use half precision during inference. Default: False
   --ext                Image extension. Options: auto | jpg | png, auto means using the same extension as inputs. Default: auto
 ```
 
@@ -253,7 +251,7 @@ A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile 
 
 ## :computer: 训练，在你的数据上微调（Fine-tune）
 
-这里有一份详细的指南：[Training.md](Training.md).
+这里有一份详细的指南：[Training.md](docs/Training.md).
 
 ## BibTeX 引用
 
@@ -275,3 +273,4 @@ A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile 
 - [AK391](https://github.com/AK391): 通过[Gradio](https://github.com/gradio-app/gradio)添加到了[Huggingface Spaces](https://huggingface.co/spaces)（一个机器学习应用的在线平台）：[Gradio在线版](https://huggingface.co/spaces/akhaliq/Real-ESRGAN)。
 - [Asiimoviet](https://github.com/Asiimoviet): 把 README.md 文档 翻译成了中文。
 - [2ji3150](https://github.com/2ji3150): 感谢详尽并且富有价值的[反馈、建议](https://github.com/xinntao/Real-ESRGAN/issues/131).
+- [Jared-02](https://github.com/Jared-02): 把 Training.md 文档 翻译成了中文。
