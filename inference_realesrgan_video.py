@@ -375,30 +375,37 @@ def run(args):
     pool.close()
     pool.join()
 
-    # combine sub videos
-    # prepare vidlist.txt
-    with open(f"{args.output}/{args.video_name}_vidlist.txt", "w") as f:
-        for i in range(num_process):
-            f.write(f"file '{args.video_name}_out_tmp_videos/{i:03d}.mp4'\n")
+    if args.frames:
+        shutil.move(
+            osp.join(args.output, f"{args.video_name}_out_tmp_videos"),
+            f"{video_save_path}",
+        )
+    else:
+        # combine sub videos
+        # prepare vidlist.txt
+        with open(f"{args.output}/{args.video_name}_vidlist.txt", "w") as f:
+            for i in range(num_process):
+                f.write(f"file '{args.video_name}_out_tmp_videos/{i:03d}.mp4'\n")
 
-    cmd = [
-        args.ffmpeg_bin,
-        "-f",
-        "concat",
-        "-safe",
-        "0",
-        "-i",
-        f"{args.output}/{args.video_name}_vidlist.txt",
-        "-c",
-        "copy",
-        f"{video_save_path}",
-    ]
-    print(" ".join(cmd))
-    subprocess.call(cmd)
+        cmd = [
+            args.ffmpeg_bin,
+            "-f",
+            "concat",
+            "-safe",
+            "0",
+            "-i",
+            f"{args.output}/{args.video_name}_vidlist.txt",
+            "-c",
+            "copy",
+            f"{video_save_path}",
+        ]
+        print(" ".join(cmd))
+        subprocess.call(cmd)
+        os.remove(f"{args.output}/{args.video_name}_vidlist.txt")
+
     shutil.rmtree(osp.join(args.output, f"{args.video_name}_out_tmp_videos"))
     if osp.exists(osp.join(args.output, f"{args.video_name}_inp_tmp_videos")):
         shutil.rmtree(osp.join(args.output, f"{args.video_name}_inp_tmp_videos"))
-    os.remove(f"{args.output}/{args.video_name}_vidlist.txt")
 
 
 def main():
@@ -473,6 +480,9 @@ def main():
         type=str,
         default="auto",
         help="Image extension. Options: auto | jpg | png, auto means using the same extension as inputs",
+    )
+    parser.add_argument(
+        "--frames", type=bool, default=False, help="Output as image frames"
     )
     args = parser.parse_args()
 
