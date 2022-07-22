@@ -21,7 +21,7 @@ def main():
         help=('Model names: RealESRGAN_x4plus | RealESRNet_x4plus | RealESRGAN_x4plus_anime_6B | RealESRGAN_x2plus | '
               'realesr-animevideov3'))
     parser.add_argument('-o', '--output', type=str, default='results', help='Output folder')
-    parser.add_argument('-s', '--outscale', type=float, default=4, help='The final upsampling scale of the image')
+    parser.add_argument('-s', '--outscale', type=float, help='The final upsampling scale of the image')
     parser.add_argument('--suffix', type=str, default='out', help='Suffix of the restored image')
     parser.add_argument('-t', '--tile', type=int, default=0, help='Tile size, 0 for no tile during testing')
     parser.add_argument('--tile_pad', type=int, default=10, help='Tile padding')
@@ -85,6 +85,7 @@ def main():
             arch='clean',
             channel_multiplier=2,
             bg_upsampler=upsampler)
+
     os.makedirs(args.output, exist_ok=True)
 
     if os.path.isfile(args.input):
@@ -105,8 +106,10 @@ def main():
         try:
             if args.face_enhance:
                 _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
-            else:
+            elif args.outscale:
                 output, _ = upsampler.enhance(img, outscale=args.outscale)
+            else:
+                output, _ = upsampler.enhance(img)
         except RuntimeError as error:
             print('Error', error)
             print('If you encounter CUDA out of memory, try to set --tile with a smaller number.')
