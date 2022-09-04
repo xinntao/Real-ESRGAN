@@ -27,7 +27,7 @@ except Exception:
 class Predictor(BasePredictor):
 
     def setup(self):
-        os.makedirs('output')
+        os.makedirs('output', exist_ok=True)
         # download weights
         if not os.path.exists('realesrgan/weights/realesr-general-x4v3.pth'):
             os.system(
