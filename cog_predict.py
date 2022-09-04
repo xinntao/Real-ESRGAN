@@ -89,13 +89,14 @@ class Predictor(BasePredictor):
             default='General - v3'),
         scale: float = Input(description='Rescaling factor', default=2),
         face_enhance: bool = Input(
-            description='Enhance faces with GFPGAN. Note that it does not work for anime images/vidoes.',
-            default=False),
+            description='Enhance faces with GFPGAN. Note that it does not work for anime images/vidoes', default=False),
         tile: int = Input(
             description=
-            'Tile size. When encountering out-of-GPU-memory issue, please decrease it (e.g., 400). 0 for no tile',
-            default=0),
+            'Tile size. Default is 0, that is no tile. When encountering the out-of-GPU-memory issue, please specify it, e.g., 400 or 200',
+            default=0)
     ) -> Path:
+        if tile <= 0 or tile is None:
+            tile = 0
         print(f'img: {img}. version: {version}. scale: {scale}. face_enhance: {face_enhance}. tile: {tile}.')
         try:
             extension = os.path.splitext(os.path.basename(str(img)))[1]
