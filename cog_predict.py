@@ -1,6 +1,6 @@
 # flake8: noqa
 # This file is used for deploying replicate models
-# running: cog predict -i img=@inputs/whole_imgs/10045.png -i version='v1.4' -i scale=2
+# running: cog predict -i img=@inputs/00017_gray.png -i version='General - v3' -i scale=2 -i face_enhance=True -i tile=0
 # push: cog push r8.im/xinntao/realesrgan
 
 import os
