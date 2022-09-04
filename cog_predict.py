@@ -27,6 +27,7 @@ except Exception:
 class Predictor(BasePredictor):
 
     def setup(self):
+        os.makedirs('output')
         # download weights
         if not os.path.exists('realesrgan/weights/realesr-general-x4v3.pth'):
             os.system(
@@ -100,6 +101,9 @@ class Predictor(BasePredictor):
             img = cv2.imread(str(img), cv2.IMREAD_UNCHANGED)
             if len(img.shape) == 3 and img.shape[2] == 4:
                 img_mode = 'RGBA'
+            elif len(img.shape) == 2:
+                img_mode = None
+                img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
             else:
                 img_mode = None
 
