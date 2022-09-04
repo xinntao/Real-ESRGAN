@@ -95,7 +95,7 @@ class Predictor(BasePredictor):
             'Tile size. Default is 0, that is no tile. When encountering the out-of-GPU-memory issue, please specify it, e.g., 400 or 200',
             default=0)
     ) -> Path:
-        if tile <= 0 or tile is None:
+        if tile <= 100 or tile is None:
             tile = 0
         print(f'img: {img}. version: {version}. scale: {scale}. face_enhance: {face_enhance}. tile: {tile}.')
         try:
