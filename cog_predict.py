@@ -98,6 +98,7 @@ class Predictor(BasePredictor):
     ) -> Path:
         print(f'img: {img}. version: {version}. scale: {scale}. face_enhance: {face_enhance}. tile: {tile}.')
         try:
+            extension = os.path.splitext(os.path.basename(str(img)))[1]
             img = cv2.imread(str(img), cv2.IMREAD_UNCHANGED)
             if len(img.shape) == 3 and img.shape[2] == 4:
                 img_mode = 'RGBA'
@@ -122,19 +123,15 @@ class Predictor(BasePredictor):
             except RuntimeError as error:
                 print('Error', error)
                 print('If you encounter CUDA out of memory, try to set "tile" to a smaller size, e.g., 400.')
-            else:
-                extension = 'png'
 
             if img_mode == 'RGBA':  # RGBA images should be saved in png format
                 extension = 'png'
-            else:
-                extension = 'jpg'
-            save_path = f'output/out.{extension}'
-            cv2.imwrite(save_path, output)
-            out_path = Path(tempfile.mkdtemp()) / 'output.png'
+            # save_path = f'output/out.{extension}'
+            # cv2.imwrite(save_path, output)
+            out_path = Path(tempfile.mkdtemp()) / f'out.{extension}'
             cv2.imwrite(str(out_path), output)
         except Exception as error:
-            print('global exception', error)
+            print('global exception: ', error)
         finally:
             clean_folder('output')
         return out_path
