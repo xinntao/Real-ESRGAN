@@ -166,7 +166,7 @@ You can finetune Real-ESRGAN on your own dataset. Typically, the fine-tuning pro
 
 ### Generate degraded images on the fly
 
-Only high-resolution images are required. The low-quality images are generated with the degradation process described in Real-ESRGAN during trainig.
+Only high-resolution images are required. The low-quality images are generated with the degradation process described in Real-ESRGAN during training.
 
 **1. Prepare dataset**
 
