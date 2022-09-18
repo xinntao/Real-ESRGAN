@@ -90,7 +90,7 @@ def main():
     else:
         model_path = os.path.join('realesrgan/weights', args.model_name + '.pth')
         if not os.path.isfile(model_path):
-            ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
             for url in file_url:
                 # model_path will be updated
                 model_path = load_file_from_url(
