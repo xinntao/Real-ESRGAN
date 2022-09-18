@@ -190,7 +190,7 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
     # ---------------------- determine model paths ---------------------- #
     model_path = os.path.join('experiments/pretrained_models', args.model_name + '.pth')
     if not os.path.isfile(model_path):
-        model_path = os.path.join('realesrgan/weights', args.model_name + '.pth')
+        model_path = os.path.join('weights', args.model_name + '.pth')
     if not os.path.isfile(model_path):
         raise ValueError(f'Model {args.model_name} does not exist.')
 
