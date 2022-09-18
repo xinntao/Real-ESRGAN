@@ -19,8 +19,9 @@ def main():
         type=str,
         default='RealESRGAN_x4plus',
         help=('Model names: RealESRGAN_x4plus | RealESRNet_x4plus | RealESRGAN_x4plus_anime_6B | RealESRGAN_x2plus | '
-              'realesr-animevideov3'))
+              'realesr-animevideov3 | realesr-general-x4v3 | realesr-general-wdn-x4v3'))
     parser.add_argument('-o', '--output', type=str, default='results', help='Output folder')
+    parser.add_argument('--model_path', type=str, default=None, help='Model path')
     parser.add_argument('-s', '--outscale', type=float, default=4, help='The final upsampling scale of the image')
     parser.add_argument('--suffix', type=str, default='out', help='Suffix of the restored image')
     parser.add_argument('-t', '--tile', type=int, default=0, help='Tile size, 0 for no tile during testing')
@@ -58,13 +59,19 @@ def main():
     elif args.model_name in ['realesr-animevideov3']:  # x4 VGG-style model (XS size)
         model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64, num_conv=16, upscale=4, act_type='prelu')
         netscale = 4
+    elif args.model_name in ['realesr-general-x4v3', 'realesr-general-wdn-x4v3']:  # x4 VGG-style model (S size)
+        model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64, num_conv=32, upscale=4, act_type='prelu')
+        netscale = 4
 
     # determine model paths
-    model_path = os.path.join('experiments/pretrained_models', args.model_name + '.pth')
-    if not os.path.isfile(model_path):
-        model_path = os.path.join('realesrgan/weights', args.model_name + '.pth')
-    if not os.path.isfile(model_path):
-        raise ValueError(f'Model {args.model_name} does not exist.')
+    if args.model_path is not None:
+        model_path = args.model_path
+    else:
+        model_path = os.path.join('experiments/pretrained_models', args.model_name + '.pth')
+        if not os.path.isfile(model_path):
+            model_path = os.path.join('realesrgan/weights', args.model_name + '.pth')
+        if not os.path.isfile(model_path):
+            raise ValueError(f'Model {args.model_name} does not exist.')
 
     # restorer
     upsampler = RealESRGANer(
