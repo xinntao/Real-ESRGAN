@@ -198,7 +198,7 @@ A common command: python inference_realesrgan.py -n RealESRGAN_x4plus -i infile 
 Download pre-trained models: [RealESRGAN_x4plus.pth](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth)
 
 ```bash
-wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth -P experiments/pretrained_models
+wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth -P weights
 ```
 
 Inference!
@@ -220,7 +220,7 @@ Pre-trained models: [RealESRGAN_x4plus_anime_6B](https://github.com/xinntao/Real
 
 ```bash
 # download model
-wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth -P experiments/pretrained_models
+wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth -P weights
 # inference
 python inference_realesrgan.py -n RealESRGAN_x4plus_anime_6B -i inputs
 ```
