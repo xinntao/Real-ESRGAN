@@ -59,7 +59,7 @@ Other recommended projects:<br>
 <!---------------------------------- Updates --------------------------->
 ## 🚩 Updates
 
-- ✅ Add the **realesr-general-x4v3** model - a tiny small model for general scenes. It also supports the **--dn** option to balance the noise (avoiding over-smooth results). **--dn** is short for denoising strength.
+- ✅ Add the **realesr-general-x4v3** model - a tiny small model for general scenes. It also supports the **-dn** option to balance the noise (avoiding over-smooth results). **-dn** is short for denoising strength.
 - ✅ Update the **RealESRGAN AnimeVideo-v3** model. Please see [anime video models](docs/anime_video_model.md) and [comparisons](docs/anime_comparisons.md) for more details.
 - ✅ Add small models for anime videos. More details are in [anime video models](docs/anime_video_model.md).
 - ✅ Add the ncnn implementation [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan).
