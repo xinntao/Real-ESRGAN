@@ -1,9 +1,9 @@
 import argparse
 import glob
 import os
-from typing import Literal
-
 import cv2
+
+from typing import Literal
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from basicsr.utils.download_util import load_file_from_url
 from realesrgan import RealESRGANer
