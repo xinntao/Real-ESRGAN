@@ -1,56 +1,90 @@
 import argparse
-import cv2
 import glob
 import os
+from typing import Literal
+
+import cv2
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from basicsr.utils.download_util import load_file_from_url
-
 from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 
 
 def main():
+    run()
+
+
+Models = Literal[
+    'RealESRGAN_x4plus',
+    'RealESRNet_x4plus',
+    'RealESRGAN_x4plus_anime_6B',
+    'RealESRGAN_x2plus',
+    'realesr-animevideov3',
+    'realesr-general-x4v3']
+AlphaUpsampleOptions = Literal['realesrgan', 'bicubic']
+FileExtensionOptions = Literal['auto', 'jpg', 'png']
+
+
+def run(input_path: str = 'inputs',
+        output_path: str = 'results',
+        model_name: Models = 'RealESRGAN_x4plus',
+        denoise_strength: float = 0.5,
+        outscale: float = 4,
+        model_path: str = None,
+        suffix: str = 'out',
+        tile_size: int = 0,
+        tile_pad: int = 10,
+        pre_pad: int = 0,
+        face_enhance: bool = False,
+        half: bool = True,
+        alpha_up_sampler: AlphaUpsampleOptions = 'realesrgan',
+        file_ext: FileExtensionOptions = 'auto',
+        gpu_id: int = None
+        ):
     """Inference demo for Real-ESRGAN.
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--input', type=str, default='inputs', help='Input image or folder')
+    parser.add_argument('-i', '--input', type=str, default=input_path, help='Input image or folder')
     parser.add_argument(
         '-n',
         '--model_name',
         type=str,
-        default='RealESRGAN_x4plus',
+        default=model_name,
         help=('Model names: RealESRGAN_x4plus | RealESRNet_x4plus | RealESRGAN_x4plus_anime_6B | RealESRGAN_x2plus | '
               'realesr-animevideov3 | realesr-general-x4v3'))
-    parser.add_argument('-o', '--output', type=str, default='results', help='Output folder')
+    parser.add_argument('-o', '--output', type=str, default=output_path, help='Output folder')
     parser.add_argument(
         '-dn',
         '--denoise_strength',
         type=float,
-        default=0.5,
+        default=denoise_strength,
         help=('Denoise strength. 0 for weak denoise (keep noise), 1 for strong denoise ability. '
               'Only used for the realesr-general-x4v3 model'))
-    parser.add_argument('-s', '--outscale', type=float, default=4, help='The final upsampling scale of the image')
+    parser.add_argument('-s', '--outscale', type=float, default=outscale,
+                        help='The final upsampling scale of the image')
     parser.add_argument(
-        '--model_path', type=str, default=None, help='[Option] Model path. Usually, you do not need to specify it')
-    parser.add_argument('--suffix', type=str, default='out', help='Suffix of the restored image')
-    parser.add_argument('-t', '--tile', type=int, default=0, help='Tile size, 0 for no tile during testing')
-    parser.add_argument('--tile_pad', type=int, default=10, help='Tile padding')
-    parser.add_argument('--pre_pad', type=int, default=0, help='Pre padding size at each border')
-    parser.add_argument('--face_enhance', action='store_true', help='Use GFPGAN to enhance face')
+        '--model_path', type=str, default=model_path,
+        help='[Option] Model path. Usually, you do not need to specify it')
+    parser.add_argument('--suffix', type=str, default=suffix, help='Suffix of the restored image')
+    parser.add_argument('-t', '--tile', type=int, default=tile_size, help='Tile size, 0 for no tile during testing')
+    parser.add_argument('--tile_pad', type=int, default=tile_pad, help='Tile padding')
+    parser.add_argument('--pre_pad', type=int, default=pre_pad, help='Pre padding size at each border')
+    parser.add_argument('--face_enhance', action='store_true', help='Use GFPGAN to enhance face', default=face_enhance)
     parser.add_argument(
-        '--fp32', action='store_true', help='Use fp32 precision during inference. Default: fp16 (half precision).')
+        '--fp32', action='store_true', help='Use fp32 precision during inference. Default: fp16 (half precision).',
+        default=not half)
     parser.add_argument(
         '--alpha_upsampler',
         type=str,
-        default='realesrgan',
+        default=alpha_up_sampler,
         help='The upsampler for the alpha channels. Options: realesrgan | bicubic')
     parser.add_argument(
         '--ext',
         type=str,
-        default='auto',
+        default=file_ext,
         help='Image extension. Options: auto | jpg | png, auto means using the same extension as inputs')
     parser.add_argument(
-        '-g', '--gpu-id', type=int, default=None, help='gpu device to use (default=None) can be 0,1,2 for multi-gpu')
+        '-g', '--gpu-id', type=int, default=gpu_id, help='gpu device to use (default=None) can be 0,1,2 for multi-gpu')
 
     args = parser.parse_args()
 
@@ -133,7 +167,6 @@ def main():
     for idx, path in enumerate(paths):
         imgname, extension = os.path.splitext(os.path.basename(path))
         print('Testing', idx, imgname)
-
         img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
         if len(img.shape) == 3 and img.shape[2] == 4:
             img_mode = 'RGBA'
@@ -163,4 +196,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    run()
