@@ -151,7 +151,8 @@ class Writer:
                                  pix_fmt='yuv420p',
                                  vcodec='libx264',
                                  loglevel='error',
-                                 acodec='copy').overwrite_output().run_async(
+                                 acodec='copy',
+                                 strict='-2').overwrite_output().run_async(
                                      pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin))
         else:
             self.stream_writer = (
