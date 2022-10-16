@@ -99,7 +99,7 @@ class RealESRGANer():
         # mod pad for divisible borders
         if self.scale == 2:
             self.mod_scale = 2
-        elif self.scale == 1:
+        elif self.scale == 4:
             self.mod_scale = 4
         if self.mod_scale is not None:
             self.mod_pad_h, self.mod_pad_w = 0, 0
@@ -254,11 +254,9 @@ class RealESRGANer():
             output = (output_img * 255.0).round().astype(np.uint8)
 
         if outscale is not None and outscale != float(self.scale):
-            output = cv2.resize(
-                output, (
-                    int(w_input * outscale),
-                    int(h_input * outscale),
-                ), interpolation=cv2.INTER_LANCZOS4)
+            frame = Image.fromarray(output)
+            frame = frame.resize((int(w_input * outscale), int(h_input * outscale)),Image.ANTIALIAS)
+            output = np.array(frame)
 
         return output, img_mode
 
