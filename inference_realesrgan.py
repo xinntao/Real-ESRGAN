@@ -140,6 +140,22 @@ def main():
         else:
             img_mode = None
 
+        if args.ext == 'auto':
+            extension = extension[1:]
+        else:
+            extension = args.ext
+        if img_mode == 'RGBA':  # RGBA images should be saved in png format
+            extension = 'png'
+        if args.suffix == '':
+            save_path = os.path.join(args.output, f'{imgname}.{extension}')
+        else:
+            save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
+
+        # Skip upscaling if output file already exist
+        if os.path.isfile(save_path):
+            print("- SKIPPING, output file already exists:", save_path)
+            continue
+
         try:
             if args.face_enhance:
                 _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
@@ -149,16 +165,6 @@ def main():
             print('Error', error)
             print('If you encounter CUDA out of memory, try to set --tile with a smaller number.')
         else:
-            if args.ext == 'auto':
-                extension = extension[1:]
-            else:
-                extension = args.ext
-            if img_mode == 'RGBA':  # RGBA images should be saved in png format
-                extension = 'png'
-            if args.suffix == '':
-                save_path = os.path.join(args.output, f'{imgname}.{extension}')
-            else:
-                save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
             cv2.imwrite(save_path, output)
 
 
