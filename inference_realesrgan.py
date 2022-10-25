@@ -142,6 +142,9 @@ def main():
 
         try:
             if args.face_enhance:
+                if len(img.shape) == 2:  # gray image
+                    img_mode = 'L'
+                    img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
                 _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
             else:
                 output, _ = upsampler.enhance(img, outscale=args.outscale)
