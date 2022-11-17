@@ -129,6 +129,7 @@ def main():
         paths = [args.input]
     else:
         paths = sorted(glob.glob(os.path.join(args.input, '*')))
+        paths = [x for x in paths if os.path.isfile(x)]
 
     for idx, path in enumerate(paths):
         imgname, extension = os.path.splitext(os.path.basename(path))
