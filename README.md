@@ -261,6 +261,7 @@ If you develop/use Real-ESRGAN in your projects, welcome to let me know.
 - [Real-ESRGAN-EGUI](https://github.com/WGzeyu/Real-ESRGAN-EGUI) by [WGzeyu](https://github.com/WGzeyu)
 - [anime_upscaler](https://github.com/shangar21/anime_upscaler) by [shangar21](https://github.com/shangar21)
 - [Upscayl](https://github.com/upscayl/upscayl) by [Nayam Amarshe](https://github.com/NayamAmarshe) and [TGS963](https://github.com/TGS963)
+- [enhancr](https://github.com/mafiosnik777/enhancr) by [mafiosnik](https://github.com/mafiosnik777)
 
 ## 🤗 Acknowledgement
 
