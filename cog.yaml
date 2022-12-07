@@ -1,0 +1,22 @@
+# This file is used for constructing replicate env
+image: "r8.im/tencentarc/realesrgan"
+
+build:
+  gpu: true
+  python_version: "3.8"
+  system_packages:
+    - "libgl1-mesa-glx"
+    - "libglib2.0-0"
+  python_packages:
+    - "torch==1.7.1"
+    - "torchvision==0.8.2"
+    - "numpy==1.21.1"
+    - "lmdb==1.2.1"
+    - "opencv-python==4.5.3.56"
+    - "PyYAML==5.4.1"
+    - "tqdm==4.62.2"
+    - "yapf==0.31.0"
+    - "basicsr==1.4.2"
+    - "facexlib==0.2.5"
+
+predict: "cog_predict.py:Predictor"

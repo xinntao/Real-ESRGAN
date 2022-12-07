@@ -195,7 +195,7 @@ Usage: realesrgan-ncnn-vulkan.exe -i infile -o outfile [options]...
 下载我们训练好的模型: [RealESRGAN_x4plus.pth](https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth)
 
 ```bash
-wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth -P experiments/pretrained_models
+wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth -P weights
 ```
 
 推断!
@@ -217,7 +217,7 @@ python inference_realesrgan.py -n RealESRGAN_x4plus -i inputs --face_enhance
 
 ```bash
 # 下载模型
-wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth -P experiments/pretrained_models
+wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth -P weights
 # 推断
 python inference_realesrgan.py -n RealESRGAN_x4plus_anime_6B -i inputs
 ```
