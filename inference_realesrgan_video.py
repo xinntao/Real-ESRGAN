@@ -278,7 +278,10 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
 
 def run(args):
     args.video_name = osp.splitext(os.path.basename(args.input))[0]
-    video_save_path = osp.join(args.output, f'{args.video_name}_{args.suffix}.mp4')
+    if args.suffix == '':
+        video_save_path = osp.join(args.output, f'{args.video_name}.mp4')
+    else:
+        video_save_path = osp.join(args.output, f'{args.video_name}_{args.suffix}.mp4')
 
     if args.extract_frame_first:
         tmp_frames_folder = osp.join(args.output, f'{args.video_name}_inp_tmp_frames')
