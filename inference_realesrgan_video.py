@@ -296,7 +296,7 @@ def run(args):
         return
 
     ctx = torch.multiprocessing.get_context('spawn')
-    pool = ctx.Pool(1)
+    pool = ctx.Pool(num_process)
     os.makedirs(osp.join(args.output, f'{args.video_name}_out_tmp_videos'), exist_ok=True)
     pbar = tqdm(total=num_process, unit='sub_video', desc='inference')
     for i in range(num_process):
