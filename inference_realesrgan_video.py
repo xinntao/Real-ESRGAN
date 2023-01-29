@@ -253,6 +253,7 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
     writer = Writer(args, audio, height, width, video_save_path, fps)
 
     pbar = tqdm(total=len(reader), unit='frame', desc='inference')
+    cuda_available = torch.cuda.is_available()
     while True:
         img = reader.get_frame()
         if img is None:
@@ -268,8 +269,8 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
             print('If you encounter CUDA out of memory, try to set --tile with a smaller number.')
         else:
             writer.write_frame(output)
-
-        torch.cuda.synchronize(device)
+        if cuda_available:
+            torch.cuda.synchronize(device)
         pbar.update(1)
 
     reader.close()
@@ -285,15 +286,17 @@ def run(args):
         os.makedirs(tmp_frames_folder, exist_ok=True)
         os.system(f'ffmpeg -i {args.input} -qscale:v 1 -qmin 1 -qmax 1 -vsync 0  {tmp_frames_folder}/frame%08d.png')
         args.input = tmp_frames_folder
-
-    num_gpus = torch.cuda.device_count()
-    num_process = num_gpus * args.num_process_per_gpu
+    if torch.cuda.is_available():
+        num_gpus = torch.cuda.device_count()
+        num_process = num_gpus * args.num_process_per_gpu
+    else:
+        num_process = 1
     if num_process == 1:
         inference_video(args, video_save_path)
         return
 
     ctx = torch.multiprocessing.get_context('spawn')
-    pool = ctx.Pool(num_process)
+    pool = ctx.Pool(1)
     os.makedirs(osp.join(args.output, f'{args.video_name}_out_tmp_videos'), exist_ok=True)
     pbar = tqdm(total=num_process, unit='sub_video', desc='inference')
     for i in range(num_process):
