@@ -217,6 +217,12 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
         model_path = [model_path, wdn_model_path]
         dni_weight = [args.denoise_strength, 1 - args.denoise_strength]
 
+    pbar = tqdm(unit='frame', desc='inference')
+    if args.tile > 0:
+        pbar_single_frame = tqdm(unit='tile', desc='current frame')
+    else:
+        pbar_single_frame = None
+
     # restorer
     upsampler = RealESRGANer(
         scale=netscale,
@@ -228,6 +234,7 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
         pre_pad=args.pre_pad,
         half=not args.fp32,
         device=device,
+        pbar=pbar_single_frame,
     )
 
     if 'anime' in args.model_name and args.face_enhance:
@@ -252,7 +259,8 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
     fps = reader.get_fps()
     writer = Writer(args, audio, height, width, video_save_path, fps)
 
-    pbar = tqdm(total=len(reader), unit='frame', desc='inference')
+    pbar.reset(total=len(reader))
+
     while True:
         img = reader.get_frame()
         if img is None:
