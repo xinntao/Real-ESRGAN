@@ -44,7 +44,7 @@ def get_sub_video(args, num_process, process_idx):
     part_time = duration // num_process
     print(f'duration: {duration}, part_time: {part_time}')
     os.makedirs(osp.join(args.output, f'{args.video_name}_inp_tmp_videos'), exist_ok=True)
-    out_path = osp.join(args.output, f'{args.video_name}_inp_tmp_videos', f'{process_idx:03d}.mp4')
+    out_path = osp.join(args.output, f'{args.video_name}_inp_tmp_videos', f'{process_idx:03d}.{args.ext_video}')
     cmd = [
         args.ffmpeg_bin, f'-i {args.input}', '-ss', f'{part_time * process_idx}',
         f'-to {part_time * (process_idx + 1)}' if process_idx != num_process - 1 else '', '-async 1', out_path, '-y'
@@ -142,6 +142,14 @@ class Writer:
             print('You are generating video that is larger than 4K, which will be very slow due to IO speed.',
                   'We highly recommend to decrease the outscale(aka, -s).')
 
+        # A few container formats don't support h264 streams, so we special-case them here.
+        vcodec = 'libx264'
+        if args.ext_video in ['ogg', 'ogv', 'webm']:
+            # TODO: set crf
+            vcodec = 'libvpx'
+        if args.ext_video == 'gif':
+            vcodec = 'gif'
+
         if audio is not None:
             self.stream_writer = (
                 ffmpeg.input('pipe:', format='rawvideo', pix_fmt='bgr24', s=f'{out_width}x{out_height}',
@@ -149,7 +157,7 @@ class Writer:
                                  audio,
                                  video_save_path,
                                  pix_fmt='yuv420p',
-                                 vcodec='libx264',
+                                 vcodec=vcodec,
                                  loglevel='error',
                                  acodec='copy').overwrite_output().run_async(
                                      pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin))
@@ -157,7 +165,7 @@ class Writer:
             self.stream_writer = (
                 ffmpeg.input('pipe:', format='rawvideo', pix_fmt='bgr24', s=f'{out_width}x{out_height}',
                              framerate=fps).output(
-                                 video_save_path, pix_fmt='yuv420p', vcodec='libx264',
+                                 video_save_path, pix_fmt='yuv420p', vcodec=vcodec,
                                  loglevel='error').overwrite_output().run_async(
                                      pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin))
 
@@ -277,8 +285,10 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
 
 
 def run(args):
-    args.video_name = osp.splitext(os.path.basename(args.input))[0]
-    video_save_path = osp.join(args.output, f'{args.video_name}_{args.suffix}.mp4')
+    args.video_name, input_ext = osp.splitext(os.path.basename(args.input))
+    if args.ext_video == 'auto':
+        args.ext_video = input_ext
+    video_save_path = osp.join(args.output, f'{args.video_name}_{args.suffix}.{args.ext_video}')
 
     if args.extract_frame_first:
         tmp_frames_folder = osp.join(args.output, f'{args.video_name}_inp_tmp_frames')
@@ -297,7 +307,7 @@ def run(args):
     os.makedirs(osp.join(args.output, f'{args.video_name}_out_tmp_videos'), exist_ok=True)
     pbar = tqdm(total=num_process, unit='sub_video', desc='inference')
     for i in range(num_process):
-        sub_video_save_path = osp.join(args.output, f'{args.video_name}_out_tmp_videos', f'{i:03d}.mp4')
+        sub_video_save_path = osp.join(args.output, f'{args.video_name}_out_tmp_videos', f'{i:03d}.{args.ext_video}')
         pool.apply_async(
             inference_video,
             args=(args, sub_video_save_path, torch.device(i % num_gpus), num_process, i),
@@ -309,7 +319,7 @@ def run(args):
     # prepare vidlist.txt
     with open(f'{args.output}/{args.video_name}_vidlist.txt', 'w') as f:
         for i in range(num_process):
-            f.write(f'file \'{args.video_name}_out_tmp_videos/{i:03d}.mp4\'\n')
+            f.write(f'file \'{args.video_name}_out_tmp_videos/{i:03d}.{args.ext_video}\'\n')
 
     cmd = [
         args.ffmpeg_bin, '-f', 'concat', '-safe', '0', '-i', f'{args.output}/{args.video_name}_vidlist.txt', '-c',
@@ -369,6 +379,11 @@ def main():
         type=str,
         default='auto',
         help='Image extension. Options: auto | jpg | png, auto means using the same extension as inputs')
+    parser.add_argument(
+        '--ext_video',
+        type=str,
+        default='auto',
+        help='Video extension. Options: auto | anything ffmpeg supports, auto means using the same extension as inputs')
     args = parser.parse_args()
 
     args.input = args.input.rstrip('/').rstrip('\\')
