@@ -7,6 +7,7 @@ import threading
 import torch
 from basicsr.utils.download_util import load_file_from_url
 from torch.nn import functional as F
+from tqdm import tqdm
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -36,13 +37,15 @@ class RealESRGANer():
                  pre_pad=10,
                  half=False,
                  device=None,
-                 gpu_id=None):
+                 gpu_id=None,
+                 pbar=None):
         self.scale = scale
         self.tile_size = tile
         self.tile_pad = tile_pad
         self.pre_pad = pre_pad
         self.mod_scale = None
         self.half = half
+        self.pbar = pbar
 
         # initialize model
         if gpu_id:
@@ -130,6 +133,11 @@ class RealESRGANer():
         tiles_x = math.ceil(width / self.tile_size)
         tiles_y = math.ceil(height / self.tile_size)
 
+        if self.pbar is None and tiles_x*tiles_y>1:
+            self.pbar = tqdm(total=tiles_x*tiles_y, unit='tile', desc='current frame')
+        elif self.pbar is not None:
+            self.pbar.reset(total=tiles_x*tiles_y)
+
         # loop over all tiles
         for y in range(tiles_y):
             for x in range(tiles_x):
@@ -160,7 +168,8 @@ class RealESRGANer():
                         output_tile = self.model(input_tile)
                 except RuntimeError as error:
                     print('Error', error)
-                print(f'\tTile {tile_idx}/{tiles_x * tiles_y}')
+                if self.pbar is not None and tiles_x*tiles_y>1:
+                    self.pbar.update(1)
 
                 # output tile area on total image
                 output_start_x = input_start_x * self.scale
