@@ -10,6 +10,7 @@ import torch
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from basicsr.utils.download_util import load_file_from_url
 from os import path as osp
+from pathlib import Path
 from tqdm import tqdm
 
 from realesrgan import RealESRGANer
@@ -23,16 +24,48 @@ except ImportError:
     import ffmpeg
 
 
+def guess_type(file):
+    p = Path(file)
+
+    if not p.exists():
+        return None
+
+    if p.is_dir():
+        return 'folder'
+
+    try:
+        ff_info = get_video_meta_info(file)
+        if ff_info['audio'] is not None:
+            return 'video'
+        if ff_info['nb_frames'] is not None:
+            if ff_info['nb_frames'] > 1:
+                return 'video'
+            if ff_info['nb_frames'] == 1:
+                return 'image'
+    except Exception as e:
+        pass
+
+    mt_guess = mimetypes.guess_type(file)[0]
+    if mt_guess is None:
+        return None
+    if mt_guess.startswith('video'):
+        return 'video'
+    if mt_guess.startswith('image'):
+        return 'image'
+
+    return None
+
+
 def get_video_meta_info(video_path):
     ret = {}
-    probe = ffmpeg.probe(video_path)
+    probe = ffmpeg.probe(video_path, count_packets=None)
     video_streams = [stream for stream in probe['streams'] if stream['codec_type'] == 'video']
     has_audio = any(stream['codec_type'] == 'audio' for stream in probe['streams'])
     ret['width'] = video_streams[0]['width']
     ret['height'] = video_streams[0]['height']
     ret['fps'] = eval(video_streams[0]['avg_frame_rate'])
     ret['audio'] = ffmpeg.input(video_path).audio if has_audio else None
-    ret['nb_frames'] = int(video_streams[0]['nb_frames'])
+    ret['nb_frames'] = int(video_streams[0]['nb_frames']) if 'nb_frames' in video_streams[0] else int(video_streams[0]['nb_read_packets'])
     return ret
 
 
@@ -58,12 +91,12 @@ class Reader:
 
     def __init__(self, args, total_workers=1, worker_idx=0):
         self.args = args
-        input_type = mimetypes.guess_type(args.input)[0]
-        self.input_type = 'folder' if input_type is None else input_type
+        input_type = guess_type(args.input)
+        self.input_type = input_type
         self.paths = []  # for image&folder type
         self.audio = None
         self.input_fps = None
-        if self.input_type.startswith('video'):
+        if self.input_type == 'video':
             video_path = get_sub_video(args, total_workers, worker_idx)
             self.stream_reader = (
                 ffmpeg.input(video_path).output('pipe:', format='rawvideo', pix_fmt='bgr24',
@@ -77,7 +110,7 @@ class Reader:
             self.nb_frames = meta['nb_frames']
 
         else:
-            if self.input_type.startswith('image'):
+            if self.input_type == 'image':
                 self.paths = [args.input]
             else:
                 paths = sorted(glob.glob(os.path.join(args.input, '*')))
@@ -374,15 +407,7 @@ def main():
     args.input = args.input.rstrip('/').rstrip('\\')
     os.makedirs(args.output, exist_ok=True)
 
-    if mimetypes.guess_type(args.input)[0] is not None and mimetypes.guess_type(args.input)[0].startswith('video'):
-        is_video = True
-    else:
-        is_video = False
-
-    if is_video and args.input.endswith('.flv'):
-        mp4_path = args.input.replace('.flv', '.mp4')
-        os.system(f'ffmpeg -i {args.input} -codec copy {mp4_path}')
-        args.input = mp4_path
+    is_video = guess_type(args.input) == 'video'
 
     if args.extract_frame_first and not is_video:
         args.extract_frame_first = False
