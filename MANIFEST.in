@@ -5,4 +5,4 @@ include inference_realesrgan.py
 include VERSION
 include LICENSE
 include requirements.txt
-include realesrgan/weights/README.md
+include weights/README.md
