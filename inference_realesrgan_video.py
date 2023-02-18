@@ -32,7 +32,11 @@ def get_video_meta_info(video_path):
     ret['height'] = video_streams[0]['height']
     ret['fps'] = eval(video_streams[0]['avg_frame_rate'])
     ret['audio'] = ffmpeg.input(video_path).audio if has_audio else None
-    ret['nb_frames'] = int(video_streams[0]['nb_frames'])
+    try:
+        ret['nb_frames'] = int(video_streams[0]['nb_frames'])
+    except KeyError:
+        cap = cv2.VideoCapture(video_path)
+        ret['nb_frames'] = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     return ret
 
 
