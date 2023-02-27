@@ -54,8 +54,16 @@ def main():
 
     args = parser.parse_args()
 
-    # determine models according to model names
+    available_models = ('RealESRGAN_x4plus', 'RealESRNet_x4plus', 'RealESRGAN_x4plus_anime_6B', 'RealESRGAN_x2plus',
+                        'realesr-animevideov3', 'realesr-general-x4v3')
+
     args.model_name = args.model_name.split('.')[0]
+    # check model_name exists
+    if args.model_name not in available_models:
+        print('Error: Model name is incorrect, should be one of the following:\n\t' + '\n\t'.join(available_models))
+        exit()
+
+    # determine models according to model names
     if args.model_name == 'RealESRGAN_x4plus':  # x4 RRDBNet model
         model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
         netscale = 4
