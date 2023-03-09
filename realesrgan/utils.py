@@ -44,6 +44,8 @@ class RealESRGANer():
         self.mod_scale = None
         self.half = half
 
+        torch.no_grad()
+
         # initialize model
         if gpu_id:
             self.device = torch.device(
