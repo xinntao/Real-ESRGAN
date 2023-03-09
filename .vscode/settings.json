@@ -12,8 +12,10 @@
         "--style",
         "{BASED_ON_STYLE = pep8, BLANK_LINE_BEFORE_NESTED_CLASS_OR_DEF = true, SPLIT_BEFORE_EXPRESSION_AFTER_OPENING_PAREN = true, COLUMN_LIMIT = 120}"
     ],
-    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Enabled": false,
     "python.linting.flake8Args": [
         "max-line-length=120"
     ],
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
 }
