@@ -67,7 +67,8 @@ class RealESRGANer():
         #     keyname = 'params_ema'
         # else:
         #     keyname = 'params'
-        model.load_state_dict(loadnet, strict=False)
+        print(loadnet.keys())
+        model.load_state_dict(loadnet, strict=True)
 
         model.eval()
         self.model = model.to(self.device)
