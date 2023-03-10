@@ -1,16 +1,14 @@
 # Prediction interface for Cog ⚙️
 # https://github.com/replicate/cog/blob/main/docs/python.md
 
+import cv2
 import os
 import tempfile
-import cv2
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from cog import BasePredictor, Input, Path
+
 from gfpgan import GFPGANer
-
 from realesrgan import RealESRGANer
-
-# subprocess.call(['python', '/src/setup.py', 'develop']) - run once at setup. 
 
 MODEL_NAME = "RealESRGAN_x4plus"
 ESRGAN_PATH = os.path.join("/root/.cache/realesrgan", MODEL_NAME + ".pth")
@@ -51,7 +49,10 @@ class Predictor(BasePredictor):
         scale: float = Input(
             description="Factor to scale image by", ge=0, le=10, default=4
         ),
-        face_enhance: bool = Input(description="Run GFPGAN face enhancement along with upscaling", default=False),
+        face_enhance: bool = Input(
+            description="Run GFPGAN face enhancement along with upscaling",
+            default=False,
+        ),
     ) -> Path:
         img = cv2.imread(str(image), cv2.IMREAD_UNCHANGED)
 
