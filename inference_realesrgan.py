@@ -8,6 +8,8 @@ from basicsr.utils.download_util import load_file_from_url
 from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 
+from torch.cuda import is_available as cudaIsAvailable
+from torch.backends.mps import is_available as mpsIsAvailable
 
 def main():
     """Inference demo for Real-ESRGAN.
@@ -51,6 +53,8 @@ def main():
         help='Image extension. Options: auto | jpg | png, auto means using the same extension as inputs')
     parser.add_argument(
         '-g', '--gpu-id', type=int, default=None, help='gpu device to use (default=None) can be 0,1,2 for multi-gpu')
+
+    parser.add_argument('--backend_type', type=str, default='auto', choices=['auto', 'cuda', 'cpu', 'mps'], help='backend type. Options: auto(cuda-cpu) | cuda | cpu | mps')
 
     args = parser.parse_args()
 
@@ -103,6 +107,21 @@ def main():
         model_path = [model_path, wdn_model_path]
         dni_weight = [args.denoise_strength, 1 - args.denoise_strength]
 
+    # deternime backend type (cpu, cuda, mps)
+    if args.backend_type == 'auto':
+        if cudaIsAvailable():
+            backend_type = 'cuda'
+        elif mpsIsAvailable():
+            backend_type = 'mps'
+        else:
+            backend_type = 'cpu'
+    elif args.backend_type == 'cuda' and cudaIsAvailable():
+        backend_type = 'cuda'
+    elif args.backend_type == 'mps' and mpsIsAvailable():
+        backend_type = 'mps'
+    else:
+        backend_type = 'cpu'
+
     # restorer
     upsampler = RealESRGANer(
         scale=netscale,
@@ -113,6 +132,7 @@ def main():
         tile_pad=args.tile_pad,
         pre_pad=args.pre_pad,
         half=not args.fp32,
+        device=backend_type,
         gpu_id=args.gpu_id)
 
     if args.face_enhance:  # Use GFPGAN for face enhancement
@@ -122,6 +142,7 @@ def main():
             upscale=args.outscale,
             arch='clean',
             channel_multiplier=2,
+            device='cpu', # <--- MPS is not supported yet, crash pas runtime. TODO: FIX THIS
             bg_upsampler=upsampler)
     os.makedirs(args.output, exist_ok=True)
 
