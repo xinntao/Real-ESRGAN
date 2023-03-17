@@ -109,7 +109,12 @@ def main():
 
     # deternime backend type (cpu, cuda, mps)
     if args.backend_type == 'auto':
-        backend_type = 'cuda' if cudaIsAvailable() else 'cpu'
+        if cudaIsAvailable():
+            backend_type = 'cuda'
+        elif mpsIsAvailable():
+            backend_type = 'mps'
+        else:
+            backend_type = 'cpu'
     elif args.backend_type == 'cuda' and cudaIsAvailable():
         backend_type = 'cuda'
     elif args.backend_type == 'mps' and mpsIsAvailable():
