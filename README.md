@@ -251,6 +251,7 @@ If you develop/use Real-ESRGAN in your projects, welcome to let me know.
 - NCNN-Android: [RealSR-NCNN-Android](https://github.com/tumuyan/RealSR-NCNN-Android) by [tumuyan](https://github.com/tumuyan)
 - VapourSynth: [vs-realesrgan](https://github.com/HolyWu/vs-realesrgan) by [HolyWu](https://github.com/HolyWu)
 - NCNN: [Real-ESRGAN-ncnn-vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan)
+- Video Upscaler: [Holloway's Upscaler](https://github.com/hollowaykeanho/Upscaler)
 
 &nbsp;&nbsp;&nbsp;&nbsp;**GUI**
 
