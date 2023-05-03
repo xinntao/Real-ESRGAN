@@ -28,15 +28,15 @@ gray_noise_prob2: 0.4
 jpeg_range2: [30, 95]
 
 gt_size: 256
-queue_size: 180
+queue_size: 200
 
 # dataset and data loader settings
 datasets:
   train:
-    name: DF2K+OST
+    name: engravings_dataset
     type: RealESRGANDataset
-    dataroot_gt: datasets/DF2K
-    meta_info: datasets/DF2K/meta_info/meta_info_DF2Kmultiscale+OST_sub.txt
+    dataroot_gt: C:\Users\ianko\Desktop\Projects\AbacusBooks\Real-ESRGAN\datasets\engravings_dataset\images
+    meta_info: C:\Users\ianko\Desktop\Projects\AbacusBooks\Real-ESRGAN\datasets\engravings_dataset\meta_info\meta_info_engraving_dataset_sub.txt
     io_backend:
       type: disk
 
@@ -65,9 +65,10 @@ datasets:
     # data loader
     use_shuffle: true
     num_worker_per_gpu: 5
-    batch_size_per_gpu: 12
+    batch_size_per_gpu: 4
     dataset_enlarge_ratio: 1
-    prefetch_mode: ~
+    prefetch_mode: 'cuda'
+    pin_memory: True
 
   # Uncomment these for validation
   # val:
@@ -89,7 +90,7 @@ network_g:
 
 # path
 path:
-  pretrain_network_g: experiments/pretrained_models/ESRGAN_SRx4_DF2KOST_official-ff704c30.pth
+  pretrain_network_g: C:\Users\ianko\Desktop\Projects\AbacusBooks\Real-ESRGAN\experiments\pretrained_models\ESRGAN_SRx4_DF2KOST_official-ff704c30.pth
   param_key_g: params_ema
   strict_load_g: true
   resume_state: ~
