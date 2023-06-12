@@ -1,12 +1,17 @@
 import argparse
-import cv2
 import glob
 import os
+
+import cv2
 from basicsr.archs.rrdbnet_arch import RRDBNet
-from basicsr.utils.download_util import load_file_from_url
+from huggingface_hub import snapshot_download
 
 from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
+
+# This is Hugging Face repo_id
+# https://huggingface.co/leonelhs/realesrgan
+REALESRGAN_REPO_ID = 'leonelhs/realesrgan'
 
 
 def main():
@@ -54,54 +59,44 @@ def main():
 
     args = parser.parse_args()
 
-    # determine models according to model names
-    args.model_name = args.model_name.split('.')[0]
+    # Get Hugging face cache models
+    snapshot_folder = snapshot_download(repo_id=REALESRGAN_REPO_ID)
+
+    model_path = os.path.join(snapshot_folder, args.model_name) + ".pth"
+
+    dni_weight = None
+    netscale = 4
+
     if args.model_name == 'RealESRGAN_x4plus':  # x4 RRDBNet model
         model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
-        netscale = 4
-        file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth']
-    elif args.model_name == 'RealESRNet_x4plus':  # x4 RRDBNet model
-        model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
-        netscale = 4
-        file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.1/RealESRNet_x4plus.pth']
-    elif args.model_name == 'RealESRGAN_x4plus_anime_6B':  # x4 RRDBNet model with 6 blocks
-        model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=6, num_grow_ch=32, scale=4)
-        netscale = 4
-        file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth']
-    elif args.model_name == 'RealESRGAN_x2plus':  # x2 RRDBNet model
-        model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=2)
-        netscale = 2
-        file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth']
-    elif args.model_name == 'realesr-animevideov3':  # x4 VGG-style model (XS size)
-        model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64, num_conv=16, upscale=4, act_type='prelu')
-        netscale = 4
-        file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-animevideov3.pth']
-    elif args.model_name == 'realesr-general-x4v3':  # x4 VGG-style model (S size)
-        model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64, num_conv=32, upscale=4, act_type='prelu')
-        netscale = 4
-        file_url = [
-            'https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-general-wdn-x4v3.pth',
-            'https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-general-x4v3.pth'
-        ]
 
-    # determine model paths
+    if args.model_name == 'RealESRNet_x4plus':  # x4 RRDBNet model
+        model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
+
+    if args.model_name == 'RealESRGAN_x4plus_anime_6B':  # x4 RRDBNet model with 6 blocks
+        model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=6, num_grow_ch=32, scale=4)
+
+    if args.model_name == 'RealESRGAN_x2plus':  # x2 RRDBNet model
+        model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=2)
+        netscale = 2  # Only here is different from 4
+
+    if args.model_name == 'realesr-animevideov3':  # x4 VGG-style model (XS size)
+        model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64, num_conv=16, upscale=4, act_type='prelu')
+
+    if args.model_name == 'realesr-general-x4v3':  # x4 VGG-style model (S size)
+        model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64, num_conv=32, upscale=4, act_type='prelu')
+        model_path = [
+            os.path.join(snapshot_folder, "realesr-general-x4v3.pth"),
+            os.path.join(snapshot_folder, "realesr-general-wdn-x4v3.pth"),
+        ]
+        # Only for realesr-general-x4v3 model
+        if args.denoise_strength != 1:
+            dni_weight = [args.denoise_strength, 1 - args.denoise_strength]
+
+    # At this point models already downloaded by huggingface hub
+    # Just in case we want to load models from different path
     if args.model_path is not None:
         model_path = args.model_path
-    else:
-        model_path = os.path.join('weights', args.model_name + '.pth')
-        if not os.path.isfile(model_path):
-            ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-            for url in file_url:
-                # model_path will be updated
-                model_path = load_file_from_url(
-                    url=url, model_dir=os.path.join(ROOT_DIR, 'weights'), progress=True, file_name=None)
-
-    # use dni to control the denoise strength
-    dni_weight = None
-    if args.model_name == 'realesr-general-x4v3' and args.denoise_strength != 1:
-        wdn_model_path = model_path.replace('realesr-general-x4v3', 'realesr-general-wdn-x4v3')
-        model_path = [model_path, wdn_model_path]
-        dni_weight = [args.denoise_strength, 1 - args.denoise_strength]
 
     # restorer
     upsampler = RealESRGANer(
