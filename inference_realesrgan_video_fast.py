@@ -162,7 +162,6 @@ class Writer:
                                  loglevel='error').overwrite_output().run_async(
                                      pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin))
 
-    @profile
     def write_frame(self, frame: np.ndarray):
         assert frame.dtype == np.uint8
         frame = frame.data
@@ -203,7 +202,6 @@ def pre_process_batched(self: RealESRGANer):
 
 
 @torch.no_grad()
-@profile
 def batch_enhance_rgb(self: RealESRGANer, imgs, outscale=None, alpha_upsampler='realesrgan'):
     tensors = []
     for img in imgs:
@@ -231,7 +229,6 @@ def batch_enhance_rgb(self: RealESRGANer, imgs, outscale=None, alpha_upsampler='
         yield output
 
 
-@profile
 def inference_video(args, video_save_path, device=None, total_workers=1, worker_idx=0):
     # ---------------------- determine models according to model names ---------------------- #
     args.model_name = args.model_name.split('.pth')[0]
