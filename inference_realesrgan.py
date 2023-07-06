@@ -7,6 +7,7 @@ from basicsr.utils.download_util import load_file_from_url
 
 from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
+from utils.ImagePreprocessor import ImagePreprocessor
 
 
 def main():
@@ -51,6 +52,11 @@ def main():
         help='Image extension. Options: auto | jpg | png, auto means using the same extension as inputs')
     parser.add_argument(
         '-g', '--gpu-id', type=int, default=None, help='gpu device to use (default=None) can be 0,1,2 for multi-gpu')
+    parser.add_argument(
+        '-b', '--brightness', type=float, default=None, help='Adjust the image brightness before the enhancement')
+    parser.add_argument(
+        '-c', '--contrast', type=float, default=None, help='Adjust the image contrast before the enhancement')
+
 
     args = parser.parse_args()
 
@@ -60,7 +66,7 @@ def main():
         model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
         netscale = 4
         file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth']
-    elif args.model_name == 'RealESRNet_x4plus':  # x4 RRDBNet model
+    elif args.model_name in ['RealESRNet_x4plus', 'fine-tune-400000', 'model1', 'test', 'net_g_1000000']:  # x4 RRDBNet model
         model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
         netscale = 4
         file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.1/RealESRNet_x4plus.pth']
@@ -103,6 +109,11 @@ def main():
         model_path = [model_path, wdn_model_path]
         dni_weight = [args.denoise_strength, 1 - args.denoise_strength]
 
+    # preprocessor
+    preprocessor = ImagePreprocessor(
+        brightness=args.brightness,
+        contrast=args.contrast)
+
     # restorer
     upsampler = RealESRGANer(
         scale=netscale,
@@ -141,6 +152,7 @@ def main():
             img_mode = None
 
         try:
+            img = preprocessor.process(img)
             if args.face_enhance:
                 _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
             else:
