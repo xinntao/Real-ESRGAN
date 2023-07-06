@@ -93,7 +93,7 @@ path:
   pretrain_network_g: C:\Users\ianko\Desktop\Projects\AbacusBooks\Real-ESRGAN\experiments\pretrained_models\ESRGAN_SRx4_DF2KOST_official-ff704c30.pth
   param_key_g: params_ema
   strict_load_g: true
-  resume_state: ~
+  resume_state: C:\Users\ianko\Desktop\Projects\AbacusBooks\Real-ESRGAN\experiments\train_RealESRNetx4plus_1000k_B12G4\training_states\975000.state
 
 # training settings
 train:

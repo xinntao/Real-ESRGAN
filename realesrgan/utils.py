@@ -45,9 +45,11 @@ class RealESRGANer():
         self.half = half
 
         # initialize model
-        if gpu_id:
-            self.device = torch.device(
-                f'cuda:{gpu_id}' if torch.cuda.is_available() else 'cpu') if device is None else device
+        if gpu_id is not None:
+            device = f'cuda:{gpu_id}' if torch.cuda.is_available() else 'cpu'
+            print(f'Using device {device}.')
+            self.device = torch.device(device) if device is None else device
+
         else:
             self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') if device is None else device
 
