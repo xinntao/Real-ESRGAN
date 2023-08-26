@@ -24,13 +24,6 @@ def batch_download_images(opt):
     input_list = opt['input_folder']
     save_folder = opt['save_folder']
 
-    # if not osp.exists(save_dir):
-    #     os.makedirs(save_dir)
-    #     print(f'mkdir {save_dir} ...')
-    # else:
-    #     print(f'Folder {save_dir} already exists. Exit.')
-    #     sys.exit(1)
-
     # Open the text file containing the image paths
     with open(input_list, 'r') as f:
         # Loop through each line in the file

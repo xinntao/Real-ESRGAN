@@ -1,4 +1,6 @@
 import argparse
+import traceback
+
 import cv2
 import glob
 import os
@@ -8,6 +10,7 @@ from basicsr.utils.download_util import load_file_from_url
 from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 from utils.ImagePreprocessor import ImagePreprocessor
+import torch.autograd.profiler as profiler
 
 
 def main():
@@ -56,6 +59,8 @@ def main():
         '-b', '--brightness', type=float, default=None, help='Adjust the image brightness before the enhancement')
     parser.add_argument(
         '-c', '--contrast', type=float, default=None, help='Adjust the image contrast before the enhancement')
+    parser.add_argument(
+        '-ps', '--prescale', type=float, default=None, help='Adjust the image scale before the enhancement')
 
 
     args = parser.parse_args()
@@ -112,7 +117,8 @@ def main():
     # preprocessor
     preprocessor = ImagePreprocessor(
         brightness=args.brightness,
-        contrast=args.contrast)
+        contrast=args.contrast,
+        scale=args.prescale)
 
     # restorer
     upsampler = RealESRGANer(
@@ -142,36 +148,41 @@ def main():
         paths = sorted(glob.glob(os.path.join(args.input, '*')))
 
     for idx, path in enumerate(paths):
-        imgname, extension = os.path.splitext(os.path.basename(path))
-        print('Testing', idx, imgname)
+        with profiler.profile(use_cuda=True, profile_memory=True) as prof:
+            imgname, extension = os.path.splitext(os.path.basename(path))
+            print('Testing', idx, imgname)
 
-        img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
-        if len(img.shape) == 3 and img.shape[2] == 4:
-            img_mode = 'RGBA'
-        else:
-            img_mode = None
+            img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
+            if len(img.shape) == 3 and img.shape[2] == 4:
+                img_mode = 'RGBA'
+            else:
+                img_mode = None
 
-        try:
-            img = preprocessor.process(img)
-            if args.face_enhance:
-                _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
+            try:
+                img = preprocessor.process(img)
+                if args.face_enhance:
+                    _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
+                else:
+                    output, _ = upsampler.enhance(img, outscale=args.outscale)
+            except RuntimeError as error:
+                print('Error', error)
+                traceback.print_exc()
+                print(prof)
+                print('If you encounter CUDA out of memory, try to set --tile with a smaller number.')
             else:
-                output, _ = upsampler.enhance(img, outscale=args.outscale)
-        except RuntimeError as error:
-            print('Error', error)
-            print('If you encounter CUDA out of memory, try to set --tile with a smaller number.')
-        else:
-            if args.ext == 'auto':
-                extension = extension[1:]
-            else:
-                extension = args.ext
-            if img_mode == 'RGBA':  # RGBA images should be saved in png format
-                extension = 'png'
-            if args.suffix == '':
-                save_path = os.path.join(args.output, f'{imgname}.{extension}')
-            else:
-                save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
-            cv2.imwrite(save_path, output)
+                if args.ext == 'auto':
+                    extension = extension[1:]
+                else:
+                    extension = args.ext
+                if img_mode == 'RGBA':  # RGBA images should be saved in png format
+                    extension = 'png'
+                if args.suffix == '':
+                    save_path = os.path.join(args.output, f'{imgname}.{extension}')
+                else:
+                    save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
+                cv2.imwrite(save_path, output)
+
+            print(prof)
 
 
 if __name__ == '__main__':
