@@ -157,6 +157,7 @@ class RealESRGANer():
                 input_tile = self.img[:, :, input_start_y_pad:input_end_y_pad, input_start_x_pad:input_end_x_pad]
 
                 # upscale tile
+                torch.cuda.empty_cache()
                 try:
                     with torch.no_grad():
                         output_tile = self.model(input_tile)
@@ -180,6 +181,9 @@ class RealESRGANer():
                 self.output[:, :, output_start_y:output_end_y,
                             output_start_x:output_end_x] = output_tile[:, :, output_start_y_tile:output_end_y_tile,
                                                                        output_start_x_tile:output_end_x_tile]
+
+        del self.img
+        torch.cuda.empty_cache()
 
     def post_process(self):
         # remove extra pad
@@ -254,6 +258,9 @@ class RealESRGANer():
             output = (output_img * 65535.0).round().astype(np.uint16)
         else:
             output = (output_img * 255.0).round().astype(np.uint8)
+
+        del output_img
+        torch.cuda.empty_cache()
 
         if outscale is not None and outscale != float(self.scale):
             output = cv2.resize(
