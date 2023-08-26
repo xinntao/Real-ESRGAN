@@ -45,9 +45,11 @@ class RealESRGANer():
         self.half = half
 
         # initialize model
-        if gpu_id:
-            self.device = torch.device(
-                f'cuda:{gpu_id}' if torch.cuda.is_available() else 'cpu') if device is None else device
+        if gpu_id is not None:
+            device = f'cuda:{gpu_id}' if torch.cuda.is_available() else 'cpu'
+            print(f'Using device {device}.')
+            self.device = torch.device(device) if device is None else device
+
         else:
             self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') if device is None else device
 
@@ -155,6 +157,7 @@ class RealESRGANer():
                 input_tile = self.img[:, :, input_start_y_pad:input_end_y_pad, input_start_x_pad:input_end_x_pad]
 
                 # upscale tile
+                torch.cuda.empty_cache()
                 try:
                     with torch.no_grad():
                         output_tile = self.model(input_tile)
@@ -178,6 +181,9 @@ class RealESRGANer():
                 self.output[:, :, output_start_y:output_end_y,
                             output_start_x:output_end_x] = output_tile[:, :, output_start_y_tile:output_end_y_tile,
                                                                        output_start_x_tile:output_end_x_tile]
+
+        del self.img
+        torch.cuda.empty_cache()
 
     def post_process(self):
         # remove extra pad
@@ -252,6 +258,9 @@ class RealESRGANer():
             output = (output_img * 65535.0).round().astype(np.uint16)
         else:
             output = (output_img * 255.0).round().astype(np.uint8)
+
+        del output_img
+        torch.cuda.empty_cache()
 
         if outscale is not None and outscale != float(self.scale):
             output = cv2.resize(

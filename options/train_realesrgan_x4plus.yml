@@ -36,10 +36,10 @@ queue_size: 180
 # dataset and data loader settings
 datasets:
   train:
-    name: DF2K+OST
+    name: engravings_dataset
     type: RealESRGANDataset
-    dataroot_gt: datasets/DF2K
-    meta_info: datasets/DF2K/meta_info/meta_info_DF2Kmultiscale+OST_sub.txt
+    dataroot_gt: C:\Users\ianko\Desktop\Projects\AbacusBooks\Real-ESRGAN\datasets\engravings_dataset\images
+    meta_info: C:\Users\ianko\Desktop\Projects\AbacusBooks\Real-ESRGAN\datasets\engravings_dataset\meta_info\meta_info_engraving_dataset_sub.txt
     io_backend:
       type: disk
 
@@ -68,7 +68,7 @@ datasets:
     # data loader
     use_shuffle: true
     num_worker_per_gpu: 5
-    batch_size_per_gpu: 12
+    batch_size_per_gpu: 4
     dataset_enlarge_ratio: 1
     prefetch_mode: ~
 
@@ -99,7 +99,7 @@ network_d:
 # path
 path:
   # use the pre-trained Real-ESRNet model
-  pretrain_network_g: experiments/pretrained_models/RealESRNet_x4plus.pth
+  pretrain_network_g: C:\Users\ianko\Desktop\Projects\AbacusBooks\Real-ESRGAN\experiments\train_RealESRNetx4plus_1000k_B12G4\models\net_g_1000000.pth
   param_key_g: params_ema
   strict_load_g: true
   resume_state: ~

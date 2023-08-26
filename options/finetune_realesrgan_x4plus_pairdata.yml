@@ -1,5 +1,5 @@
 # general settings
-name: finetune_RealESRGANx4plus_400k_pairdata
+name: finetune_color_net_with_synthetic_lines
 model_type: RealESRGANModel
 scale: 4
 num_gpu: auto
@@ -15,22 +15,22 @@ high_order_degradation: False # do not use the high-order degradation generation
 # dataset and data loader settings
 datasets:
   train:
-    name: DIV2K
+    name: synthetic_lines_dataset
     type: RealESRGANPairedDataset
-    dataroot_gt: datasets/DF2K
-    dataroot_lq: datasets/DF2K
-    meta_info: datasets/DF2K/meta_info/meta_info_DIV2K_sub_pair.txt
+    dataroot_gt: C:\Users\ianko\Desktop\Projects\AbacusBooks\Real-ESRGAN\datasets\synthetic_lines_dataset\data
+    dataroot_lq: C:\Users\ianko\Desktop\Projects\AbacusBooks\Real-ESRGAN\datasets\synthetic_lines_dataset\data
+    meta_info: C:\Users\ianko\Desktop\Projects\AbacusBooks\Real-ESRGAN\datasets\synthetic_lines_dataset\meta_info\synthetic_lines_dataset.txt
     io_backend:
       type: disk
 
-    gt_size: 256
+    gt_size: 400
     use_hflip: True
     use_rot: False
 
     # data loader
     use_shuffle: true
     num_worker_per_gpu: 5
-    batch_size_per_gpu: 12
+    batch_size_per_gpu: 2
     dataset_enlarge_ratio: 1
     prefetch_mode: ~
 
@@ -61,7 +61,7 @@ network_d:
 # path
 path:
   # use the pre-trained Real-ESRNet model
-  pretrain_network_g: experiments/pretrained_models/RealESRNet_x4plus.pth
+  pretrain_network_g: weights/net_g_1000000.pth
   param_key_g: params_ema
   strict_load_g: true
   pretrain_network_d: experiments/pretrained_models/RealESRGAN_x4plus_netD.pth
