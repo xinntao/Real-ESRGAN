@@ -31,21 +31,21 @@ class Predictor(BasePredictor):
         # download weights
         if not os.path.exists('weights/realesr-general-x4v3.pth'):
             os.system(
-                'wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-general-x4v3.pth -P ./weights'
+                'pget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-general-x4v3.pth -P ./weights'
             )
         if not os.path.exists('weights/GFPGANv1.4.pth'):
-            os.system('wget https://github.com/TencentARC/GFPGAN/releases/download/v1.3.0/GFPGANv1.4.pth -P ./weights')
+            os.system('pget https://github.com/TencentARC/GFPGAN/releases/download/v1.3.0/GFPGANv1.4.pth -P ./weights')
         if not os.path.exists('weights/RealESRGAN_x4plus.pth'):
             os.system(
-                'wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth -P ./weights'
+                'pget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth -P ./weights'
             )
         if not os.path.exists('weights/RealESRGAN_x4plus_anime_6B.pth'):
             os.system(
-                'wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth -P ./weights'
+                'pget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth -P ./weights'
             )
         if not os.path.exists('weights/realesr-animevideov3.pth'):
             os.system(
-                'wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-animevideov3.pth -P ./weights'
+                'pget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-animevideov3.pth -P ./weights'
             )
 
     def choose_model(self, scale, version, tile=0):
