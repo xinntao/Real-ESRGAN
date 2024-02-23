@@ -1,0 +1,26 @@
+name: cd
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+
+    - name: install yolo
+      run: |
+        sudo curl -o /usr/local/bin/yolo -L "https://github.com/replicate/yolo/releases/latest/download/yolo_$(uname -s)_$(uname -m)"
+        sudo chmod +x /usr/local/bin/yolo
+
+    - name: what changed
+      run: some sorta diff to determine what has changed
+
+    - name: push model
+      -- todo - yolo push model
+      -- model specific config - where are we pushing this model

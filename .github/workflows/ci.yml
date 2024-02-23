@@ -1,0 +1,38 @@
+-- checkout repo
+-- get credentials for yolo
+-- determine where to push model
+-- yolo push model to scratch place perhaps?
+-- run tests
+-- if success, great! if not, boo.
+
+name: replicate-ci
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+
+    - name: install yolo
+      run: |
+        sudo curl -o /usr/local/bin/yolo -L "https://github.com/replicate/yolo/releases/latest/download/yolo_$(uname -s)_$(uname -m)"
+        sudo chmod +x /usr/local/bin/yolo
+
+    - name: what changed
+      run: some sorta diff to determine what has changed
+
+    - name: push model
+      -- todo - yolo push model
+      -- model specific config - where are we pushing this model
+
+    - name: test model
+      -- just run some http tests
+      -- borrow template from SDXL
+      -- pass in some flag s.t. we're testing in prod
