@@ -1,10 +1,3 @@
--- checkout repo
--- get credentials for yolo
--- determine where to push model
--- yolo push model to scratch place perhaps?
--- run tests
--- if success, great! if not, boo.
-
 name: replicate-ci
 
 on:
@@ -15,6 +8,9 @@ on:
 jobs:
   push:
     runs-on: ubuntu-latest
+    env:
+      BASE_IMAGE: 'daanelson/real-esrgan-a100'
+      PUSH_DEST: 'daanelson/real-esrgan-staging'
 
     steps:
     - name: checkout
@@ -26,13 +22,19 @@ jobs:
         sudo chmod +x /usr/local/bin/yolo
 
     - name: what changed
-      run: some sorta diff to determine what has changed
+      id: files
+      run: |
+        echo "FILES_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.event.after }})" >> $GITHUB_ENV
 
     - name: push model
-      -- todo - yolo push model
-      -- model specific config - where are we pushing this model
+      env:
+       REPLICATE_API_TOKEN: ${{secrets.REPLICATE_API_TOKEN}}
+      run: |
+        echo "pushing changes from $BASE_IMAGE to $PUSH_DEST"
+        echo "changed files: $GITHUB_ENV"
+        yolo push --base $BASE_IMAGE --dest $PUSH_DEST $GITHUB_ENV
 
-    - name: test model
-      -- just run some http tests
-      -- borrow template from SDXL
-      -- pass in some flag s.t. we're testing in prod
+    # - name: test model
+    #   -- just run some http tests
+    #   -- borrow template from SDXL
+    #   -- pass in some flag s.t. we're testing in prod

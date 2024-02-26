@@ -63,7 +63,7 @@ class Predictor(BasePredictor):
                 img, has_aligned=False, only_center_face=False, paste_back=True
             )
         else:
-            print("running without face enhancement")
+            print("running without face enhancement!")
             output, _ = self.upsampler.enhance(img, outscale=scale)
         save_path = os.path.join(tempfile.mkdtemp(), "output.png")
         cv2.imwrite(save_path, output)
