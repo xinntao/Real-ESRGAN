@@ -1,0 +1,90 @@
+name: replicate-ci
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    env:
+      BASE_MODEL: 'daanelson/real-esrgan-fake-prod-model'
+      STAGING_MODEL: 'daanelson/real-esrgan-staging'
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: what changed
+      id: what-changed
+      run: |
+        FILES_CHANGED=$(git diff --name-only --diff-filter=AMR origin/master HEAD | xargs)
+        echo "FILES_CHANGED=$FILES_CHANGED" >> $GITHUB_ENV
+        if echo "$FILES_CHANGED" | grep -q 'cog.yaml'; then
+            echo "cog-push=true" >> $GITHUB_OUTPUT
+          else
+            echo "cog-push=false" >> $GITHUB_OUTPUT
+          fi
+        if ${{ contains(github.event.head_commit.message, '[cog build]') }}; then
+            echo "cog-push=true" >> $GITHUB_OUTPUT
+          fi
+
+    # if cog.yaml changes - cog build and push. else - yolo build and push!
+    - name: did-it-tho
+      env:
+        COG_PUSH: ${{ steps.what-changed.outputs.cog-push }}
+      run: |
+        echo "cog push?: $COG_PUSH"
+        echo "changed files: $FILES_CHANGED"
+
+    - name: setup-cog
+      if: steps.what-changed.outputs.cog-push == 'true'
+      uses: replicate/setup-cog@v1.0.3
+      with:
+        token: ${{ secrets.REPLICATE_API_TOKEN }}
+        install-cuda: false
+
+    - name: cog-build
+      if: steps.what-changed.outputs.cog-push == 'true'
+      run: |
+        cog build
+
+    - name: cog-push
+      if: steps.what-changed.outputs.cog-push == 'true'
+      run: |
+        cog push r8.im/"$STAGING_MODEL"
+
+    - name: install-yolo
+      if: steps.what-changed.outputs.cog-push == 'false'
+      run: |
+        sudo curl -o /usr/local/bin/yolo -L "https://github.com/replicate/yolo/releases/latest/download/yolo_$(uname -s)_$(uname -m)"
+        sudo chmod +x /usr/local/bin/yolo
+
+    - name: yolo-push
+      if: steps.what-changed.outputs.cog-push == 'false'
+      env:
+       REPLICATE_API_TOKEN: ${{secrets.REPLICATE_API_TOKEN}}
+       SENTRY_DSN: ${{secrets.SENTRY_DSN}}
+      run: |
+        echo "pushing changes from $BASE_MODEL to $STAGING_MODEL"
+        echo "changed files: $FILES_CHANGED"
+        yolo push -e SENTRY_DSN="$SENTRY_DSN" --base $BASE_MODEL --dest $STAGING_MODEL $FILES_CHANGED
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: install python test deps
+      run: |
+        pip install -r requirements_test.txt
+
+    - name: test model
+      env:
+       REPLICATE_API_TOKEN: ${{secrets.REPLICATE_API_TOKEN}}
+       TEST_ENV: 'staging'
+      run: |
+        pytest replicate_tests
+

@@ -6,6 +6,7 @@ import os
 import tempfile
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from cog import BasePredictor, Input, Path
+import sentry_sdk
 
 from gfpgan import GFPGANer
 from realesrgan import RealESRGANer
@@ -17,6 +18,13 @@ GFPGAN_PATH = "/root/.cache/realesrgan/GFPGANv1.3.pth"
 
 class Predictor(BasePredictor):
     def setup(self):
+        sentry_dsn = os.getenv("SENTRY_DSN", "no-op")
+        if sentry_dsn != "no-op":
+            sentry_sdk.init(
+                dsn=sentry_dsn,
+            )
+            print("sentry init")
+
         model = RRDBNet(
             num_in_ch=3,
             num_out_ch=3,
@@ -54,17 +62,28 @@ class Predictor(BasePredictor):
             default=False,
         ),
     ) -> Path:
-        img = cv2.imread(str(image), cv2.IMREAD_UNCHANGED)
+        try:
+            img = cv2.imread(str(image), cv2.IMREAD_UNCHANGED)
 
-        if face_enhance:
-            print("running with face enhancement")
-            self.face_enhancer.upscale = scale
-            _, _, output = self.face_enhancer.enhance(
-                img, has_aligned=False, only_center_face=False, paste_back=True
-            )
-        else:
-            print("running without face enhancement")
-            output, _ = self.upsampler.enhance(img, outscale=scale)
-        save_path = os.path.join(tempfile.mkdtemp(), "output.png")
-        cv2.imwrite(save_path, output)
+            if face_enhance:
+                print("running with face enhancement")
+                self.face_enhancer.upscale = scale
+                _, _, output = self.face_enhancer.enhance(
+                    img, has_aligned=False, only_center_face=False, paste_back=True
+                )
+            else:
+                print("running without face enhancement!!")
+                print(img.shape)
+                output, _ = self.upsampler.enhance(img, outscale=scale)
+            save_path = os.path.join(tempfile.mkdtemp(), "output.png")
+            cv2.imwrite(save_path, output)
+
+        except Exception as e:
+            if img is not None:
+                img_shape = img.shape
+                print(f"capturing {img_shape} for logging")
+                del image
+            sentry_sdk.capture_exception(e)
+            raise e
+        print("beep")
         return Path(save_path)

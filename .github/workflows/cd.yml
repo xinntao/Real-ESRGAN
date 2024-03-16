@@ -1,0 +1,115 @@
+name: replicate-cd
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    env:
+      BASE_MODEL: 'daanelson/real-esrgan-fake-prod-model'
+      PROD_MODEL: 'daanelson/real-esrgan-fake-prod-model'
+      PROD_DEPLOYMENT: 'daanelson/real-esrgan-prod-official'
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: what changed
+      id: what-changed
+      run: |
+        FILES_CHANGED=$(git diff --name-only --diff-filter=AMR origin/master HEAD | xargs)
+        echo "FILES_CHANGED=$FILES_CHANGED" >> $GITHUB_ENV
+        if echo "$FILES_CHANGED" | grep -q 'cog.yaml'; then
+            echo "cog-push=true" >> $GITHUB_OUTPUT
+          else
+            echo "cog-push=false" >> $GITHUB_OUTPUT
+          fi
+        if ${{ contains(github.event.head_commit.message, '[cog build]') }}; then
+            echo "cog-push=true" >> $GITHUB_OUTPUT
+          fi
+
+    # if cog.yaml changes - cog build and push. else - yolo build and push!
+    - name: did-it-tho
+      env:
+        COG_PUSH: ${{ steps.what-changed.outputs.cog-push }}
+      run: |
+        echo "cog push?: $COG_PUSH"
+        echo "changed files: $FILES_CHANGED"
+
+    - name: setup-cog
+      if: steps.what-changed.outputs.cog-push == 'true'
+      uses: replicate/setup-cog@v1.0.3
+      with:
+        token: ${{ secrets.REPLICATE_API_TOKEN }}
+        install-cuda: false
+
+    - name: cog-build
+      if: steps.what-changed.outputs.cog-push == 'true'
+      run: |
+        cog build
+
+    - name: cog-push
+      if: steps.what-changed.outputs.cog-push == 'true'
+      run: |
+        cog push r8.im/"$PROD_MODEL"
+
+    - name: install-yolo
+      run: |
+        sudo curl -o /usr/local/bin/yolo -L "https://github.com/replicate/yolo/releases/latest/download/yolo_$(uname -s)_$(uname -m)"
+        sudo chmod +x /usr/local/bin/yolo
+
+    # yolo as hack for pushing environment variables
+    - name: yolo-push-env
+      if: steps.what-changed.outputs.cog-push == 'true'
+      env:
+       REPLICATE_API_TOKEN: ${{secrets.REPLICATE_API_TOKEN}}
+       SENTRY_DSN: ${{secrets.SENTRY_DSN}}
+      run: |
+        touch meaningless_prod_file.txt
+        echo "adding environment variables to $PROD_MODEL"
+        yolo push -e SENTRY_DSN="$SENTRY_DSN" --base $PROD_MODEL --dest $PROD_MODEL meaningless_file.txt
+
+    - name: yolo-push
+      if: steps.what-changed.outputs.cog-push == 'false'
+      env:
+       REPLICATE_API_TOKEN: ${{secrets.REPLICATE_API_TOKEN}}
+       SENTRY_DSN: ${{secrets.SENTRY_DSN}}
+      run: |
+        echo "pushing changes from $BASE_MODEL to $PROD_MODEL"
+        echo "changed files: $FILES_CHANGED"
+        yolo push -e SENTRY_DSN="$SENTRY_DSN" --base $BASE_MODEL --dest $PROD_MODEL $FILES_CHANGED
+
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: install python test deps
+      run: |
+        pip install -r requirements_test.txt
+
+    - name: test model
+      env:
+       REPLICATE_API_TOKEN: ${{secrets.REPLICATE_API_TOKEN}}
+       TEST_ENV: 'prod'
+      run: |
+        pytest replicate_tests
+
+    - name: update deployment
+      env:
+        REPLICATE_API_TOKEN: ${{secrets.REPLICATE_API_TOKEN}}
+
+      run: |
+        sudo apt-get install jq
+        export LATEST_VERSION=$(curl -s -H "Authorization: Token $REPLICATE_API_TOKEN" \
+          https://api.replicate.com/v1/models/$PROD_MODEL/versions | jq -r '.results[0].id')
+        curl -s \
+          -X PATCH \
+          -H "Authorization: Token $REPLICATE_API_TOKEN" \
+          -H "Content-Type: application/json" \
+          -d '{"version": "'$LATEST_VERSION'" }' \
+          https://api.replicate.com/v1/deployments/$PROD_DEPLOYMENT

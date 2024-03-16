@@ -16,6 +16,7 @@ build:
     - "opencv-python==4.6.0.66"
     - "Pillow==9.1.1"
     - "tqdm==4.64.0"
+    - "sentry-sdk"
 
   run:
     - "pip install basicsr"
@@ -25,6 +26,7 @@ build:
     - "wget --output-document=/src/gfpgan/weights/detection_Resnet50_Final.pth https://github.com/xinntao/facexlib/releases/download/v0.1.0/detection_Resnet50_Final.pth"
     - "wget --output-document=/src/gfpgan/weights/parsing_parsenet.pth https://github.com/xinntao/facexlib/releases/download/v0.2.2/parsing_parsenet.pth"
     - "pip install realesrgan"
+    - "echo heyo"
 
 # predict.py defines how predictions are run on your model
 predict: "predict.py:Predictor"
