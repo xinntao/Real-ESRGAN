@@ -90,7 +90,7 @@ network_g:
 
 # path
 path:
-  pretrain_network_g: experiments/pretrained_models/RealESRGAN_x4plus.pth
+  pretrain_network_g: experiments/pretrained_models/RealESRGAN_x2plus.pth
   param_key_g: params_ema
   strict_load_g: False
   resume_state: ~
