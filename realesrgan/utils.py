@@ -89,7 +89,7 @@ class RealESRGANer():
         """Pre-process, such as pre-pad and mod pad, so that the images can be divisible
         """
         img = torch.from_numpy(np.transpose(img, (2, 0, 1))).float()
-        self.img = img.unsqueeze(0).to(self.device)
+        self.img = img.unsqueeze(0).contiguous().to(self.device)
         if self.half:
             self.img = self.img.half()
 
