@@ -269,7 +269,8 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
         else:
             writer.write_frame(output)
 
-        torch.cuda.synchronize(device)
+        if not args.cpu:
+            torch.cuda.synchronize(device)
         pbar.update(1)
 
     reader.close()
@@ -286,10 +287,10 @@ def run(args):
         os.system(f'ffmpeg -i {args.input} -qscale:v 1 -qmin 1 -qmax 1 -vsync 0  {tmp_frames_folder}/frame%08d.png')
         args.input = tmp_frames_folder
 
-    num_gpus = torch.cuda.device_count()
+    num_gpus = 1 if args.cpu else torch.cuda.device_count()
     num_process = num_gpus * args.num_process_per_gpu
     if num_process == 1:
-        inference_video(args, video_save_path)
+        inference_video(args, video_save_path, torch.device('cpu') if args.cpu else None)
         return
 
     ctx = torch.multiprocessing.get_context('spawn')
@@ -300,7 +301,7 @@ def run(args):
         sub_video_save_path = osp.join(args.output, f'{args.video_name}_out_tmp_videos', f'{i:03d}.mp4')
         pool.apply_async(
             inference_video,
-            args=(args, sub_video_save_path, torch.device(i % num_gpus), num_process, i),
+            args=(args, sub_video_save_path, torch.device('cpu') if args.cpu else torch.device(i % num_gpus), num_process, i),
             callback=lambda arg: pbar.update(1))
     pool.close()
     pool.join()
@@ -358,6 +359,7 @@ def main():
     parser.add_argument('--ffmpeg_bin', type=str, default='ffmpeg', help='The path to ffmpeg')
     parser.add_argument('--extract_frame_first', action='store_true')
     parser.add_argument('--num_process_per_gpu', type=int, default=1)
+    parser.add_argument('--cpu', action='store_true', help='Use CPU instead of GPU. Default: use GPU.')
 
     parser.add_argument(
         '--alpha_upsampler',
