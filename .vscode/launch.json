@@ -1,0 +1,51 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "RealESRGAN training",
+            "type": "python",
+            "module": "torch.distributed.launch",
+            "request": "launch",
+            "args": [
+                "--nproc_per_node=4",
+                "--master_port=4321",
+                "realesrgan/train.py",
+                "-opt",
+                "options/train_realesrnet_x4plus.yml",
+                "--launcher",
+                "pytorch",
+                "--debug"
+            ],
+            "cwd": "${workspaceFolder}",
+            "env": {},
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "RealESRGAN training",
+            "type": "python",
+            "module": "realesrgan/train.py",
+            "request": "launch",
+            "args": [
+                "-opt",
+                "options/train_realesrnet_x4plus.yml",
+                "--auto_resume"
+            ],
+            "cwd": "${workspaceFolder}",
+            "env": {},
+            "console": "integratedTerminal",
+            "justMyCode": false
+        }
+    ]
+}
