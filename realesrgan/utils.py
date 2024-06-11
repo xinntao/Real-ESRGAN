@@ -239,7 +239,7 @@ class RealESRGANer():
         output_imgs = [o for o in output_imgs]
 
         final_results = []
-        for output_img, img_mode, h_i, w_i in zip(output_imgs, img_modes, h_input, w_input):
+        for output_img, img_mode, max_r, h_i, w_i in zip(output_imgs, img_modes, max_range, h_input, w_input):
             output_img = np.transpose(output_img[[2, 1, 0], :, :], (1, 2, 0))
             if img_mode == 'L':
                 output_img = cv2.cvtColor(output_img, cv2.COLOR_BGR2GRAY)
@@ -265,7 +265,7 @@ class RealESRGANer():
                 output_img[:, :, 3] = output_alpha
 
             # ------------------------------ return ------------------------------ #
-            if max_range == 65535:  # 16-bit image
+            if max_r == 65535:  # 16-bit image
                 output = (output_img * 65535.0).round().astype(np.uint16)
             else:
                 output = (output_img * 255.0).round().astype(np.uint8)
