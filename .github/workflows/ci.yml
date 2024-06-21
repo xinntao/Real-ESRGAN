@@ -9,8 +9,8 @@ jobs:
   push:
     runs-on: ubuntu-latest
     env:
-      BASE_MODEL: 'daanelson/real-esrgan-fake-prod-model'
-      STAGING_MODEL: 'daanelson/real-esrgan-staging'
+      BASE_MODEL: 'replicate/real-esrgan'
+      STAGING_MODEL: 'replicate/real-esrgan-staging'
 
     steps:
     - name: checkout
@@ -67,11 +67,10 @@ jobs:
       if: steps.what-changed.outputs.cog-push == 'false'
       env:
        REPLICATE_API_TOKEN: ${{secrets.REPLICATE_API_TOKEN}}
-       SENTRY_DSN: ${{secrets.SENTRY_DSN}}
       run: |
         echo "pushing changes from $BASE_MODEL to $STAGING_MODEL"
         echo "changed files: $FILES_CHANGED"
-        yolo push -e SENTRY_DSN="$SENTRY_DSN" --base $BASE_MODEL --dest $STAGING_MODEL $FILES_CHANGED
+        yolo push --base $BASE_MODEL --dest $STAGING_MODEL $FILES_CHANGED
 
     - uses: actions/setup-python@v5
       with:
