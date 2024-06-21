@@ -1,29 +1,37 @@
 # Prediction interface for Cog ⚙️
 # https://github.com/replicate/cog/blob/main/docs/python.md
 
+import subprocess
+import time
 import cv2
 import os
 import tempfile
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from cog import BasePredictor, Input, Path
-import sentry_sdk
 
 from gfpgan import GFPGANer
 from realesrgan import RealESRGANer
 
-MODEL_NAME = "RealESRGAN_x4plus"
-ESRGAN_PATH = os.path.join("/root/.cache/realesrgan", MODEL_NAME + ".pth")
-GFPGAN_PATH = "/root/.cache/realesrgan/GFPGANv1.3.pth"
+WEIGHTS_URL = "https://weights.replicate.delivery/default/official-models/tencent/real-esrgan/real-esrgan-models.tar"
+EXTRA_URL = "https://weights.replicate.delivery/default/official-models/tencent/real-esrgan/esrgan-extra-models.tar"
+
+MODEL_FOLDER = "/src/weights/esrgan/"
+GFPGAN_FOLDER = "/src/gfpgan/weights/"
+
+def download_weights(url, dest):
+    start = time.time()
+    print("downloading url: ", url)
+    print("downloading to: ", dest)
+    subprocess.check_call(["pget", "-x", url, dest], close_fds=False)
+    print("downloading took: ", time.time() - start)
 
 
 class Predictor(BasePredictor):
     def setup(self):
-        sentry_dsn = os.getenv("SENTRY_DSN", "no-op")
-        if sentry_dsn != "no-op":
-            sentry_sdk.init(
-                dsn=sentry_dsn,
-            )
-            print("sentry init")
+        if not os.path.exists(MODEL_FOLDER):
+            download_weights(WEIGHTS_URL, MODEL_FOLDER)
+        if not os.path.exists(GFPGAN_FOLDER):
+            download_weights(EXTRA_URL, GFPGAN_FOLDER)
 
         model = RRDBNet(
             num_in_ch=3,
@@ -36,7 +44,7 @@ class Predictor(BasePredictor):
         netscale = 4
         self.upsampler = RealESRGANer(
             scale=netscale,
-            model_path=ESRGAN_PATH,
+            model_path=os.path.join(MODEL_FOLDER, "RealESRGAN_x4plus.pth"),
             model=model,
             tile=0,
             tile_pad=10,
@@ -44,7 +52,7 @@ class Predictor(BasePredictor):
             half=True,
         )
         self.face_enhancer = GFPGANer(
-            model_path=GFPGAN_PATH,
+            model_path=os.path.join(MODEL_FOLDER, "GFPGANv1.3.pth"),
             upscale=4,
             arch="clean",
             channel_multiplier=2,
@@ -62,28 +70,18 @@ class Predictor(BasePredictor):
             default=False,
         ),
     ) -> Path:
-        try:
-            img = cv2.imread(str(image), cv2.IMREAD_UNCHANGED)
+        img = cv2.imread(str(image), cv2.IMREAD_UNCHANGED)
 
-            if face_enhance:
-                print("running with face enhancement")
-                self.face_enhancer.upscale = scale
-                _, _, output = self.face_enhancer.enhance(
-                    img, has_aligned=False, only_center_face=False, paste_back=True
-                )
-            else:
-                print("running without face enhancement!!")
-                print(img.shape)
-                output, _ = self.upsampler.enhance(img, outscale=scale)
-            save_path = os.path.join(tempfile.mkdtemp(), "output.png")
-            cv2.imwrite(save_path, output)
-
-        except Exception as e:
-            if img is not None:
-                img_shape = img.shape
-                print(f"capturing {img_shape} for logging")
-                del image
-            sentry_sdk.capture_exception(e)
-            raise e
-        print("beep")
+        if face_enhance:
+            print("running with face enhancement")
+            self.face_enhancer.upscale = scale
+            _, _, output = self.face_enhancer.enhance(
+                img, has_aligned=False, only_center_face=False, paste_back=True
+            )
+        else:
+            print("running without face enhancement!!")
+            print(img.shape)
+            output, _ = self.upsampler.enhance(img, outscale=scale)
+        save_path =  "output.png"
+        cv2.imwrite(save_path, output)
         return Path(save_path)

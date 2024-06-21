@@ -21,12 +21,8 @@ build:
   run:
     - "pip install basicsr"
     - "pip install gfpgan"
-    - "mkdir -p /root/.cache/realesrgan; wget --quiet --output-document=/root/.cache/realesrgan/RealESRGAN_x4plus.pth https://models.nmb.ai/RealESRGAN_x4plus.pth; wget --quiet --output-document=/root/.cache/realesrgan/GFPGANv1.3.pth https://models.nmb.ai/majesty/GFPGANv1.3.pth"
-    - "mkdir -p /src/gfpgan/weights"
-    - "wget --output-document=/src/gfpgan/weights/detection_Resnet50_Final.pth https://github.com/xinntao/facexlib/releases/download/v0.1.0/detection_Resnet50_Final.pth"
-    - "wget --output-document=/src/gfpgan/weights/parsing_parsenet.pth https://github.com/xinntao/facexlib/releases/download/v0.2.2/parsing_parsenet.pth"
     - "pip install realesrgan"
-    - "echo heyo"
+    - curl -o /usr/local/bin/pget -L "https://github.com/replicate/pget/releases/download/v0.8.2/pget_linux_x86_64" && chmod +x /usr/local/bin/pget
 
 # predict.py defines how predictions are run on your model
 predict: "predict.py:Predictor"
