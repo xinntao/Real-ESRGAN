@@ -7,7 +7,7 @@ import cv2
 import os
 import tempfile
 from basicsr.archs.rrdbnet_arch import RRDBNet
-from cog import BasePredictor, Input, Path
+from cog import BasePredictor, Input, Path, emit_metric
 
 from gfpgan import GFPGANer
 from realesrgan import RealESRGANer
@@ -79,9 +79,13 @@ class Predictor(BasePredictor):
                 img, has_aligned=False, only_center_face=False, paste_back=True
             )
         else:
-            print("running without face enhancement!!")
-            print(img.shape)
+            print("running without face enhancement")
             output, _ = self.upsampler.enhance(img, outscale=scale)
         save_path =  "output.png"
+
         cv2.imwrite(save_path, output)
+        emit_metric("scale", scale)
+        emit_metric("original_height", img.shape[0])
+        emit_metric("original_width", img.shape[1])
+        emit_metric("face_enhance", face_enhance)
         return Path(save_path)
