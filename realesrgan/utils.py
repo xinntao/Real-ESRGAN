@@ -67,12 +67,12 @@ class RealESRGANer():
             keyname = 'params_ema'
         else:
             keyname = 'params'
-        model.load_state_dict(loadnet[keyname], strict=True)
+        model.load_state_dict(loadnet.get(keyname, loadnet), strict=True)
 
         model.eval()
         self.model = model.to(self.device)
         if self.half:
-            self.model = self.model.half()
+            self.model = self.model.bfloat16()
 
     def dni(self, net_a, net_b, dni_weight, key='params', loc='cpu'):
         """Deep network interpolation.
@@ -91,7 +91,7 @@ class RealESRGANer():
         img = torch.from_numpy(np.transpose(img, (2, 0, 1))).float()
         self.img = img.unsqueeze(0).to(self.device)
         if self.half:
-            self.img = self.img.half()
+            self.img = self.img.bfloat16()
 
         # pre_pad
         if self.pre_pad != 0:
