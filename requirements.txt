@@ -1,4 +1,6 @@
-basicsr>=1.4.2
+#basicsr>=1.4.2
+git+https://github.com/XPixelGroup/BasicSR.git
+
 facexlib>=0.2.5
 gfpgan>=1.3.5
 numpy
