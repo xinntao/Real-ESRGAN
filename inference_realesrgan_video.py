@@ -1,3 +1,4 @@
+# inference_realesrgan_video.py
 import argparse
 import cv2
 import glob
@@ -22,6 +23,15 @@ except ImportError:
     pip.main(['install', '--user', 'ffmpeg-python'])
     import ffmpeg
 
+def print_device_info():
+    print("\nDevice Information:")
+    print(f"CUDA Available: {torch.cuda.is_available()}")
+    if torch.cuda.is_available():
+        print(f"GPU Device: {torch.cuda.get_device_name(0)}")
+        print(f"GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1024**2:.1f}MB")
+        print(f"Number of GPUs: {torch.cuda.device_count()}")
+    else:
+        print("No GPU detected - running on CPU")
 
 def get_video_meta_info(video_path):
     ret = {}
@@ -34,7 +44,6 @@ def get_video_meta_info(video_path):
     ret['audio'] = ffmpeg.input(video_path).audio if has_audio else None
     ret['nb_frames'] = int(video_streams[0]['nb_frames'])
     return ret
-
 
 def get_sub_video(args, num_process, process_idx):
     if num_process == 1:
@@ -53,9 +62,7 @@ def get_sub_video(args, num_process, process_idx):
     subprocess.call(' '.join(cmd), shell=True)
     return out_path
 
-
 class Reader:
-
     def __init__(self, args, total_workers=1, worker_idx=0):
         self.args = args
         input_type = mimetypes.guess_type(args.input)[0]
@@ -75,7 +82,6 @@ class Reader:
             self.input_fps = meta['fps']
             self.audio = meta['audio']
             self.nb_frames = meta['nb_frames']
-
         else:
             if self.input_type.startswith('image'):
                 self.paths = [args.input]
@@ -109,7 +115,7 @@ class Reader:
         return self.nb_frames
 
     def get_frame_from_stream(self):
-        img_bytes = self.stream_reader.stdout.read(self.width * self.height * 3)  # 3 bytes for one pixel
+        img_bytes = self.stream_reader.stdout.read(self.width * self.height * 3)
         if not img_bytes:
             return None
         img = np.frombuffer(img_bytes, np.uint8).reshape([self.height, self.width, 3])
@@ -133,9 +139,7 @@ class Reader:
             self.stream_reader.stdin.close()
             self.stream_reader.wait()
 
-
 class Writer:
-
     def __init__(self, args, audio, height, width, video_save_path, fps):
         out_width, out_height = int(width * args.outscale), int(height * args.outscale)
         if out_height > 2160:
@@ -169,31 +173,31 @@ class Writer:
         self.stream_writer.stdin.close()
         self.stream_writer.wait()
 
-
 def inference_video(args, video_save_path, device=None, total_workers=1, worker_idx=0):
-    # ---------------------- determine models according to model names ---------------------- #
     args.model_name = args.model_name.split('.pth')[0]
-    if args.model_name == 'RealESRGAN_x4plus':  # x4 RRDBNet model
+
+    # Model architecture selection
+    if args.model_name == 'RealESRGAN_x4plus':
         model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
         netscale = 4
         file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth']
-    elif args.model_name == 'RealESRNet_x4plus':  # x4 RRDBNet model
+    elif args.model_name == 'RealESRNet_x4plus':
         model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
         netscale = 4
         file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.1/RealESRNet_x4plus.pth']
-    elif args.model_name == 'RealESRGAN_x4plus_anime_6B':  # x4 RRDBNet model with 6 blocks
+    elif args.model_name == 'RealESRGAN_x4plus_anime_6B':
         model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=6, num_grow_ch=32, scale=4)
         netscale = 4
         file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth']
-    elif args.model_name == 'RealESRGAN_x2plus':  # x2 RRDBNet model
+    elif args.model_name == 'RealESRGAN_x2plus':
         model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=2)
         netscale = 2
         file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth']
-    elif args.model_name == 'realesr-animevideov3':  # x4 VGG-style model (XS size)
+    elif args.model_name == 'realesr-animevideov3':
         model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64, num_conv=16, upscale=4, act_type='prelu')
         netscale = 4
         file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-animevideov3.pth']
-    elif args.model_name == 'realesr-general-x4v3':  # x4 VGG-style model (S size)
+    elif args.model_name == 'realesr-general-x4v3':
         model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64, num_conv=32, upscale=4, act_type='prelu')
         netscale = 4
         file_url = [
@@ -201,23 +205,22 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
             'https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-general-x4v3.pth'
         ]
 
-    # ---------------------- determine model paths ---------------------- #
+    # Model paths
     model_path = os.path.join('weights', args.model_name + '.pth')
     if not os.path.isfile(model_path):
         ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
         for url in file_url:
-            # model_path will be updated
             model_path = load_file_from_url(
                 url=url, model_dir=os.path.join(ROOT_DIR, 'weights'), progress=True, file_name=None)
 
-    # use dni to control the denoise strength
+    # DNI weight setup
     dni_weight = None
     if args.model_name == 'realesr-general-x4v3' and args.denoise_strength != 1:
         wdn_model_path = model_path.replace('realesr-general-x4v3', 'realesr-general-wdn-x4v3')
         model_path = [model_path, wdn_model_path]
         dni_weight = [args.denoise_strength, 1 - args.denoise_strength]
 
-    # restorer
+    # Initialize upsampler
     upsampler = RealESRGANer(
         scale=netscale,
         model_path=model_path,
@@ -231,27 +234,28 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
     )
 
     if 'anime' in args.model_name and args.face_enhance:
-        print('face_enhance is not supported in anime models, we turned this option off for you. '
-              'if you insist on turning it on, please manually comment the relevant lines of code.')
+        print('Face enhancement is not supported in anime models - option disabled.')
         args.face_enhance = False
 
-    if args.face_enhance:  # Use GFPGAN for face enhancement
+    # Setup face enhancer if requested
+    face_enhancer = None
+    if args.face_enhance:
         from gfpgan import GFPGANer
         face_enhancer = GFPGANer(
             model_path='https://github.com/TencentARC/GFPGAN/releases/download/v1.3.0/GFPGANv1.3.pth',
             upscale=args.outscale,
             arch='clean',
             channel_multiplier=2,
-            bg_upsampler=upsampler)  # TODO support custom device
-    else:
-        face_enhancer = None
+            bg_upsampler=upsampler)
 
+    # Initialize reader and writer
     reader = Reader(args, total_workers, worker_idx)
     audio = reader.get_audio()
     height, width = reader.get_resolution()
     fps = reader.get_fps()
     writer = Writer(args, audio, height, width, video_save_path, fps)
 
+    # Process frames
     pbar = tqdm(total=len(reader), unit='frame', desc='inference')
     while True:
         img = reader.get_frame()
@@ -264,19 +268,21 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
             else:
                 output, _ = upsampler.enhance(img, outscale=args.outscale)
         except RuntimeError as error:
-            print('Error', error)
-            print('If you encounter CUDA out of memory, try to set --tile with a smaller number.')
+            print('Error:', error)
+            print('If encountering CUDA out of memory, try setting --tile to a smaller number.')
         else:
             writer.write_frame(output)
 
-        torch.cuda.synchronize(device)
+        if device is not None:
+            torch.cuda.synchronize(device)
         pbar.update(1)
 
     reader.close()
     writer.close()
 
-
 def run(args):
+    print_device_info()  # Print device information at start
+
     args.video_name = osp.splitext(os.path.basename(args.input))[0]
     video_save_path = osp.join(args.output, f'{args.video_name}_{args.suffix}.mp4')
 
@@ -287,47 +293,69 @@ def run(args):
         args.input = tmp_frames_folder
 
     num_gpus = torch.cuda.device_count()
-    num_process = num_gpus * args.num_process_per_gpu
-    if num_process == 1:
+    print(f"\nUsing {num_gpus} GPU(s)")
+
+    if num_gpus == 0:
+        print("No GPU detected. Running in CPU mode...")
+        args.num_process_per_gpu = 1
         inference_video(args, video_save_path)
         return
 
-    ctx = torch.multiprocessing.get_context('spawn')
-    pool = ctx.Pool(num_process)
-    os.makedirs(osp.join(args.output, f'{args.video_name}_out_tmp_videos'), exist_ok=True)
-    pbar = tqdm(total=num_process, unit='sub_video', desc='inference')
-    for i in range(num_process):
-        sub_video_save_path = osp.join(args.output, f'{args.video_name}_out_tmp_videos', f'{i:03d}.mp4')
-        pool.apply_async(
-            inference_video,
-            args=(args, sub_video_save_path, torch.device(i % num_gpus), num_process, i),
-            callback=lambda arg: pbar.update(1))
-    pool.close()
-    pool.join()
+    num_process = max(1, num_gpus * args.num_process_per_gpu)
 
-    # combine sub videos
-    # prepare vidlist.txt
-    with open(f'{args.output}/{args.video_name}_vidlist.txt', 'w') as f:
+    if num_process == 1:
+        print("Running in single process mode...")
+        inference_video(args, video_save_path)
+        return
+
+    try:
+        print(f"Running in multi-process mode with {num_process} processes...")
+        ctx = torch.multiprocessing.get_context('spawn')
+        pool = ctx.Pool(num_process)
+        os.makedirs(osp.join(args.output, f'{args.video_name}_out_tmp_videos'), exist_ok=True)
+
+        pbar = tqdm(total=num_process, unit='sub_video', desc='inference')
+
         for i in range(num_process):
-            f.write(f'file \'{args.video_name}_out_tmp_videos/{i:03d}.mp4\'\n')
+            sub_video_save_path = osp.join(args.output, f'{args.video_name}_out_tmp_videos', f'{i:03d}.mp4')
+            pool.apply_async(
+                inference_video,
+                args=(args, sub_video_save_path, torch.device(i % num_gpus), num_process, i),
+                callback=lambda arg: pbar.update(1))
 
-    cmd = [
-        args.ffmpeg_bin, '-f', 'concat', '-safe', '0', '-i', f'{args.output}/{args.video_name}_vidlist.txt', '-c',
-        'copy', f'{video_save_path}'
-    ]
-    print(' '.join(cmd))
-    subprocess.call(cmd)
-    shutil.rmtree(osp.join(args.output, f'{args.video_name}_out_tmp_videos'))
-    if osp.exists(osp.join(args.output, f'{args.video_name}_inp_tmp_videos')):
-        shutil.rmtree(osp.join(args.output, f'{args.video_name}_inp_tmp_videos'))
-    os.remove(f'{args.output}/{args.video_name}_vidlist.txt')
+        pool.close()
+        pool.join()
+
+        # combine sub videos
+        print("\nCombining video segments...")
+        with open(f'{args.output}/{args.video_name}_vidlist.txt', 'w') as f:
+            for i in range(num_process):
+                f.write(f'file \'{args.video_name}_out_tmp_videos/{i:03d}.mp4\'\n')
+
+        cmd = [
+            args.ffmpeg_bin, '-f', 'concat', '-safe', '0', '-i',
+            f'{args.output}/{args.video_name}_vidlist.txt', '-c', 'copy', f'{video_save_path}'
+        ]
+        print("Running ffmpeg to combine videos...")
+        subprocess.call(cmd)
+
+        # Cleanup
+        print("Cleaning up temporary files...")
+        if osp.exists(osp.join(args.output, f'{args.video_name}_out_tmp_videos')):
+            shutil.rmtree(osp.join(args.output, f'{args.video_name}_out_tmp_videos'))
+        if osp.exists(osp.join(args.output, f'{args.video_name}_inp_tmp_videos')):
+            shutil.rmtree(osp.join(args.output, f'{args.video_name}_inp_tmp_videos'))
+        if osp.exists(f'{args.output}/{args.video_name}_vidlist.txt'):
+            os.remove(f'{args.output}/{args.video_name}_vidlist.txt')
+
+    except Exception as e:
+        print(f"\nError during processing: {str(e)}")
+        print("Falling back to single process mode...")
+        inference_video(args, video_save_path)
 
 
 def main():
-    """Inference demo for Real-ESRGAN.
-    It mainly for restoring anime videos.
-
-    """
+    """Inference demo for Real-ESRGAN."""
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input', type=str, default='inputs', help='Input video, image or folder')
     parser.add_argument(
@@ -387,7 +415,12 @@ def main():
     if args.extract_frame_first and not is_video:
         args.extract_frame_first = False
 
-    run(args)
+    try:
+        run(args)
+    except KeyboardInterrupt:
+        print('Interrupted by user')
+    except Exception as e:
+        print(f'Error: {e}')
 
     if args.extract_frame_first:
         tmp_frames_folder = osp.join(args.output, f'{args.video_name}_inp_tmp_frames')
