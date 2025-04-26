@@ -135,6 +135,10 @@ def main():
         print('Testing', idx, imgname)
 
         img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
+        if img is None:
+            print(f"Error: failed to read image {path}. Skipping.")
+            continue
+
         if len(img.shape) == 3 and img.shape[2] == 4:
             img_mode = 'RGBA'
         else:
