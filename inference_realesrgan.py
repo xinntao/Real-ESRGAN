@@ -2,6 +2,7 @@ import argparse
 import cv2
 import glob
 import os
+import torch
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from basicsr.utils.download_util import load_file_from_url
 
@@ -10,6 +11,13 @@ from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 
 
 def main():
+    print("PyTorch version:", torch.__version__)
+    print("CUDA available:", torch.cuda.is_available())
+    print("CUDA version:", torch.version.cuda if torch.cuda.is_available() else "N/A")
+    print("CUDA device count:", torch.cuda.device_count())
+    if torch.cuda.is_available():
+        print("Current CUDA device:", torch.cuda.current_device())
+        print("CUDA device name:", torch.cuda.get_device_name(0))
     """Inference demo for Real-ESRGAN.
     """
     parser = argparse.ArgumentParser()

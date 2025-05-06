@@ -1,3 +1,26 @@
+# 使い方
+
+1. README.md記載の `Install dependent packages` を実行
+
+2. 1件アップスケール、以下のコマンドを実行
+
+```
+python optimal_upscale.py -i inputs/00003.png -o results --max_size 11000 --tile 512
+
+
+```
+
+
+3. まとめてアップスケール（フォルダ名など修正してください）
+
+```
+python .\batch_process.py
+```
+
+
+
+
+
 <p align="center">
   <img src="assets/realesrgan_logo.png" height=120>
 </p>
