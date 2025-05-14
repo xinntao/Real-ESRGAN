@@ -2,16 +2,16 @@ import argparse
 import cv2
 import glob
 import os
+from tqdm import tqdm
 
 
 def main(args):
     txt_file = open(args.meta_info, 'w')
     for folder, root in zip(args.input, args.root):
         img_paths = sorted(glob.glob(os.path.join(folder, '*')))
-        for img_path in img_paths:
+        for img_path in tqdm(img_paths, desc=f"Processing {os.path.basename(folder)}"):
             status = True
             if args.check:
-                # read the image once for check, as some images may have errors
                 try:
                     img = cv2.imread(img_path)
                 except (IOError, OSError) as error:
@@ -21,10 +21,12 @@ def main(args):
                     status = False
                     print(f'Img is None: {img_path}')
             if status:
-                # get the relative path
-                img_name = os.path.relpath(img_path, root)
-                print(img_name)
+                if root == "":
+                    img_name = img_path
+                else:
+                    img_name = os.path.relpath(img_path, root)
                 txt_file.write(f'{img_name}\n')
+    txt_file.close()
 
 
 if __name__ == '__main__':
@@ -42,7 +44,8 @@ if __name__ == '__main__':
         '--root',
         nargs='+',
         default=['datasets/DF2K', 'datasets/DF2K'],
-        help='Folder root, should have the length as input folders')
+        help='Folder root for relative paths, should match input folders in length. '
+             'Use "" to keep full image paths without computing relative paths.')
     parser.add_argument(
         '--meta_info',
         type=str,
