@@ -1,7 +1,7 @@
 repos:
   # flake8
   - repo: https://github.com/PyCQA/flake8
-    rev: 3.8.3
+    rev: 7.3.0
     hooks:
       - id: flake8
         args: ["--config=setup.cfg", "--ignore=W504, W503"]
@@ -13,8 +13,8 @@ repos:
       - id: seed-isort-config
 
   # isort
-  - repo: https://github.com/timothycrosley/isort
-    rev: 5.2.2
+  - repo: https://github.com/PyCQA/isort
+    rev: 6.0.1
     hooks:
       - id: isort
 
