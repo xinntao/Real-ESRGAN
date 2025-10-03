@@ -149,7 +149,7 @@ class Writer:
                                  audio,
                                  video_save_path,
                                  pix_fmt='yuv420p',
-                                 vcodec='libx264',
+                                 vcodec='av1_nvenc',
                                  loglevel='error',
                                  acodec='copy').overwrite_output().run_async(
                                      pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin))
@@ -157,7 +157,7 @@ class Writer:
             self.stream_writer = (
                 ffmpeg.input('pipe:', format='rawvideo', pix_fmt='bgr24', s=f'{out_width}x{out_height}',
                              framerate=fps).output(
-                                 video_save_path, pix_fmt='yuv420p', vcodec='libx264',
+                                 video_save_path, pix_fmt='yuv420p', vcodec='av1_nvenc',
                                  loglevel='error').overwrite_output().run_async(
                                      pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin))
 
@@ -173,6 +173,7 @@ class Writer:
 def inference_video(args, video_save_path, device=None, total_workers=1, worker_idx=0):
     # ---------------------- determine models according to model names ---------------------- #
     args.model_name = args.model_name.split('.pth')[0]
+    file_url = []  # default to avoid UnboundLocalError
     if args.model_name == 'RealESRGAN_x4plus':  # x4 RRDBNet model
         model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
         netscale = 4
@@ -200,6 +201,11 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
             'https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-general-wdn-x4v3.pth',
             'https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-general-x4v3.pth'
         ]
+    else:
+        raise ValueError(
+            'Unsupported model_name: {}. Valid options: RealESRGAN_x4plus | RealESRNet_x4plus | '
+            'RealESRGAN_x4plus_anime_6B | RealESRGAN_x2plus | realesr-animevideov3 | realesr-general-x4v3'.format(
+                args.model_name))
 
     # ---------------------- determine model paths ---------------------- #
     model_path = os.path.join('weights', args.model_name + '.pth')
@@ -252,22 +258,31 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
     fps = reader.get_fps()
     writer = Writer(args, audio, height, width, video_save_path, fps)
 
-    pbar = tqdm(total=len(reader), unit='frame', desc='inference')
+    pbar = tqdm(total=len(reader), unit='frame', desc='Total Frames')
     while True:
         img = reader.get_frame()
         if img is None:
             break
 
+        frame_bar = tqdm(total=1, desc=f'Frame {pbar.n + 1}', unit='tile', leave=False)
+        output = None
         try:
             if args.face_enhance:
-                _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
+                frame_bar.reset(total=1)
+                _, _, output = face_enhancer.enhance(
+                    img, has_aligned=False, only_center_face=False, paste_back=True)
+                frame_bar.update(1)
             else:
-                output, _ = upsampler.enhance(img, outscale=args.outscale)
+                output, _ = upsampler.enhance(img, outscale=args.outscale, progress_bar=frame_bar)
         except RuntimeError as error:
+            frame_bar.set_description(f'Frame {pbar.n + 1} (error)')
             print('Error', error)
             print('If you encounter CUDA out of memory, try to set --tile with a smaller number.')
         else:
-            writer.write_frame(output)
+            if output is not None:
+                writer.write_frame(output)
+        finally:
+            frame_bar.close()
 
         torch.cuda.synchronize(device)
         pbar.update(1)

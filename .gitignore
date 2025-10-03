@@ -6,6 +6,8 @@ tb_logger/*
 wandb/*
 tmp/*
 weights/*
+gfpgan/weights/*
+
 
 version.py
 
@@ -138,3 +140,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+temp/

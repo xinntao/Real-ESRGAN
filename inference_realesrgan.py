@@ -4,6 +4,7 @@ import glob
 import os
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from basicsr.utils.download_util import load_file_from_url
+from tqdm import tqdm
 
 from realesrgan import RealESRGANer
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
@@ -76,13 +77,19 @@ def main():
         model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64, num_conv=16, upscale=4, act_type='prelu')
         netscale = 4
         file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-animevideov3.pth']
-    elif args.model_name == 'realesr-general-x4v3':  # x4 VGG-style model (S size)
+    elif args.model_name in ['realesr-general-x4v3', 'Real-ESRGAN-General-x4v3']:  # x4 VGG-style model (S size)
         model = SRVGGNetCompact(num_in_ch=3, num_out_ch=3, num_feat=64, num_conv=32, upscale=4, act_type='prelu')
         netscale = 4
         file_url = [
             'https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-general-wdn-x4v3.pth',
             'https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.5.0/realesr-general-x4v3.pth'
         ]
+    else:
+        # Default case for unknown model names
+        print(f'Warning: Unknown model name {args.model_name}. Using default RealESRGAN_x4plus model.')
+        model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=4)
+        netscale = 4
+        file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth']
 
     # determine model paths
     if args.model_path is not None:
@@ -98,7 +105,7 @@ def main():
 
     # use dni to control the denoise strength
     dni_weight = None
-    if args.model_name == 'realesr-general-x4v3' and args.denoise_strength != 1:
+    if args.model_name in ['realesr-general-x4v3', 'Real-ESRGAN-General-x4v3'] and args.denoise_strength != 1:
         wdn_model_path = model_path.replace('realesr-general-x4v3', 'realesr-general-wdn-x4v3')
         model_path = [model_path, wdn_model_path]
         dni_weight = [args.denoise_strength, 1 - args.denoise_strength]
@@ -130,36 +137,45 @@ def main():
     else:
         paths = sorted(glob.glob(os.path.join(args.input, '*')))
 
-    for idx, path in enumerate(paths):
-        imgname, extension = os.path.splitext(os.path.basename(path))
-        print('Testing', idx, imgname)
+    with tqdm(total=len(paths), desc='Total Files', unit='file') as total_bar:
+        for path in paths:
+            imgname, extension = os.path.splitext(os.path.basename(path))
+            total_bar.set_postfix_str(imgname)
 
-        img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
-        if len(img.shape) == 3 and img.shape[2] == 4:
-            img_mode = 'RGBA'
-        else:
-            img_mode = None
+            img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
+            if len(img.shape) == 3 and img.shape[2] == 4:
+                img_mode = 'RGBA'
+            else:
+                img_mode = None
 
-        try:
-            if args.face_enhance:
-                _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
-            else:
-                output, _ = upsampler.enhance(img, outscale=args.outscale)
-        except RuntimeError as error:
-            print('Error', error)
-            print('If you encounter CUDA out of memory, try to set --tile with a smaller number.')
-        else:
-            if args.ext == 'auto':
-                extension = extension[1:]
-            else:
-                extension = args.ext
-            if img_mode == 'RGBA':  # RGBA images should be saved in png format
-                extension = 'png'
-            if args.suffix == '':
-                save_path = os.path.join(args.output, f'{imgname}.{extension}')
-            else:
-                save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
-            cv2.imwrite(save_path, output)
+            output = None
+            with tqdm(total=1, desc=f'{imgname}', unit='tile', leave=False) as file_bar:
+                try:
+                    if args.face_enhance:
+                        file_bar.reset(total=1)
+                        _, _, output = face_enhancer.enhance(
+                            img, has_aligned=False, only_center_face=False, paste_back=True)
+                        file_bar.update(1)
+                    else:
+                        output, _ = upsampler.enhance(img, outscale=args.outscale, progress_bar=file_bar)
+                except RuntimeError as error:
+                    file_bar.set_description(f'{imgname} (error)')
+                    print('Error', error)
+                    print('If you encounter CUDA out of memory, try to set --tile with a smaller number.')
+            if output is not None:
+                if args.ext == 'auto':
+                    extension = extension[1:]
+                else:
+                    extension = args.ext
+                if img_mode == 'RGBA':  # RGBA images should be saved in png format
+                    extension = 'png'
+                if args.suffix == '':
+                    save_path = os.path.join(args.output, f'{imgname}.{extension}')
+                else:
+                    save_path = os.path.join(args.output, f'{imgname}_{args.suffix}.{extension}')
+                cv2.imwrite(save_path, output)
+
+            total_bar.update(1)
 
 
 if __name__ == '__main__':

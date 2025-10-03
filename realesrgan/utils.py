@@ -110,11 +110,13 @@ class RealESRGANer():
                 self.mod_pad_w = (self.mod_scale - w % self.mod_scale)
             self.img = F.pad(self.img, (0, self.mod_pad_w, 0, self.mod_pad_h), 'reflect')
 
-    def process(self):
+    def process(self, progress_bar=None):
         # model inference
         self.output = self.model(self.img)
+        if progress_bar is not None:
+            progress_bar.update(1)
 
-    def tile_process(self):
+    def tile_process(self, progress_bar=None):
         """It will first crop input images to tiles, and then process each tile.
         Finally, all the processed tiles are merged into one images.
 
@@ -160,7 +162,10 @@ class RealESRGANer():
                         output_tile = self.model(input_tile)
                 except RuntimeError as error:
                     print('Error', error)
-                print(f'\tTile {tile_idx}/{tiles_x * tiles_y}')
+                if progress_bar is not None:
+                    progress_bar.update(1)
+                else:
+                    print(f'\tTile {tile_idx}/{tiles_x * tiles_y}')
 
                 # output tile area on total image
                 output_start_x = input_start_x * self.scale
@@ -191,7 +196,7 @@ class RealESRGANer():
         return self.output
 
     @torch.no_grad()
-    def enhance(self, img, outscale=None, alpha_upsampler='realesrgan'):
+    def enhance(self, img, outscale=None, alpha_upsampler='realesrgan', progress_bar=None):
         h_input, w_input = img.shape[0:2]
         # img: numpy
         img = img.astype(np.float32)
@@ -217,10 +222,18 @@ class RealESRGANer():
 
         # ------------------- process image (without the alpha channel) ------------------- #
         self.pre_process(img)
+        if progress_bar is not None:
+            if self.tile_size > 0:
+                batch, channel, height, width = self.img.shape
+                tiles_x = math.ceil(width / self.tile_size)
+                tiles_y = math.ceil(height / self.tile_size)
+                progress_bar.reset(total=tiles_x * tiles_y)
+            else:
+                progress_bar.reset(total=1)
         if self.tile_size > 0:
-            self.tile_process()
+            self.tile_process(progress_bar=progress_bar)
         else:
-            self.process()
+            self.process(progress_bar=progress_bar)
         output_img = self.post_process()
         output_img = output_img.data.squeeze().float().cpu().clamp_(0, 1).numpy()
         output_img = np.transpose(output_img[[2, 1, 0], :, :], (1, 2, 0))
