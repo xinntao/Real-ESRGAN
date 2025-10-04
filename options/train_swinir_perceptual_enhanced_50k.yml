@@ -1,0 +1,240 @@
+# Enhanced Real-ESRGAN with SwinIR + Advanced Perceptual Losses
+# Optimized for SNR, LPIPS, SSIM, and DISTS metrics
+# 50K iterations with 80/20 train/val split
+name: SwinIR_Perceptual_x4_50k
+model_type: RealESRGANModel
+scale: 4
+num_gpu: auto
+manual_seed: 0
+
+# USM the ground-truth
+l1_gt_usm: True
+percep_gt_usm: True
+gan_gt_usm: False
+
+# the first degradation process
+resize_prob: [0.2, 0.7, 0.1]  # up, down, keep
+resize_range: [0.15, 1.5]
+gaussian_noise_prob: 0.5
+noise_range: [1, 30]
+poisson_scale_range: [0.05, 3]
+gray_noise_prob: 0.4
+jpeg_range: [30, 95]
+
+# the second degradation process
+second_blur_prob: 0.8
+resize_prob2: [0.3, 0.4, 0.3]  # up, down, keep
+resize_range2: [0.3, 1.2]
+gaussian_noise_prob2: 0.5
+noise_range2: [1, 25]
+poisson_scale_range2: [0.05, 2.5]
+gray_noise_prob2: 0.4
+jpeg_range2: [30, 95]
+
+gt_size: 256
+queue_size: 180
+
+# dataset and data loader settings
+datasets:
+  train:
+    name: DIV2K_Train
+    type: RealESRGANDataset
+    dataroot_gt: DIV2K_dataset/DIV2K_train_HR
+    meta_info: DIV2K_dataset/meta_info/meta_info_DIV2K_train.txt
+    io_backend:
+      type: disk
+
+    blur_kernel_size: 21
+    kernel_list: ['iso', 'aniso', 'generalized_iso', 'generalized_aniso', 'plateau_iso', 'plateau_aniso']
+    kernel_prob: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+    sinc_prob: 0.1
+    blur_sigma: [0.2, 3]
+    betag_range: [0.5, 4]
+    betap_range: [1, 2]
+
+    blur_kernel_size2: 21
+    kernel_list2: ['iso', 'aniso', 'generalized_iso', 'generalized_aniso', 'plateau_iso', 'plateau_aniso']
+    kernel_prob2: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+    sinc_prob2: 0.1
+    blur_sigma2: [0.2, 1.5]
+    betag_range2: [0.5, 4]
+    betap_range2: [1, 2]
+
+    final_sinc_prob: 0.8
+
+    gt_size: 256
+    use_hflip: True
+    use_rot: False
+
+    # data loader
+    use_shuffle: true
+    num_worker_per_gpu: 4
+    batch_size_per_gpu: 2
+    dataset_enlarge_ratio: 1
+    prefetch_mode: ~
+
+  # Validation dataset (20% of data)
+  val:
+    name: DIV2K_Val
+    type: RealESRGANDataset
+    dataroot_gt: DIV2K_dataset/DIV2K_train_HR
+    meta_info: DIV2K_dataset/meta_info/meta_info_DIV2K_val.txt
+    io_backend:
+      type: disk
+
+    blur_kernel_size: 21
+    kernel_list: ['iso', 'aniso', 'generalized_iso', 'generalized_aniso', 'plateau_iso', 'plateau_aniso']
+    kernel_prob: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+    sinc_prob: 0.1
+    blur_sigma: [0.2, 3]
+    betag_range: [0.5, 4]
+    betap_range: [1, 2]
+
+    blur_kernel_size2: 21
+    kernel_list2: ['iso', 'aniso', 'generalized_iso', 'generalized_aniso', 'plateau_iso', 'plateau_aniso']
+    kernel_prob2: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+    sinc_prob2: 0.1
+    blur_sigma2: [0.2, 1.5]
+    betag_range2: [0.5, 4]
+    betap_range2: [1, 2]
+
+    final_sinc_prob: 0.8
+
+    gt_size: 256
+    use_hflip: False  # No augmentation for validation
+    use_rot: False
+
+# network structures - Using SwinIR for better perceptual quality
+network_g:
+  type: SwinIR
+  upscale: 4
+  in_chans: 3
+  img_size: 64    # Input patch size
+  window_size: 8
+  img_range: 1.0
+  depths: [6, 6, 6, 6, 6, 6]  # Number of transformer blocks in each layer
+  embed_dim: 180   # Larger feature dimension for better quality
+  num_heads: [6, 6, 6, 6, 6, 6]  # Number of attention heads
+  mlp_ratio: 2
+  upsampler: 'pixelshuffle'  # For super-resolution
+  resi_connection: '1conv'   # Residual connection type
+
+network_d:
+  type: UNetDiscriminatorSN
+  num_in_ch: 3
+  num_feat: 64
+  skip_connection: True
+
+# path - Load pretrained SwinIR weights
+path:
+  # Use pretrained SwinIR weights for real-world SR
+  pretrain_network_g: weights/SwinIR_realSR_x4_GAN.pth
+  param_key_g: params_ema
+  strict_load_g: false  # Allow partial loading (architecture may differ slightly)
+  resume_state: ~
+  # Visualization directory for sample images
+  visualization: experiments/SwinIR_Perceptual_x4_50k/visualization
+
+# training settings
+train:
+  ema_decay: 0.999
+  optim_g:
+    type: Adam
+    lr: !!float 1e-4  # Lower learning rate for fine-tuning pretrained model
+    weight_decay: 0
+    betas: [0.9, 0.99]
+  optim_d:
+    type: Adam
+    lr: !!float 1e-4
+    weight_decay: 0
+    betas: [0.9, 0.99]
+
+  scheduler:
+    type: MultiStepLR
+    milestones: [25000, 40000, 47500]  # Adjusted for 50K training
+    gamma: 0.5
+
+  total_iter: 50000  # Reduced from 500K since we start with pretrained weights
+  warmup_iter: -1  # no warm up
+
+  # Comprehensive loss configuration for perceptual quality
+
+  # Pixel loss (L1) - for basic fidelity
+  pixel_opt:
+    type: L1Loss
+    loss_weight: 1.0
+    reduction: mean
+
+  # VGG Perceptual loss - for feature similarity
+  perceptual_opt:
+    type: PerceptualLoss
+    layer_weights:
+      'conv1_2': 0.1
+      'conv2_2': 0.1
+      'conv3_4': 1.0
+      'conv4_4': 1.0
+      'conv5_4': 1.0
+    vgg_type: vgg19
+    use_input_norm: true
+    perceptual_weight: !!float 1.0
+    style_weight: 0.5
+    range_norm: false
+    criterion: l1
+
+  # LPIPS loss - for perceptual similarity (KEY for your goals!)
+  lpips_opt:
+    type: LPIPSLoss
+    loss_weight: !!float 0.3  # Significant weight for perceptual quality
+    net: 'alex'  # AlexNet backbone (fast and effective)
+    use_input_norm: false
+
+  # DISTS loss - for structure and texture similarity (KEY for your goals!)
+  dists_opt:
+    type: DISTSLoss
+    loss_weight: !!float 0.2  # Additional perceptual metric
+    as_loss: true
+
+  # GAN loss - for realism
+  gan_opt:
+    type: GANLoss
+    gan_type: vanilla
+    real_label_val: 1.0
+    fake_label_val: 0.0
+    loss_weight: !!float 1e-1
+
+  net_d_iters: 1
+  net_d_init_iters: 0
+
+# Validation settings - DISABLED for now due to dataset compatibility
+# Will rely on training loss metrics (LPIPS, DISTS, PSNR via pixel loss)
+# val:
+#   val_freq: !!float 320
+#   save_img: false
+#   metrics:
+#     psnr:
+#       type: calculate_psnr
+#       crop_border: 4
+#       test_y_channel: false
+#     ssim:
+#       type: calculate_ssim
+#       crop_border: 4
+#       test_y_channel: false
+
+# logging settings
+logger:
+  print_freq: 100  # Print training stats every 100 iterations
+  save_checkpoint_freq: !!float 5e3  # Save checkpoint every 5K iterations
+  use_tb_logger: true  # Enable TensorBoard for loss visualization
+  wandb:
+    project: ~
+    resume_id: ~
+  # Save visual comparison images every 5000 iterations
+  save_vis_freq: !!float 5e3
+
+# dist training settings
+dist_params:
+  backend: nccl
+  port: 29500
+
+find_unused_parameters: true  # Important for SwinIR training
+use_fp16: true  # Mixed precision for efficiency
