@@ -5,7 +5,11 @@ This module provides LPIPS and DISTS losses for improved perceptual quality.
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
+
 from basicsr.utils.registry import LOSS_REGISTRY
+
+# Edge and detail preservation losses will be defined below
 
 try:
     import lpips
@@ -171,3 +175,111 @@ class CombinedPerceptualLoss(nn.Module):
             total_loss += dists_val
 
         return total_loss, lpips_val, dists_val
+
+
+@LOSS_REGISTRY.register()
+class EdgeLoss(nn.Module):
+    """Edge preservation loss using Sobel edge detection"""
+
+    def __init__(self, loss_weight=1.0, edge_type='sobel'):
+        super(EdgeLoss, self).__init__()
+        self.loss_weight = loss_weight
+        self.edge_type = edge_type
+
+        # Sobel kernels for edge detection
+        sobel_x = torch.tensor([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], dtype=torch.float32)
+        sobel_y = torch.tensor([[-1, -2, -1], [0, 0, 0], [1, 2, 1]], dtype=torch.float32)
+
+        self.register_buffer('sobel_x', sobel_x.view(1, 1, 3, 3))
+        self.register_buffer('sobel_y', sobel_y.view(1, 1, 3, 3))
+
+    def forward(self, pred, target):
+        """
+        Args:
+            pred (Tensor): Predicted image [B, C, H, W]
+            target (Tensor): Target image [B, C, H, W]
+        """
+        # Convert to grayscale for edge detection
+        pred_gray = 0.299 * pred[:, 0:1] + 0.587 * pred[:, 1:2] + 0.114 * pred[:, 2:3]
+        target_gray = 0.299 * target[:, 0:1] + 0.587 * target[:, 1:2] + 0.114 * target[:, 2:3]
+
+        # Apply Sobel edge detection
+        pred_edge_x = F.conv2d(pred_gray, self.sobel_x, padding=1)
+        pred_edge_y = F.conv2d(pred_gray, self.sobel_y, padding=1)
+        pred_edges = torch.sqrt(pred_edge_x**2 + pred_edge_y**2 + 1e-8)
+
+        target_edge_x = F.conv2d(target_gray, self.sobel_x, padding=1)
+        target_edge_y = F.conv2d(target_gray, self.sobel_y, padding=1)
+        target_edges = torch.sqrt(target_edge_x**2 + target_edge_y**2 + 1e-8)
+
+        # Calculate L1 loss between edge maps
+        edge_loss = F.l1_loss(pred_edges, target_edges)
+
+        return self.loss_weight * edge_loss
+
+
+@LOSS_REGISTRY.register()
+class GradientLoss(nn.Module):
+    """Gradient preservation loss for sharpness"""
+
+    def __init__(self, loss_weight=1.0, order=1):
+        super(GradientLoss, self).__init__()
+        self.loss_weight = loss_weight
+        self.order = order
+
+    def forward(self, pred, target):
+        """
+        Args:
+            pred (Tensor): Predicted image [B, C, H, W]
+            target (Tensor): Target image [B, C, H, W]
+        """
+        # Calculate gradients
+        pred_grad_x = torch.abs(pred[:, :, :, 1:] - pred[:, :, :, :-1])
+        pred_grad_y = torch.abs(pred[:, :, 1:, :] - pred[:, :, :-1, :])
+
+        target_grad_x = torch.abs(target[:, :, :, 1:] - target[:, :, :, :-1])
+        target_grad_y = torch.abs(target[:, :, 1:, :] - target[:, :, :-1, :])
+
+        # Calculate L1 loss between gradients
+        grad_x_loss = F.l1_loss(pred_grad_x, target_grad_x)
+        grad_y_loss = F.l1_loss(pred_grad_y, target_grad_y)
+
+        gradient_loss = grad_x_loss + grad_y_loss
+
+        return self.loss_weight * gradient_loss
+
+
+@LOSS_REGISTRY.register()
+class HighFreqLoss(nn.Module):
+    """High-frequency detail preservation loss"""
+
+    def __init__(self, loss_weight=1.0, freq_threshold=0.1):
+        super(HighFreqLoss, self).__init__()
+        self.loss_weight = loss_weight
+        self.freq_threshold = freq_threshold
+
+    def forward(self, pred, target):
+        """
+        Args:
+            pred (Tensor): Predicted image [B, C, H, W]
+            target (Tensor): Target image [B, C, H, W]
+        """
+        # Convert to grayscale
+        pred_gray = 0.299 * pred[:, 0:1] + 0.587 * pred[:, 1:2] + 0.114 * pred[:, 2:3]
+        target_gray = 0.299 * target[:, 0:1] + 0.587 * target[:, 1:2] + 0.114 * target[:, 2:3]
+
+        # Apply high-pass filter (Laplacian)
+        laplacian_kernel = torch.tensor([[0, -1, 0], [-1, 4, -1], [0, -1, 0]], dtype=torch.float32)
+        laplacian_kernel = laplacian_kernel.view(1, 1, 3, 3).to(pred.device)
+
+        pred_hf = F.conv2d(pred_gray, laplacian_kernel, padding=1)
+        target_hf = F.conv2d(target_gray, laplacian_kernel, padding=1)
+
+        # Only consider high-frequency components above threshold
+        pred_hf_masked = pred_hf * (torch.abs(pred_hf) > self.freq_threshold).float()
+        target_hf_masked = target_hf * (torch.abs(target_hf) > self.freq_threshold).float()
+
+        # Calculate L1 loss
+        hf_loss = F.l1_loss(pred_hf_masked, target_hf_masked)
+
+        return self.loss_weight * hf_loss

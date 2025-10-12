@@ -2,6 +2,7 @@ import argparse
 
 import cv2
 import numpy as np
+
 from basicsr.metrics.psnr_ssim import calculate_psnr, calculate_ssim
 
 try:
