@@ -1,14 +1,19 @@
-import numpy as np
 import random
+from collections import OrderedDict
+
+import numpy as np
 import torch
-from basicsr.data.degradations import random_add_gaussian_noise_pt, random_add_poisson_noise_pt
+from torch.nn import functional as F
+
+from basicsr.data.degradations import (
+    random_add_gaussian_noise_pt,
+    random_add_poisson_noise_pt,
+)
 from basicsr.data.transforms import paired_random_crop
 from basicsr.models.srgan_model import SRGANModel
 from basicsr.utils import DiffJPEG, USMSharp
 from basicsr.utils.img_process_util import filter2D
 from basicsr.utils.registry import MODEL_REGISTRY
-from collections import OrderedDict
-from torch.nn import functional as F
 
 
 @MODEL_REGISTRY.register()
@@ -25,6 +30,40 @@ class RealESRGANModel(SRGANModel):
         self.jpeger = DiffJPEG(differentiable=False).cuda()  # simulate JPEG compression artifacts
         self.usm_sharpener = USMSharp().cuda()  # do usm sharpening
         self.queue_size = opt.get('queue_size', 180)
+
+        # Additional perceptual losses (LPIPS, DISTS)
+        self.cri_lpips = None
+        self.cri_dists = None
+
+        # Edge and detail preservation losses
+        self.cri_edge = None
+        self.cri_gradient = None
+        self.cri_hf_detail = None
+
+        # Load LPIPS loss if specified
+        if 'lpips_opt' in opt['train']:
+            from basicsr.losses import build_loss
+            self.cri_lpips = build_loss(opt['train']['lpips_opt']).to(self.device)
+
+        # Load DISTS loss if specified
+        if 'dists_opt' in opt['train']:
+            from basicsr.losses import build_loss
+            self.cri_dists = build_loss(opt['train']['dists_opt']).to(self.device)
+
+        # Load edge loss if specified
+        if 'edge_opt' in opt['train']:
+            from basicsr.losses import build_loss
+            self.cri_edge = build_loss(opt['train']['edge_opt']).to(self.device)
+
+        # Load gradient loss if specified
+        if 'gradient_opt' in opt['train']:
+            from basicsr.losses import build_loss
+            self.cri_gradient = build_loss(opt['train']['gradient_opt']).to(self.device)
+
+        # Load high-frequency detail loss if specified
+        if 'hf_detail_opt' in opt['train']:
+            from basicsr.losses import build_loss
+            self.cri_hf_detail = build_loss(opt['train']['hf_detail_opt']).to(self.device)
 
     @torch.no_grad()
     def _dequeue_and_enqueue(self):
@@ -224,6 +263,37 @@ class RealESRGANModel(SRGANModel):
                 if l_g_style is not None:
                     l_g_total += l_g_style
                     loss_dict['l_g_style'] = l_g_style
+
+            # LPIPS loss
+            if self.cri_lpips:
+                l_g_lpips = self.cri_lpips(self.output, percep_gt)
+                l_g_total += l_g_lpips
+                loss_dict['l_g_lpips'] = l_g_lpips
+
+            # DISTS loss
+            if self.cri_dists:
+                l_g_dists = self.cri_dists(self.output, percep_gt)
+                l_g_total += l_g_dists
+                loss_dict['l_g_dists'] = l_g_dists
+
+            # Edge preservation loss
+            if self.cri_edge:
+                l_g_edge = self.cri_edge(self.output, percep_gt)
+                l_g_total += l_g_edge
+                loss_dict['l_g_edge'] = l_g_edge
+
+            # Gradient sharpness loss
+            if self.cri_gradient:
+                l_g_gradient = self.cri_gradient(self.output, percep_gt)
+                l_g_total += l_g_gradient
+                loss_dict['l_g_gradient'] = l_g_gradient
+
+            # High-frequency detail loss
+            if self.cri_hf_detail:
+                l_g_hf_detail = self.cri_hf_detail(self.output, percep_gt)
+                l_g_total += l_g_hf_detail
+                loss_dict['l_g_hf_detail'] = l_g_hf_detail
+
             # gan loss
             fake_g_pred = self.net_d(self.output)
             l_g_gan = self.cri_gan(fake_g_pred, True, is_disc=False)

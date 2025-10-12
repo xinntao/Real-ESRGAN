@@ -1,3 +1,8 @@
+import os
+# Enable CPU fallback for MPS when an op is not implemented
+# This avoids crashes on macOS for ops like torch.poisson
+if 'PYTORCH_ENABLE_MPS_FALLBACK' not in os.environ:
+    os.environ['PYTORCH_ENABLE_MPS_FALLBACK'] = '1'
 import numpy as np
 import random
 import torch
@@ -22,8 +27,14 @@ class RealESRNetModel(SRModel):
 
     def __init__(self, opt):
         super(RealESRNetModel, self).__init__(opt)
-        self.jpeger = DiffJPEG(differentiable=False).cuda()  # simulate JPEG compression artifacts
-        self.usm_sharpener = USMSharp().cuda()  # do usm sharpening
+        if torch.cuda.is_available():
+            self.device = torch.device('cuda')
+        elif torch.backends.mps.is_available():
+            self.device = torch.device('mps')
+        else:
+            self.device = torch.device('cpu')
+        self.jpeger = DiffJPEG(differentiable=False).to(self.device)  # simulate JPEG compression artifacts
+        self.usm_sharpener = USMSharp().to(self.device)  # do usm sharpening
         self.queue_size = opt.get('queue_size', 180)
 
     @torch.no_grad()
@@ -38,9 +49,9 @@ class RealESRNetModel(SRModel):
         b, c, h, w = self.lq.size()
         if not hasattr(self, 'queue_lr'):
             assert self.queue_size % b == 0, f'queue size {self.queue_size} should be divisible by batch size {b}'
-            self.queue_lr = torch.zeros(self.queue_size, c, h, w).cuda()
+            self.queue_lr = torch.zeros(self.queue_size, c, h, w).to(self.device)
             _, c, h, w = self.gt.size()
-            self.queue_gt = torch.zeros(self.queue_size, c, h, w).cuda()
+            self.queue_gt = torch.zeros(self.queue_size, c, h, w).to(self.device)
             self.queue_ptr = 0
         if self.queue_ptr == self.queue_size:  # the pool is full
             # do dequeue and enqueue

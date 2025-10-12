@@ -67,8 +67,8 @@ datasets:
 
     # data loader
     use_shuffle: true
-    num_worker_per_gpu: 5
-    batch_size_per_gpu: 12
+    num_worker_per_gpu: 0
+    batch_size_per_gpu: 2
     dataset_enlarge_ratio: 1
     prefetch_mode: ~
 
@@ -98,13 +98,12 @@ network_d:
 
 # path
 path:
-  # use the pre-trained Real-ESRNet model
-  pretrain_network_g: experiments/pretrained_models/RealESRNet_x4plus.pth
+  pretrain_network_g: ~
   param_key_g: params_ema
-  strict_load_g: true
-  pretrain_network_d: experiments/pretrained_models/RealESRGAN_x4plus_netD.pth
+  strict_load_g: false
+  pretrain_network_d: ~
   param_key_d: params
-  strict_load_d: true
+  strict_load_d: false
   resume_state: ~
 
 # training settings
@@ -126,7 +125,7 @@ train:
     milestones: [400000]
     gamma: 0.5
 
-  total_iter: 400000
+  total_iter: 2000
   warmup_iter: -1  # no warm up
 
   # losses
@@ -175,8 +174,8 @@ train:
 
 # logging settings
 logger:
-  print_freq: 100
-  save_checkpoint_freq: !!float 5e3
+  print_freq: 20
+  save_checkpoint_freq: 1000
   use_tb_logger: true
   wandb:
     project: ~

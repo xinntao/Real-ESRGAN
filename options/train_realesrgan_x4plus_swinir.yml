@@ -1,0 +1,195 @@
+# Real-ESRGAN with SwinIR Architecture
+# Enhanced configuration for improved perceptual quality and global structure
+name: train_RealESRGAN_SwinIR_x4plus_400k_B12G4
+model_type: RealESRGANModel
+scale: 4
+num_gpu: auto
+manual_seed: 0
+
+# USM the ground-truth
+l1_gt_usm: True
+percep_gt_usm: True
+gan_gt_usm: False
+
+# the first degradation process
+resize_prob: [0.2, 0.7, 0.1]  # up, down, keep
+resize_range: [0.15, 1.5]
+gaussian_noise_prob: 0.5
+noise_range: [1, 30]
+poisson_scale_range: [0.05, 3]
+gray_noise_prob: 0.4
+jpeg_range: [30, 95]
+
+# the second degradation process
+second_blur_prob: 0.8
+resize_prob2: [0.3, 0.4, 0.3]  # up, down, keep
+resize_range2: [0.3, 1.2]
+gaussian_noise_prob2: 0.5
+noise_range2: [1, 25]
+poisson_scale_range2: [0.05, 2.5]
+gray_noise_prob2: 0.4
+jpeg_range2: [30, 95]
+
+gt_size: 256
+queue_size: 180
+
+# dataset and data loader settings
+datasets:
+  train:
+    name: DIV2K
+    type: RealESRGANDataset
+    dataroot_gt: datasets/DIV2K
+    meta_info: datasets/DIV2K/meta_info/meta_info_DIV2Kmultiscale.txt
+    io_backend:
+      type: disk
+
+    blur_kernel_size: 21
+    kernel_list: ['iso', 'aniso', 'generalized_iso', 'generalized_aniso', 'plateau_iso', 'plateau_aniso']
+    kernel_prob: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+    sinc_prob: 0.1
+    blur_sigma: [0.2, 3]
+    betag_range: [0.5, 4]
+    betap_range: [1, 2]
+
+    blur_kernel_size2: 21
+    kernel_list2: ['iso', 'aniso', 'generalized_iso', 'generalized_aniso', 'plateau_iso', 'plateau_aniso']
+    kernel_prob2: [0.45, 0.25, 0.12, 0.03, 0.12, 0.03]
+    sinc_prob2: 0.1
+    blur_sigma2: [0.2, 1.5]
+    betag_range2: [0.5, 4]
+    betap_range2: [1, 2]
+
+    final_sinc_prob: 0.8
+
+    gt_size: 256
+    use_hflip: True
+    use_rot: False
+
+    # data loader
+    use_shuffle: true
+    num_worker_per_gpu: 4
+    batch_size_per_gpu: 2  # Reduced batch size for SwinIR (more memory usage)
+    dataset_enlarge_ratio: 1
+    prefetch_mode: ~
+
+# network structures - MAIN CHANGE: Using SwinIR instead of RRDBNet
+network_g:
+  type: SwinIR
+  upscale: 4
+  in_chans: 3
+  img_size: 64    # Input patch size
+  window_size: 8
+  img_range: 1.0
+  depths: [6, 6, 6, 6, 6, 6]  # Number of transformer blocks in each layer
+  embed_dim: 96   # Feature dimension
+  num_heads: [6, 6, 6, 6, 6, 6]  # Number of attention heads
+  mlp_ratio: 2
+  upsampler: 'pixelshuffle'  # For super-resolution
+  resi_connection: '1conv'   # Residual connection type
+
+network_d:
+  type: UNetDiscriminatorSN
+  num_in_ch: 3
+  num_feat: 64
+  skip_connection: True
+
+# path
+path:
+  # Start training from scratch - no pretrained model
+  pretrain_network_g: ~
+  param_key_g: params_ema
+  strict_load_g: false  # Changed to false since we're not loading pretrained weights
+  resume_state: ~
+
+# training settings
+train:
+  ema_decay: 0.999
+  optim_g:
+    type: Adam
+    lr: !!float 2e-4  # Learning rate for SwinIR
+    weight_decay: 0
+    betas: [0.9, 0.99]
+  optim_d:
+    type: Adam
+    lr: !!float 2e-4
+    weight_decay: 0
+    betas: [0.9, 0.99]
+
+  scheduler:
+    type: MultiStepLR
+    milestones: [250000, 400000, 450000, 475000]
+    gamma: 0.5
+
+  total_iter: 500000
+  warmup_iter: -1  # no warm up
+
+  # Enhanced losses for your project goals
+  pixel_opt:
+    type: L1Loss
+    loss_weight: 1.0
+    reduction: mean
+
+  # Enhanced perceptual loss - KEY IMPROVEMENT for your project
+  perceptual_opt:
+    type: PerceptualLoss
+    layer_weights:
+      'conv1_2': 0.1
+      'conv2_2': 0.1
+      'conv3_4': 1
+      'conv4_4': 1
+      'conv5_4': 1
+    vgg_type: vgg19
+    use_input_norm: true
+    perceptual_weight: !!float 1.0
+    style_weight: 0.5  # Increased style weight for better texture
+    range_norm: false
+    criterion: l1
+
+  # LPIPS loss - INNOVATION from your project proposal
+  # Note: You'll need to implement this as a custom loss
+  lpips_opt:
+    type: LPIPSLoss  # Custom loss you'll implement
+    loss_weight: !!float 0.1
+
+  # gan loss
+  gan_opt:
+    type: GANLoss
+    gan_type: vanilla
+    real_label_val: 1.0
+    fake_label_val: 0.0
+    loss_weight: !!float 1e-1
+
+  net_d_iters: 1
+  net_d_init_iters: 0
+
+# Uncomment these for validation
+# validation settings
+# val:
+#   val_freq: !!float 5e3
+#   save_img: True
+#   metrics:
+#     psnr: # metric name
+#       type: calculate_psnr
+#       crop_border: 4
+#       test_y_channel: false
+#     ssim:
+#       type: calculate_ssim
+#       crop_border: 4
+#       test_y_channel: false
+
+# logging settings
+logger:
+  print_freq: 100
+  save_checkpoint_freq: 10000  # Save every 10K iterations (much less frequent!)
+  use_tb_logger: true
+  wandb:
+    project: realesrgan-swinir-enhancement
+    resume_id: ~
+
+# dist training settings
+dist_params:
+  backend: nccl
+  port: 29500
+
+find_unused_parameters: true  # Important for SwinIR training
+use_fp16: true  # Mixed precision for efficiency - addresses your performance goals

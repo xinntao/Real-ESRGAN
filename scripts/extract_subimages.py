@@ -58,8 +58,15 @@ def extract_subimages(opt):
         print(f'Folder {save_folder} already exists. Exit.')
         sys.exit(1)
 
-    # scan all images
-    img_list = list(scandir(input_folder, full_path=True))
+    # Search images recursively and only accept PNG/JPG files
+    # Using os.walk to avoid issues with hidden files like .DS_Store on macOS
+    img_list = []
+    for dp, _, fns in os.walk(input_folder):
+        for fn in fns:
+            if fn.startswith('.'):
+                continue  # skip hidden files such as .DS_Store
+            if fn.lower().endswith((".png", ".jpg", ".jpeg")):
+                img_list.append(osp.join(dp, fn))
 
     pbar = tqdm(total=len(img_list), unit='image', desc='Extract')
     pool = Pool(opt['n_thread'])
@@ -119,8 +126,8 @@ def worker(path, opt):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input', type=str, default='datasets/DF2K/DF2K_HR', help='Input folder')
-    parser.add_argument('--output', type=str, default='datasets/DF2K/DF2K_HR_sub', help='Output folder')
+    parser.add_argument('--input', type=str, default='DIV2K_dataset/DIV2K_train_HR', help='Input folder')
+    parser.add_argument('--output', type=str, default='DIV2K_dataset/DIV2K_train_HR_sub', help='Output folder')
     parser.add_argument('--crop_size', type=int, default=480, help='Crop size')
     parser.add_argument('--step', type=int, default=240, help='Step for overlapped sliding window')
     parser.add_argument(
@@ -128,7 +135,7 @@ if __name__ == '__main__':
         type=int,
         default=0,
         help='Threshold size. Patches whose size is lower than thresh_size will be dropped.')
-    parser.add_argument('--n_thread', type=int, default=20, help='Thread number.')
+    parser.add_argument('--n_thread', type=int, default=4, help='Thread number.')
     parser.add_argument('--compression_level', type=int, default=3, help='Compression level')
     args = parser.parse_args()
 

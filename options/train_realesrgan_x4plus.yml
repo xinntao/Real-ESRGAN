@@ -36,10 +36,10 @@ queue_size: 180
 # dataset and data loader settings
 datasets:
   train:
-    name: DF2K+OST
+    name: DIV2K
     type: RealESRGANDataset
-    dataroot_gt: datasets/DF2K
-    meta_info: datasets/DF2K/meta_info/meta_info_DF2Kmultiscale+OST_sub.txt
+    dataroot_gt: "./DIV2K_dataset"
+    meta_info: "./DIV2K_dataset/meta_info/meta_info_DIV2Kmultiscale.txt"
     io_backend:
       type: disk
 
@@ -67,8 +67,8 @@ datasets:
 
     # data loader
     use_shuffle: true
-    num_worker_per_gpu: 5
-    batch_size_per_gpu: 12
+    num_worker_per_gpu: 2
+    batch_size_per_gpu: 4
     dataset_enlarge_ratio: 1
     prefetch_mode: ~
 
@@ -99,7 +99,7 @@ network_d:
 # path
 path:
   # use the pre-trained Real-ESRNet model
-  pretrain_network_g: experiments/pretrained_models/RealESRNet_x4plus.pth
+  pretrain_network_g: experiments/train_RealESRNetx4plus_smoke/models/net_g_latest.pth
   param_key_g: params_ema
   strict_load_g: true
   resume_state: ~
@@ -123,7 +123,7 @@ train:
     milestones: [400000]
     gamma: 0.5
 
-  total_iter: 400000
+  total_iter: 3000
   warmup_iter: -1  # no warm up
 
   # losses
@@ -172,9 +172,9 @@ train:
 
 # logging settings
 logger:
-  print_freq: 100
-  save_checkpoint_freq: !!float 5e3
-  use_tb_logger: true
+  print_freq: 1000
+  save_checkpoint_freq: 10000  # Save every 10K iterations (much less frequent!)
+  use_tb_logger: False
   wandb:
     project: ~
     resume_id: ~
@@ -183,3 +183,5 @@ logger:
 dist_params:
   backend: nccl
   port: 29500
+
+use_fp16: true

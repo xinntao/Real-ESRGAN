@@ -1,0 +1,285 @@
+"""Custom loss functions for Real-ESRGAN with enhanced perceptual metrics.
+
+This module provides LPIPS and DISTS losses for improved perceptual quality.
+"""
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+from basicsr.utils.registry import LOSS_REGISTRY
+
+# Edge and detail preservation losses will be defined below
+
+try:
+    import lpips
+    _HAS_LPIPS = True
+except ImportError:
+    _HAS_LPIPS = False
+
+try:
+    import pyiqa
+    _HAS_PYIQA = True
+except ImportError:
+    _HAS_PYIQA = False
+
+
+@LOSS_REGISTRY.register()
+class LPIPSLoss(nn.Module):
+    """LPIPS (Learned Perceptual Image Patch Similarity) loss.
+
+    LPIPS measures perceptual similarity using deep features from pre-trained networks.
+    Lower values indicate more similar images from a perceptual standpoint.
+
+    Args:
+        loss_weight (float): Loss weight. Default: 1.0.
+        net (str): Network to use for computing LPIPS. Options: 'alex', 'vgg', 'squeeze'.
+            Default: 'alex' (AlexNet - fastest and recommended).
+        use_input_norm (bool): If True, normalize from [0, 1] to ImageNet stats. Default: False.
+    """
+
+    def __init__(self, loss_weight=1.0, net='alex', use_input_norm=False):
+        super(LPIPSLoss, self).__init__()
+        if not _HAS_LPIPS:
+            raise ImportError('lpips package is required for LPIPSLoss. Install with: pip install lpips')
+
+        self.loss_weight = loss_weight
+        self.use_input_norm = use_input_norm
+
+        # Initialize LPIPS model
+        self.lpips_model = lpips.LPIPS(net=net, verbose=False)
+
+        # Freeze LPIPS model parameters
+        for param in self.lpips_model.parameters():
+            param.requires_grad = False
+
+    def forward(self, pred, target):
+        """Forward function.
+
+        Args:
+            pred (Tensor): Predicted images with shape (n, 3, h, w). Range [0, 1].
+            target (Tensor): Target images with shape (n, 3, h, w). Range [0, 1].
+
+        Returns:
+            Tensor: LPIPS loss value.
+        """
+        # LPIPS expects input in range [-1, 1]
+        if not self.use_input_norm:
+            pred = pred * 2.0 - 1.0
+            target = target * 2.0 - 1.0
+
+        # Compute LPIPS distance
+        lpips_val = self.lpips_model(pred, target)
+
+        return lpips_val.mean() * self.loss_weight
+
+
+@LOSS_REGISTRY.register()
+class DISTSLoss(nn.Module):
+    """DISTS (Deep Image Structure and Texture Similarity) loss.
+
+    DISTS is a full-reference image quality assessment metric that correlates well
+    with human perception. It captures both structure and texture information.
+
+    Args:
+        loss_weight (float): Loss weight. Default: 1.0.
+        as_loss (bool): If True, return 1-DISTS (for use as a loss). Default: True.
+    """
+
+    def __init__(self, loss_weight=1.0, as_loss=True):
+        super(DISTSLoss, self).__init__()
+        if not _HAS_PYIQA:
+            raise ImportError('pyiqa package is required for DISTSLoss. Install with: pip install pyiqa')
+
+        self.loss_weight = loss_weight
+        self.as_loss = as_loss
+
+        # Initialize DISTS metric
+        self.dists_metric = pyiqa.create_metric('dists', device=torch.device('cuda'))
+
+        # Freeze DISTS model parameters
+        for param in self.dists_metric.parameters():
+            param.requires_grad = False
+
+    def forward(self, pred, target):
+        """Forward function.
+
+        Args:
+            pred (Tensor): Predicted images with shape (n, 3, h, w). Range [0, 1].
+            target (Tensor): Target images with shape (n, 3, h, w). Range [0, 1].
+
+        Returns:
+            Tensor: DISTS loss value.
+        """
+        # Clamp inputs to [0, 1] range as required by DISTS
+        pred = torch.clamp(pred, 0, 1)
+        target = torch.clamp(target, 0, 1)
+
+        # Compute DISTS score (lower is better, range: 0-1)
+        dists_val = self.dists_metric(pred, target)
+
+        # If as_loss is True, we can use it directly (lower is better)
+        # Otherwise return 1-DISTS to make higher scores better
+        if self.as_loss:
+            return dists_val.mean() * self.loss_weight
+        else:
+            return (1.0 - dists_val).mean() * self.loss_weight
+
+
+@LOSS_REGISTRY.register()
+class CombinedPerceptualLoss(nn.Module):
+    """Combined perceptual loss using multiple metrics.
+
+    This combines LPIPS, DISTS, and traditional perceptual losses for comprehensive
+    perceptual quality optimization.
+
+    Args:
+        lpips_weight (float): Weight for LPIPS loss. Default: 1.0.
+        dists_weight (float): Weight for DISTS loss. Default: 1.0.
+        lpips_net (str): Network for LPIPS. Default: 'alex'.
+    """
+
+    def __init__(self, lpips_weight=1.0, dists_weight=1.0, lpips_net='alex'):
+        super(CombinedPerceptualLoss, self).__init__()
+
+        self.lpips_loss = None
+        self.dists_loss = None
+
+        if _HAS_LPIPS and lpips_weight > 0:
+            self.lpips_loss = LPIPSLoss(loss_weight=lpips_weight, net=lpips_net)
+
+        if _HAS_PYIQA and dists_weight > 0:
+            self.dists_loss = DISTSLoss(loss_weight=dists_weight)
+
+    def forward(self, pred, target):
+        """Forward function.
+
+        Args:
+            pred (Tensor): Predicted images with shape (n, 3, h, w). Range [0, 1].
+            target (Tensor): Target images with shape (n, 3, h, w). Range [0, 1].
+
+        Returns:
+            Tensor: Combined perceptual loss value.
+            tuple: Individual loss components (lpips, dists).
+        """
+        total_loss = 0
+        lpips_val = None
+        dists_val = None
+
+        if self.lpips_loss is not None:
+            lpips_val = self.lpips_loss(pred, target)
+            total_loss += lpips_val
+
+        if self.dists_loss is not None:
+            dists_val = self.dists_loss(pred, target)
+            total_loss += dists_val
+
+        return total_loss, lpips_val, dists_val
+
+
+@LOSS_REGISTRY.register()
+class EdgeLoss(nn.Module):
+    """Edge preservation loss using Sobel edge detection"""
+
+    def __init__(self, loss_weight=1.0, edge_type='sobel'):
+        super(EdgeLoss, self).__init__()
+        self.loss_weight = loss_weight
+        self.edge_type = edge_type
+
+        # Sobel kernels for edge detection
+        sobel_x = torch.tensor([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], dtype=torch.float32)
+        sobel_y = torch.tensor([[-1, -2, -1], [0, 0, 0], [1, 2, 1]], dtype=torch.float32)
+
+        self.register_buffer('sobel_x', sobel_x.view(1, 1, 3, 3))
+        self.register_buffer('sobel_y', sobel_y.view(1, 1, 3, 3))
+
+    def forward(self, pred, target):
+        """
+        Args:
+            pred (Tensor): Predicted image [B, C, H, W]
+            target (Tensor): Target image [B, C, H, W]
+        """
+        # Convert to grayscale for edge detection
+        pred_gray = 0.299 * pred[:, 0:1] + 0.587 * pred[:, 1:2] + 0.114 * pred[:, 2:3]
+        target_gray = 0.299 * target[:, 0:1] + 0.587 * target[:, 1:2] + 0.114 * target[:, 2:3]
+
+        # Apply Sobel edge detection
+        pred_edge_x = F.conv2d(pred_gray, self.sobel_x, padding=1)
+        pred_edge_y = F.conv2d(pred_gray, self.sobel_y, padding=1)
+        pred_edges = torch.sqrt(pred_edge_x**2 + pred_edge_y**2 + 1e-8)
+
+        target_edge_x = F.conv2d(target_gray, self.sobel_x, padding=1)
+        target_edge_y = F.conv2d(target_gray, self.sobel_y, padding=1)
+        target_edges = torch.sqrt(target_edge_x**2 + target_edge_y**2 + 1e-8)
+
+        # Calculate L1 loss between edge maps
+        edge_loss = F.l1_loss(pred_edges, target_edges)
+
+        return self.loss_weight * edge_loss
+
+
+@LOSS_REGISTRY.register()
+class GradientLoss(nn.Module):
+    """Gradient preservation loss for sharpness"""
+
+    def __init__(self, loss_weight=1.0, order=1):
+        super(GradientLoss, self).__init__()
+        self.loss_weight = loss_weight
+        self.order = order
+
+    def forward(self, pred, target):
+        """
+        Args:
+            pred (Tensor): Predicted image [B, C, H, W]
+            target (Tensor): Target image [B, C, H, W]
+        """
+        # Calculate gradients
+        pred_grad_x = torch.abs(pred[:, :, :, 1:] - pred[:, :, :, :-1])
+        pred_grad_y = torch.abs(pred[:, :, 1:, :] - pred[:, :, :-1, :])
+
+        target_grad_x = torch.abs(target[:, :, :, 1:] - target[:, :, :, :-1])
+        target_grad_y = torch.abs(target[:, :, 1:, :] - target[:, :, :-1, :])
+
+        # Calculate L1 loss between gradients
+        grad_x_loss = F.l1_loss(pred_grad_x, target_grad_x)
+        grad_y_loss = F.l1_loss(pred_grad_y, target_grad_y)
+
+        gradient_loss = grad_x_loss + grad_y_loss
+
+        return self.loss_weight * gradient_loss
+
+
+@LOSS_REGISTRY.register()
+class HighFreqLoss(nn.Module):
+    """High-frequency detail preservation loss"""
+
+    def __init__(self, loss_weight=1.0, freq_threshold=0.1):
+        super(HighFreqLoss, self).__init__()
+        self.loss_weight = loss_weight
+        self.freq_threshold = freq_threshold
+
+    def forward(self, pred, target):
+        """
+        Args:
+            pred (Tensor): Predicted image [B, C, H, W]
+            target (Tensor): Target image [B, C, H, W]
+        """
+        # Convert to grayscale
+        pred_gray = 0.299 * pred[:, 0:1] + 0.587 * pred[:, 1:2] + 0.114 * pred[:, 2:3]
+        target_gray = 0.299 * target[:, 0:1] + 0.587 * target[:, 1:2] + 0.114 * target[:, 2:3]
+
+        # Apply high-pass filter (Laplacian)
+        laplacian_kernel = torch.tensor([[0, -1, 0], [-1, 4, -1], [0, -1, 0]], dtype=torch.float32)
+        laplacian_kernel = laplacian_kernel.view(1, 1, 3, 3).to(pred.device)
+
+        pred_hf = F.conv2d(pred_gray, laplacian_kernel, padding=1)
+        target_hf = F.conv2d(target_gray, laplacian_kernel, padding=1)
+
+        # Only consider high-frequency components above threshold
+        pred_hf_masked = pred_hf * (torch.abs(pred_hf) > self.freq_threshold).float()
+        target_hf_masked = target_hf * (torch.abs(target_hf) > self.freq_threshold).float()
+
+        # Calculate L1 loss
+        hf_loss = F.l1_loss(pred_hf_masked, target_hf_masked)
+
+        return self.loss_weight * hf_loss

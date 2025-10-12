@@ -1,5 +1,5 @@
 # general settings
-name: train_RealESRNetx4plus_1000k_B12G4
+name: train_RealESRNetx4plus_smoke
 model_type: RealESRNetModel
 scale: 4
 num_gpu: auto  # auto: can infer from your visible devices automatically. official: 4 GPUs
@@ -33,10 +33,10 @@ queue_size: 180
 # dataset and data loader settings
 datasets:
   train:
-    name: DF2K+OST
+    name: DIV2K
     type: RealESRGANDataset
-    dataroot_gt: datasets/DF2K
-    meta_info: datasets/DF2K/meta_info/meta_info_DF2Kmultiscale+OST_sub.txt
+    dataroot_gt: "./DIV2K_dataset"
+    meta_info: "./DIV2K_dataset/meta_info/meta_info_DIV2Kmultiscale.txt"
     io_backend:
       type: disk
 
@@ -64,12 +64,12 @@ datasets:
 
     # data loader
     use_shuffle: true
-    num_worker_per_gpu: 5
-    batch_size_per_gpu: 12
+    num_worker_per_gpu: 0
+    batch_size_per_gpu: 2
     dataset_enlarge_ratio: 1
     prefetch_mode: ~
 
-  # Uncomment these for validation
+  #Uncomment these for validation
   # val:
   #   name: validation
   #   type: PairedImageDataset
@@ -89,9 +89,9 @@ network_g:
 
 # path
 path:
-  pretrain_network_g: experiments/pretrained_models/ESRGAN_SRx4_DF2KOST_official-ff704c30.pth
+  pretrain_network_g: ~
   param_key_g: params_ema
-  strict_load_g: true
+  strict_load_g: false
   resume_state: ~
 
 # training settings
@@ -108,7 +108,7 @@ train:
     milestones: [1000000]
     gamma: 0.5
 
-  total_iter: 1000000
+  total_iter: 1000
   warmup_iter: -1  # no warm up
 
   # losses
@@ -118,7 +118,7 @@ train:
     reduction: mean
 
 # Uncomment these for validation
-# validation settings
+#validation settings
 # val:
 #   val_freq: !!float 5e3
 #   save_img: True
@@ -132,8 +132,8 @@ train:
 # logging settings
 logger:
   print_freq: 100
-  save_checkpoint_freq: !!float 5e3
-  use_tb_logger: true
+  save_checkpoint_freq: 10000  # Save every 10K iterations (much less frequent!)
+  use_tb_logger: false
   wandb:
     project: ~
     resume_id: ~
