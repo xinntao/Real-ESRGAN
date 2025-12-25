@@ -2,7 +2,23 @@ import argparse
 import cv2
 import glob
 import os
-from basicsr.archs.rrdbnet_arch import RRDBNet
+try:
+    # torchvision.transforms.functional_tensor are dispatch on version
+    # Try to imports module with dispatch "torchvision.transforms.functional_tensor"
+    from basicsr.archs.rrdbnet_arch import RRDBNet
+except ImportError:
+    import sys
+    import types
+    from torchvision.transforms.functional import rgb_to_grayscale
+
+    # Create a module for `torchvision.transforms.functional_tensor`
+    functional_tensor = types.ModuleType("torchvision.transforms.functional_tensor")
+    functional_tensor.rgb_to_grayscale = rgb_to_grayscale
+
+    # Add this module to sys.modules so other imports can access it
+    sys.modules["torchvision.transforms.functional_tensor"] = functional_tensor
+    # Try imports module again
+    from basicsr.archs.rrdbnet_arch import RRDBNet
 from basicsr.utils.download_util import load_file_from_url
 
 from realesrgan import RealESRGANer
