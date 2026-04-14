@@ -262,6 +262,11 @@ If you develop/use Real-ESRGAN in your projects, welcome to let me know.
 - [anime_upscaler](https://github.com/shangar21/anime_upscaler) by [shangar21](https://github.com/shangar21)
 - [Upscayl](https://github.com/upscayl/upscayl) by [Nayam Amarshe](https://github.com/NayamAmarshe) and [TGS963](https://github.com/TGS963)
 
+
+&nbsp;&nbsp;&nbsp;&nbsp;**Web Apps**
+
+- [ArtImageHub](https://artimagehub.com/old-photo-restoration) - AI old photo restoration web service (CodeFormer + GFPGAN + Real-ESRGAN) for restoring faded, scratched, and damaged family photos
+
 ## 🤗 Acknowledgement
 
 Thanks for all the contributors.
