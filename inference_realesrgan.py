@@ -2,6 +2,20 @@ import argparse
 import cv2
 import glob
 import os
+
+# --- Compatibility patch for torchvision >= 0.16 ---
+# torchvision 0.16 removed the functional_tensor submodule, but basicsr still
+# tries to import rgb_to_grayscale from it. We create a fake module in Python's
+# module registry that points to the correct location, so basicsr finds it
+# without errors. This must run before any basicsr import.
+import sys
+import types
+import torchvision.transforms.functional as _tvf
+_compat_mod = types.ModuleType('torchvision.transforms.functional_tensor')
+_compat_mod.rgb_to_grayscale = _tvf.rgb_to_grayscale
+sys.modules['torchvision.transforms.functional_tensor'] = _compat_mod
+# --- End compatibility patch ---
+
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from basicsr.utils.download_util import load_file_from_url
 
