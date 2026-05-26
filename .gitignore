@@ -6,6 +6,7 @@ tb_logger/*
 wandb/*
 tmp/*
 weights/*
+outputs/*
 
 version.py
 

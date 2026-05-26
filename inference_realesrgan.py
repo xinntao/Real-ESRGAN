@@ -52,6 +52,10 @@ def main():
     parser.add_argument(
         '-g', '--gpu-id', type=int, default=None, help='gpu device to use (default=None) can be 0,1,2 for multi-gpu')
 
+    parser.add_argument('-ov','--openvino', type=bool, default=True,
+                        help='Whether to use openvino to optimize performance. Default: True')
+    parser.add_argument('--ov_device', type=str, default='CPU', help='OpenVINO development device. Options: CPU | GPU, Default: CPU, GPU means using Intel Core iGPU for development.')
+
     args = parser.parse_args()
 
     # determine models according to model names
@@ -113,7 +117,10 @@ def main():
         tile_pad=args.tile_pad,
         pre_pad=args.pre_pad,
         half=not args.fp32,
-        gpu_id=args.gpu_id)
+        gpu_id=args.gpu_id,
+        openvino=args.openvino,
+        ov_device=args.ov_device,
+        )
 
     if args.face_enhance:  # Use GFPGAN for face enhancement
         from gfpgan import GFPGANer
@@ -144,7 +151,8 @@ def main():
             if args.face_enhance:
                 _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
             else:
-                output, _ = upsampler.enhance(img, outscale=args.outscale)
+                output, _ = upsampler.enhance(img, outscale=args.outscale,
+                                              )
         except RuntimeError as error:
             print('Error', error)
             print('If you encounter CUDA out of memory, try to set --tile with a smaller number.')
