@@ -66,7 +66,77 @@ from enhance.playback_writer import install_playback_writer  # noqa: E402
 
 # Be explicit even though realesrgan_fast imported the same sys.modules entry.
 fast.base = _LOCAL_BASE
-install_playback_writer(_LOCAL_BASE)
+_PlaybackWriter = install_playback_writer(_LOCAL_BASE)
+
+
+# The original encoder probe validates RGB conversion and NVENC availability but
+# not the exact playback writer options. Encode one real frame before model
+# loading so incompatible FFmpeg builds fail immediately rather than after an
+# expensive BasicVSR++/Real-ESRGAN pass.
+_original_encoder_probe = _LOCAL_BASE.probe_encoder_runtime
+
+
+def _probe_playback_writer(
+    ffmpeg_bin: str,
+    codec: str,
+    pixel_format: str,
+    width: int,
+    height: int,
+    encode_gpu: int,
+    video_filters: object,
+    color_spec: object,
+) -> None:
+    _original_encoder_probe(
+        ffmpeg_bin,
+        codec,
+        pixel_format,
+        width,
+        height,
+        encode_gpu,
+        video_filters,
+        color_spec,
+    )
+
+    root = Path("/kaggle/working")
+    if not root.is_dir():
+        root = Path(tempfile.gettempdir())
+    fd, path_text = tempfile.mkstemp(
+        prefix="realesrgan-writer-probe-",
+        suffix=".mp4",
+        dir=root,
+    )
+    os.close(fd)
+    probe_path = Path(path_text)
+    try:
+        probe_path.unlink(missing_ok=True)
+        writer = _PlaybackWriter(
+            probe_path,
+            ffmpeg_bin,
+            width,
+            height,
+            "1",
+            "1",
+            codec,
+            18,
+            "medium",
+            15,
+            "p7",
+            encode_gpu,
+            pixel_format,
+            video_filters,
+            color_spec,
+        )
+        writer.write(np.zeros((height, width, 3), dtype=np.float32))
+        writer.close()
+        print(
+            f"[playback] writer preflight OK: {width}x{height}/{pixel_format}",
+            flush=True,
+        )
+    finally:
+        probe_path.unlink(missing_ok=True)
+
+
+_LOCAL_BASE.probe_encoder_runtime = _probe_playback_writer
 
 _original_shared_array_init = fast.SharedArray.__init__
 
