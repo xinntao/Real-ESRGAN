@@ -6,9 +6,9 @@ Use POSIX shared memory when there is ample capacity and transparently fall back
 to a persistent file-backed mmap otherwise. Both paths avoid Queue pickling of
 frame/tile arrays.
 
-The repository has a top-level ``realesrgan.py`` runner.  Load that adjacent
+The repository has a top-level ``realesrgan.py`` runner. Load that adjacent
 file explicitly as the ``realesrgan`` module before importing
-``realesrgan_fast``.  The project now vendors SRVGGNetCompact locally, so no
+``realesrgan_fast``. The project vendors SRVGGNetCompact locally, so no
 separate installable ``realesrgan`` package is required or expected.
 """
 
@@ -62,9 +62,11 @@ def _load_local_realesrgan() -> ModuleType:
 _LOCAL_BASE = _load_local_realesrgan()
 
 import realesrgan_fast as fast  # noqa: E402  (requires local-module bootstrap)
+from enhance.playback_writer import install_playback_writer  # noqa: E402
 
 # Be explicit even though realesrgan_fast imported the same sys.modules entry.
 fast.base = _LOCAL_BASE
+install_playback_writer(_LOCAL_BASE)
 
 _original_shared_array_init = fast.SharedArray.__init__
 
