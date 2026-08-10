@@ -16,11 +16,60 @@ from typing import Dict, List, Optional, Sequence, Tuple
 import cv2
 import numpy as np
 import torch
-from tqdm import tqdm
+from tqdm import tqdm as _tqdm
 
 from . import runtime as base
 
 _TIMEOUT = 300.0
+
+
+class PersistentTqdm(_tqdm):
+    """Keep tqdm for interactive runs and emit durable newline progress logs."""
+
+    def __init__(self, *args, persistent_interval: float = 10.0, **kwargs):
+        self._persistent_interval = max(1.0, float(persistent_interval))
+        self._persistent_last_time = 0.0
+        self._persistent_last_bucket = -1
+        super().__init__(*args, **kwargs)
+
+    def _persistent_log(self, postfix: str = "") -> None:
+        if self.n <= 0:
+            return
+        now = time.monotonic()
+        total = int(self.total or 0)
+        percent = (100.0 * self.n / total) if total > 0 else 0.0
+        bucket = int(percent // 10.0) if total > 0 else 0
+        first = self.n == 1
+        timed = now - self._persistent_last_time >= self._persistent_interval
+        stepped = total > 0 and bucket > self._persistent_last_bucket
+        final = total > 0 and self.n >= total
+        if not (first or timed or stepped or final):
+            return
+
+        elapsed = max(time.time() - self.start_t, 1e-6)
+        if "ETA" in postfix:
+            speed_eta = postfix
+        else:
+            rate = self.n / elapsed
+            remaining = max(0, total - self.n)
+            eta = remaining / rate if rate > 1e-9 else 0.0
+            speed_eta = f"{rate:.3f} frame/s | ETA {self.format_interval(eta)}"
+        total_text = str(total) if total > 0 else "?"
+        print(
+            f"[progress] {self.n}/{total_text} | {percent:.1f}% | "
+            f"{speed_eta} | elapsed {self.format_interval(elapsed)}",
+            flush=True,
+        )
+        self._persistent_last_time = now
+        self._persistent_last_bucket = bucket
+
+    def set_postfix(self, ordered_dict=None, refresh=True, **kwargs):
+        super().set_postfix(ordered_dict=ordered_dict, refresh=refresh, **kwargs)
+        self._persistent_log(str(self.postfix or ""))
+
+    def set_postfix_str(self, s="", refresh=True):
+        super().set_postfix_str(s=s, refresh=refresh)
+        self._persistent_log(str(s))
 
 
 def _worker(
@@ -366,7 +415,7 @@ def process_video(args) -> None:
         model_time = time.monotonic() - t
         print(f"Pipeline: shared_memory={workers.memory_mib:.0f} MiB | GPU inference overlaps resize/encode", flush=True)
         print(flush=True)
-        progress = tqdm(total=expected, desc="Real-ESRGAN", unit="frame", dynamic_ncols=True, mininterval=1.0, file=sys.stdout)
+        progress = PersistentTqdm(total=expected, desc="Real-ESRGAN", unit="frame", dynamic_ncols=True, mininterval=1.0, file=sys.stdout)
         pump = OutputPump(workers, writer, out_w, out_h, progress, started)
 
         for worker_id in range(workers.count):
