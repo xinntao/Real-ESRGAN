@@ -4,8 +4,10 @@ import glob
 import mimetypes
 import numpy as np
 import os
+import queue
 import shutil
 import subprocess
+import threading
 import torch
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from basicsr.utils.download_util import load_file_from_url
@@ -44,13 +46,14 @@ def get_sub_video(args, num_process, process_idx):
     part_time = duration // num_process
     print(f'duration: {duration}, part_time: {part_time}')
     os.makedirs(osp.join(args.output, f'{args.video_name}_inp_tmp_videos'), exist_ok=True)
-    out_path = osp.join(args.output, f'{args.video_name}_inp_tmp_videos', f'{process_idx:03d}.mp4')
-    cmd = [
-        args.ffmpeg_bin, f'-i {args.input}', '-ss', f'{part_time * process_idx}',
-        f'-to {part_time * (process_idx + 1)}' if process_idx != num_process - 1 else '', '-async 1', out_path, '-y'
-    ]
-    print(' '.join(cmd))
-    subprocess.call(' '.join(cmd), shell=True)
+    out_path = osp.join(args.output, f'{args.video_name}_inp_tmp_videos', f'{process_idx}.mp4')
+    if not args.keyframe_split:
+        cmd = [
+            args.ffmpeg_bin, f'-i {args.input}', '-ss', f'{part_time * process_idx}',
+            f'-to {part_time * (process_idx + 1)}' if process_idx != num_process - 1 else '', '-async 1', out_path, '-y'
+        ]
+        print(' '.join(cmd))
+        subprocess.call(' '.join(cmd), shell=True)
     return out_path
 
 
@@ -142,23 +145,26 @@ class Writer:
             print('You are generating video that is larger than 4K, which will be very slow due to IO speed.',
                   'We highly recommend to decrease the outscale(aka, -s).')
 
+        # encoding quality: crf is the main knob (lower = better), preset trades speed for compression
+        encode_opts = {'pix_fmt': 'yuv420p', 'vcodec': 'libx264', 'crf': args.crf, 'preset': args.preset}
+        if args.bitrate is not None:
+            # explicit bitrate target overrides crf
+            encode_opts.pop('crf')
+            encode_opts['video_bitrate'] = args.bitrate
+
         if audio is not None:
             self.stream_writer = (
                 ffmpeg.input('pipe:', format='rawvideo', pix_fmt='bgr24', s=f'{out_width}x{out_height}',
                              framerate=fps).output(
-                                 audio,
-                                 video_save_path,
-                                 pix_fmt='yuv420p',
-                                 vcodec='libx264',
-                                 loglevel='error',
-                                 acodec='copy').overwrite_output().run_async(
+                                 audio, video_save_path, loglevel='error', acodec='copy',
+                                 **encode_opts).overwrite_output().run_async(
                                      pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin))
         else:
             self.stream_writer = (
                 ffmpeg.input('pipe:', format='rawvideo', pix_fmt='bgr24', s=f'{out_width}x{out_height}',
                              framerate=fps).output(
-                                 video_save_path, pix_fmt='yuv420p', vcodec='libx264',
-                                 loglevel='error').overwrite_output().run_async(
+                                 video_save_path, loglevel='error',
+                                 **encode_opts).overwrite_output().run_async(
                                      pipe_stdin=True, pipe_stdout=True, cmd=args.ffmpeg_bin))
 
     def write_frame(self, frame):
@@ -217,6 +223,12 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
         model_path = [model_path, wdn_model_path]
         dni_weight = [args.denoise_strength, 1 - args.denoise_strength]
 
+    # Autotuning would let cudnn pick one conv algorithm and reuse it for every frame, but the
+    # algorithms it trials can reserve tens of GB of workspace, which the caching allocator then
+    # holds onto. That starves the other workers, so it is opt-in rather than default.
+    if args.cudnn_benchmark:
+        torch.backends.cudnn.benchmark = True
+
     # restorer
     upsampler = RealESRGANer(
         scale=netscale,
@@ -228,6 +240,7 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
         pre_pad=args.pre_pad,
         half=not args.fp32,
         device=device,
+        channels_last=args.channels_last,
     )
 
     if 'anime' in args.model_name and args.face_enhance:
@@ -252,9 +265,40 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
     fps = reader.get_fps()
     writer = Writer(args, audio, height, width, video_save_path, fps)
 
+    # Decode, infer and encode run on separate threads so the GPU never blocks on an ffmpeg pipe.
+    # The queues are bounded because a single upscaled 4K frame can be a few hundred MB.
+    read_q = queue.Queue(maxsize=args.queue_size)
+    write_q = queue.Queue(maxsize=args.queue_size)
+
+    def read_worker():
+        try:
+            while True:
+                img = reader.get_frame()
+                read_q.put(img)
+                if img is None:
+                    break
+        except Exception as error:  # noqa: BLE001 - surface it, then unblock the main loop
+            print('Reader error', error)
+            read_q.put(None)
+
+    def write_worker():
+        try:
+            while True:
+                frame = write_q.get()
+                if frame is None:
+                    break
+                writer.write_frame(frame)
+        except Exception as error:  # noqa: BLE001
+            print('Writer error', error)
+
+    read_thread = threading.Thread(target=read_worker, daemon=True)
+    write_thread = threading.Thread(target=write_worker, daemon=True)
+    read_thread.start()
+    write_thread.start()
+
     pbar = tqdm(total=len(reader), unit='frame', desc='inference')
     while True:
-        img = reader.get_frame()
+        img = read_q.get()
         if img is None:
             break
 
@@ -262,15 +306,18 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
             if args.face_enhance:
                 _, _, output = face_enhancer.enhance(img, has_aligned=False, only_center_face=False, paste_back=True)
             else:
-                output, _ = upsampler.enhance(img, outscale=args.outscale)
+                output = upsampler.enhance_frame(img, outscale=args.outscale)
         except RuntimeError as error:
             print('Error', error)
             print('If you encounter CUDA out of memory, try to set --tile with a smaller number.')
         else:
-            writer.write_frame(output)
+            write_q.put(output)
 
-        torch.cuda.synchronize(device)
         pbar.update(1)
+
+    write_q.put(None)
+    write_thread.join()
+    read_thread.join()
 
     reader.close()
     writer.close()
@@ -291,6 +338,34 @@ def run(args):
     if num_process == 1:
         inference_video(args, video_save_path)
         return
+    
+    #splitting video:
+    if args.keyframe_split:
+        print(f"splitting video into {num_process} approximately equal pieces on keyframes")
+        meta = get_video_meta_info(args.input)
+        duration = int(meta['nb_frames'] / meta['fps'])
+        part_time = duration // num_process
+        print(f'duration: {duration}, part_time: {part_time}')
+        os.makedirs(osp.join(args.output, f'{args.video_name}_inp_tmp_videos'), exist_ok=True)
+
+        seg_time_str = ""
+        for i in range(1, num_process):
+            seg_time_str += str(i * part_time)
+            if not i == num_process - 1:
+                seg_time_str += ","
+        print("seg_time_str: ",seg_time_str)
+
+        cmd = [
+            args.ffmpeg_bin, 
+            f'-i {args.input}',
+            '-c copy',
+            '-map 0',
+            '-f segment',
+            '-segment_times', seg_time_str,
+            f'{args.output}/{args.video_name}_inp_tmp_videos/%d.mp4'
+        ]
+        print(' '.join(cmd))
+        subprocess.call(' '.join(cmd), shell=True)
 
     ctx = torch.multiprocessing.get_context('spawn')
     pool = ctx.Pool(num_process)
@@ -317,6 +392,7 @@ def run(args):
     ]
     print(' '.join(cmd))
     subprocess.call(cmd)
+
     shutil.rmtree(osp.join(args.output, f'{args.video_name}_out_tmp_videos'))
     if osp.exists(osp.join(args.output, f'{args.video_name}_inp_tmp_videos')):
         shutil.rmtree(osp.join(args.output, f'{args.video_name}_inp_tmp_videos'))
@@ -358,6 +434,38 @@ def main():
     parser.add_argument('--ffmpeg_bin', type=str, default='ffmpeg', help='The path to ffmpeg')
     parser.add_argument('--extract_frame_first', action='store_true')
     parser.add_argument('--num_process_per_gpu', type=int, default=1)
+    parser.add_argument('--keyframe_split', action='store_true')
+    parser.add_argument(
+        '--queue_size',
+        type=int,
+        default=2,
+        help='Frames buffered between the decode/inference/encode threads. Higher hides longer I/O '
+        'stalls but costs RAM, and an upscaled 4K frame is a few hundred MB. Default: 2')
+    parser.add_argument(
+        '--channels_last',
+        action='store_true',
+        help='Run the model in channels_last layout, which feeds tensor cores better with fp16. '
+        'Mathematically the same convolution, but not bit-identical to the default layout.')
+    parser.add_argument(
+        '--cudnn_benchmark',
+        action='store_true',
+        help='Enable cudnn autotuning. Off by default: it can reserve tens of GB of VRAM per process '
+        'because the trialled algorithms need large workspaces, which starves multi-worker runs. Only '
+        'worth trying with a single worker on a large-VRAM GPU.')
+    parser.add_argument(
+        '--crf',
+        type=int,
+        default=18,
+        help='x264 quality, lower is better/bigger. 0 is lossless, 18 is visually near-lossless, 23 is the ffmpeg '
+        'default. Ignored if --bitrate is set. Default: 18')
+    parser.add_argument(
+        '--preset',
+        type=str,
+        default='medium',
+        help='x264 speed/compression tradeoff: ultrafast | superfast | veryfast | faster | fast | medium | slow | '
+        'slower | veryslow. Slower gives better quality per byte. Default: medium')
+    parser.add_argument(
+        '--bitrate', type=str, default=None, help='Target video bitrate, e.g. 20M. Overrides --crf if set.')
 
     parser.add_argument(
         '--alpha_upsampler',

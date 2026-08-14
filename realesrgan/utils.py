@@ -36,13 +36,17 @@ class RealESRGANer():
                  pre_pad=10,
                  half=False,
                  device=None,
-                 gpu_id=None):
+                 gpu_id=None,
+                 channels_last=False):
         self.scale = scale
         self.tile_size = tile
         self.tile_pad = tile_pad
         self.pre_pad = pre_pad
         self.mod_scale = None
         self.half = half
+        self.channels_last = channels_last
+        self._stage = None  # pinned host staging buffer, see enhance_frame
+        self._stage_np = None
 
         # initialize model
         if gpu_id:
@@ -71,6 +75,8 @@ class RealESRGANer():
 
         model.eval()
         self.model = model.to(self.device)
+        if self.channels_last:
+            self.model = self.model.to(memory_format=torch.channels_last)
         if self.half:
             self.model = self.model.half()
 
@@ -92,7 +98,10 @@ class RealESRGANer():
         self.img = img.unsqueeze(0).to(self.device)
         if self.half:
             self.img = self.img.half()
+        self._pad_input()
 
+    def _pad_input(self):
+        """Apply pre_pad and mod pad to self.img."""
         # pre_pad
         if self.pre_pad != 0:
             self.img = F.pad(self.img, (0, self.pre_pad, 0, self.pre_pad), 'reflect')
@@ -189,6 +198,51 @@ class RealESRGANer():
             _, _, h, w = self.output.size()
             self.output = self.output[:, :, 0:h - self.pre_pad * self.scale, 0:w - self.pre_pad * self.scale]
         return self.output
+
+    @torch.no_grad()
+    def enhance_frame(self, img, outscale=None):
+        """Fast path for uint8 BGR video frames.
+
+        Bit-identical to enhance(), but the uint8<->float conversions happen on the GPU, so only
+        uint8 crosses PCIe: 4x less traffic on upload and 4x less on download. Also skips the
+        per-frame np.max() 16-bit probe, which a bgr24 stream can never trigger.
+        """
+        h_input, w_input = img.shape[0:2]
+
+        # staging buffer is pinned so the upload can overlap with compute, and writable so it can
+        # accept the read-only array that np.frombuffer hands back from the ffmpeg pipe
+        if self._stage is None or self._stage_np.shape != img.shape:
+            self._stage = torch.empty(img.shape, dtype=torch.uint8).pin_memory()
+            self._stage_np = self._stage.numpy()
+        self._stage_np[...] = img
+
+        # HWC BGR -> NCHW RGB, then the same float32 divide the numpy path does
+        t = self._stage.to(self.device, non_blocking=True)
+        t = t.permute(2, 0, 1)[[2, 1, 0], :, :].unsqueeze(0).float().div_(255)
+        if self.channels_last:
+            t = t.contiguous(memory_format=torch.channels_last)
+        self.img = t.half() if self.half else t
+        self._pad_input()
+
+        if self.tile_size > 0:
+            self.tile_process()
+        else:
+            self.process()
+        output = self.post_process()
+
+        # clamp -> *255 -> round -> uint8, same order and same fp32 precision as the numpy path,
+        # but done on device so the download is uint8 rather than float32
+        output = output.squeeze(0).float().clamp_(0, 1).mul_(255).round_().to(torch.uint8)
+        output = output[[2, 1, 0], :, :].permute(1, 2, 0)  # CHW RGB -> HWC BGR
+        output = output.contiguous().cpu().numpy()
+
+        if outscale is not None and outscale != float(self.scale):
+            output = cv2.resize(
+                output, (
+                    int(w_input * outscale),
+                    int(h_input * outscale),
+                ), interpolation=cv2.INTER_LANCZOS4)
+        return output
 
     @torch.no_grad()
     def enhance(self, img, outscale=None, alpha_upsampler='realesrgan'):
