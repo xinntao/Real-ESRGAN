@@ -194,8 +194,9 @@ class RealESRGANer():
     def enhance(self, img, outscale=None, alpha_upsampler='realesrgan'):
         h_input, w_input = img.shape[0:2]
         # img: numpy
+        is_uint16 = img.dtype == np.uint16
         img = img.astype(np.float32)
-        if np.max(img) > 256:  # 16-bit image
+        if is_uint16 or np.max(img) > 256:  # 16-bit image
             max_range = 65535
             print('\tInput is a 16-bit image')
         else:
