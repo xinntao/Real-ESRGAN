@@ -120,6 +120,10 @@ Real-ESRGAN 将会被长期支持，我会在空闲的时间中持续维护更�
 
 绿色版指的是这些exe你可以直接运行（放U盘里拷走都没问题），因为里面已经有所需的文件和模型了。它不需要 CUDA 或者 PyTorch运行环境。<br>
 
+如需从官方 Windows 资产重新生成便携包，可运行
+`powershell -ExecutionPolicy Bypass -File scripts\package_windows_portable.ps1`。
+生成的 ZIP 包含官方 exe 和模型，以及启动脚本、使用说明和许可证声明。
+
 你可以通过下面这个命令来运行（Windows版本的例子，更多信息请查看对应版本的README.md）：
 
 ```bash
