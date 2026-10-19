@@ -132,6 +132,11 @@ You can download [Windows](https://github.com/xinntao/Real-ESRGAN/releases/downl
 
 This executable file is **portable** and includes all the binaries and models required. No CUDA or PyTorch environment is needed.<br>
 
+To reproduce a local package from the official Windows asset, run
+`powershell -ExecutionPolicy Bypass -File scripts\package_windows_portable.ps1`.
+The generated ZIP includes the upstream executable and models plus launcher
+batch files, usage instructions, and license notices.
+
 You can simply run the following command (the Windows example, more information is in the README.md of each executable files):
 
 ```bash
