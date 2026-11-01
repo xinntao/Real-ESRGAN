@@ -1,0 +1,31 @@
+[project]
+name = "real-esrgan-a6i"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "__tachyon_gz__", email = "lizihan20040716@outlook.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "basicsr-fixed>=1.4.2",
+    "facexlib>=0.3.0",
+    "ffmpeg-python>=0.2.0",
+    "gfpgan>=1.3.8",
+    "numpy>=2.4.6",
+    "opencv-python>=5.0.0.93",
+    "pillow>=13.0.0",
+    "torch>=2.15.0",
+    "torchvision>=0.29.2",
+    "tqdm>=4.66.5",
+]
+
+[project.scripts]
+real-esrgan-a6i = "real_esrgan_a6i:main"
+
+[[tool.uv.index]]
+url = "https://download.pytorch.org/whl/cu134"
+
+[build-system]
+requires = ["uv_build>=0.13.5,<0.14.0"]
+build-backend = "uv_build"
