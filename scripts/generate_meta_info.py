@@ -53,6 +53,6 @@ if __name__ == '__main__':
 
     assert len(args.input) == len(args.root), ('Input folder and folder root should have the same length, but got '
                                                f'{len(args.input)} and {len(args.root)}.')
-    os.makedirs(os.path.dirname(args.meta_info), exist_ok=True)
+    os.makedirs(os.path.dirname(os.path.abspath(args.meta_info)), exist_ok=True)
 
     main(args)
