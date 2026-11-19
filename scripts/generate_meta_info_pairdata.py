@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     assert len(args.input) == 2, 'Input folder should have two elements: gt folder and lq folder'
     assert len(args.root) == 2, 'Root path should have two elements: root for gt folder and lq folder'
-    os.makedirs(os.path.dirname(args.meta_info), exist_ok=True)
+    os.makedirs(os.path.dirname(os.path.abspath(args.meta_info)), exist_ok=True)
     for i in range(2):
         if args.input[i].endswith('/'):
             args.input[i] = args.input[i][:-1]
